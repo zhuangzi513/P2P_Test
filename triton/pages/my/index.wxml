@@ -1,0 +1,178 @@
+<view class="page-container">
+  <!-- 头部用户信息区域 -->
+  <view class="header-section">
+    <view wx:if="{{ !apiUserInfoMap }}" class="login-container">
+      <view class="login-tips">欢迎来到商城</view>
+      <view class="login-btn" bindtap="login">
+        <text>立即登录</text>
+      </view>
+    </view>
+    
+    <view wx:else class="user-info-container">
+      <view class="user-main">
+        <button class="avatar-btn" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
+          <image class="avatar" src="{{ apiUserInfoMap.base.avatarUrl ? apiUserInfoMap.base.avatarUrl : '/images/default.png' }}" mode="aspectFill"></image>
+          <view class="avatar-border"></view>
+        </button>
+        <view class="user-detail">
+          <view class="nickname-row">
+            <text class="nickname" bindtap="editNick">{{ apiUserInfoMap.base.nick ? apiUserInfoMap.base.nick : '点击设置昵称' }}</text>
+          </view>
+          <view class="user-id" bind:tap="copyUid">ID: {{ apiUserInfoMap.base.id }}</view>
+        </view>
+      </view>
+      <view class="qr-code-btn" bindtap="goUserCode">
+        <view class="qr-icon-box">
+          <van-icon name="qr" size="52rpx" color="#E4393C" />
+        </view>
+        <view class="qr-text">会员码</view>
+      </view>
+    </view>
+    
+    <!-- 会员等级卡片 -->
+    <navigator url="/pages/vip/index" class="vip-card-wrapper">
+      <!-- 已开通会员 -->
+      <view wx:if="{{ apiUserInfoMap.userLevel }}" class="vip-card vip-card-active vip-level-{{ apiUserInfoMap.userLevel.level || 1 }}">
+        <view class="vip-card-bg">
+          <view class="vip-shine"></view>
+          <view class="vip-shine vip-shine-2"></view>
+          <view class="vip-decoration vip-decoration-1"></view>
+          <view class="vip-decoration vip-decoration-2"></view>
+        </view>
+        <view class="vip-card-content">
+          <view class="vip-main-info">
+            <view class="vip-badge-wrapper">
+              <view class="vip-badge">
+                <text class="vip-badge-icon">{{ vipLevelConfig[apiUserInfoMap.userLevel.level] ? vipLevelConfig[apiUserInfoMap.userLevel.level].icon : '👑' }}</text>
+              </view>
+              <view class="vip-badge-glow"></view>
+            </view>
+            <view class="vip-text-info">
+              <view class="vip-name-row">
+                <text class="vip-level-name">{{ apiUserInfoMap.userLevel.name }}</text>
+                <text class="vip-level-tag">VIP{{ apiUserInfoMap.userLevel.level || '' }}</text>
+              </view>
+              <view class="vip-desc">专属特权 · 尊享服务</view>
+            </view>
+          </view>
+          <view class="vip-action-btn">
+            <text class="vip-action-text">会员中心</text>
+            <text class="vip-action-arrow">›</text>
+          </view>
+        </view>
+        <view class="vip-card-footer">
+          <view class="vip-expire-info">
+            <text class="vip-expire-icon">⏰</text>
+            <text class="vip-expire-text">有效期至 {{ apiUserInfoMap.base.levelExpire || '长期有效' }}</text>
+          </view>
+          <!-- <view class="vip-upgrade-hint" wx:if="{{ apiUserInfoMap.userLevel.canUpgrade }}">
+            <text class="upgrade-hint-text">升级更高等级 ›</text>
+          </view> -->
+        </view>
+      </view>
+      
+      <view wx:else class="vip-card vip-card-inactive">
+        <view class="vip-card-bg">
+          <view class="vip-pattern"></view>
+        </view>
+        <view class="vip-card-content">
+          <view class="vip-main-info">
+            <view class="vip-badge-wrapper vip-badge-inactive">
+              <van-icon name="vip-card-o" size="64rpx" color="#666" />
+            </view>
+            <view class="vip-text-info">
+              <view class="vip-name-row">
+                <text class="vip-level-name vip-inactive-name">普通用户</text>
+              </view>
+              <view class="vip-desc vip-inactive-desc">开通会员，尊享多重特权</view>
+            </view>
+          </view>
+          <view class="vip-open-btn">
+            <text class="vip-open-text">立即开通</text>
+          </view>
+        </view>
+      </view>
+    </navigator>
+  </view>
+
+  <!-- 会员卡区域 -->
+  <view wx:if="{{ myCards }}" class="card-section">
+    <view class="section-title">
+      <text class="title-text">我的会员卡</text>
+      <text class="title-icon">💳</text>
+    </view>
+    <view class="card-list {{ cardsExpanded ? 'expanded' : 'collapsed' }}">
+      <navigator wx:for="{{ cardsExpanded ? myCards : [myCards[0]] }}" wx:key="id" url="/pages/card/logs?id={{ item.id }}" class="card-item card-item-animate">
+        <view class="card-gradient">
+          <view class="card-header">
+            <view class="card-name">{{ item.cardInfo.name }}</view>
+            <view class="card-badge">VIP</view>
+          </view>
+          <view class="card-body">
+            <view class="card-amount-box">
+              <text class="card-amount-label">剩余次数</text>
+              <text class="card-amount-value">{{ item.amount }}</text>
+            </view>
+          </view>
+          <view class="card-footer">
+            <view class="card-expire">
+              <text class="expire-icon">⏰</text>
+              <text>{{ item.dateEnd }} 到期</text>
+            </view>
+            <view class="card-arrow">查看详情 ›</view>
+          </view>
+        </view>
+      </navigator>
+    </view>
+    <view wx:if="{{ myCards.length > 1 }}" class="toggle-btn" bindtap="toggleCards">
+      <text class="toggle-text">{{ cardsExpanded ? '收起' : '查看更多(' + (myCards.length - 1) + ')' }}</text>
+      <text class="toggle-icon {{ cardsExpanded ? 'rotated' : '' }}">›</text>
+    </view>
+  </view>
+
+  <!-- 常用功能 -->
+  <view class="function-section">
+    <view class="section-title">常用功能</view>
+    <view class="function-grid">
+      <navigator url="/pages/create/index" bind:tap="createA" class="function-item">
+        <text class="function-icon">📋</text>
+        <view class="function-label">create</view>
+      </navigator>
+    </view>
+  </view>
+
+  <!-- 其他功能 -->
+  <view class="other-section">
+    <view class="section-title">其他功能</view>
+    <navigator url="/pages/my/info-menu" class="menu-item">
+      <view class="menu-label">个人信息</view>
+      <text class="arrow">›</text>
+    </navigator>
+    <navigator url="/pages/help/index" class="menu-item">
+      <view class="menu-label">帮助中心</view>
+      <text class="arrow">›</text>
+    </navigator>
+    <view wx:if="{{ customerServiceType == 'QW' }}" class="menu-item" bind:tap="customerService">
+      <view class="menu-label">联系客服</view>
+      <text class="arrow">›</text>
+    </view>
+    <navigator url="/pages/my/setting" class="menu-item">
+      <view class="menu-label">系统设置</view>
+      <text class="arrow">›</text>
+    </navigator>
+  </view>
+</view>
+
+<!-- 修改昵称弹窗 -->
+<view wx:if="{{ nickShow }}" class="modal-mask">
+  <view class="modal-content" catchtap="">
+    <view class="modal-header">修改昵称</view>
+    <view class="modal-body">
+      <input class="nick-input" model:value="{{ nick }}" type="nickname" placeholder="请输入昵称" placeholder-class="input-placeholder" />
+    </view>
+    <view class="modal-footer">
+      <view class="modal-btn cancel-btn" catchtap="hideNickModal">取消</view>
+      <view class="modal-btn confirm-btn" catchtap="_editNick">确定</view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,51 @@
+<view class="container">
+  <scroll-view scroll-y enhanced class="scroll-view">
+    <view class="section">
+      <view class="section-title">基本信息</view>
+      <view class="form-item">
+        <view class="label">颜色</view>
+        <input class="input" placeholder="请输入颜色" value="{{form.color}}" bindinput="onColorInput" />
+      </view>
+      <view class="form-item">
+        <view class="label">尺寸</view>
+        <input class="input" placeholder="请输入尺寸" value="{{form.size}}" bindinput="onSizeInput" />
+      </view>
+      <view class="form-item">
+        <view class="label">价格</view>
+        <input class="input" type="digit" placeholder="请输入价格" value="{{form.price}}" bindinput="onPriceInput" />
+      </view>
+      <view class="form-item">
+        <view class="label">描述</view>
+        <textarea class="textarea" placeholder="请输入产品描述" value="{{form.description}}" bindinput="onDescInput" maxlength="200" auto-height />
+      </view>
+    </view>
+
+    <view class="section">
+      <view class="section-title">图片（最多9张）</view>
+      <view class="media-list">
+        <block wx:for="{{imageList}}" wx:key="index">
+          <view class="media-item">
+            <image class="preview-image" src="{{item.url}}" mode="aspectFill" bindtap="previewImage" data-url="{{item.url}}" />
+            <view class="delete-btn" catchtap="deleteImage" data-index="{{index}}">×</view>
+          </view>
+        </block>
+        <view class="add-btn" wx:if="{{imageList.length < 9}}" bindtap="addImage">+</view>
+      </view>
+    </view>
+
+    <view class="section">
+      <view class="section-title">视频（最多3个）</view>
+      <view class="media-list">
+        <block wx:for="{{videoList}}" wx:key="index">
+          <view class="media-item video-item">
+            <video class="preview-video" src="{{item.url}}" poster="{{item.thumb || ''}}" controls="{{false}}" />
+            <view class="delete-btn" catchtap="deleteVideo" data-index="{{index}}">×</view>
+          </view>
+        </block>
+        <view class="add-btn" wx:if="{{videoList.length < 3}}" bindtap="addVideo">+</view>
+      </view>
+    </view>
+
+    <button class="submit-btn" type="primary" bindtap="submit" loading="{{submitting}}" disabled="{{submitting}}">保存修改</button>
+  </scroll-view>
+</view>
