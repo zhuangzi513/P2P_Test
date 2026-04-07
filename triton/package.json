@@ -7,6 +7,7 @@
     "@vant/weapp": "^1.11.7",
     "apifm-wxapi": "^26.2.5",
     "dayjs": "^1.11.19",
+    "miniprogram-ci": "^2.1.31",
     "mp-html": "^2.5.2",
     "wxa-plugin-canvas": "^1.1.12",
     "wxbarcode": "^1.0.2"
