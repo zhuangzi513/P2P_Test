@@ -24,10 +24,16 @@
       "disablePlugins": [],
       "outputPath": ""
     },
+    "miniprogramRoot":"./" ,
     "useIsolateContext": true,
     "userConfirmedBundleSwitch": false,
     "packNpmManually": false,
-    "packNpmRelationList": [],
+    "packNpmRelationList": [
+	    {
+		    "packageJsonPath": "./package.json",
+		    "miniprogramNpmDistDir": "./"
+	    }
+    ],
     "minifyWXSS": true,
     "disableUseStrict": false,
     "minifyWXML": true,
@@ -62,5 +68,5 @@
     "ignore": [],
     "include": []
   },
-  "appid": "wxa46b09d413fbcaff"
+  "appid": "wxffe63b8bf92fea11"
 }

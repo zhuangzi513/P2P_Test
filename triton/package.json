@@ -1,13 +1,12 @@
 {
   "name": "wechat-app-mall",
   "version": "8.4.0",
-  "description": "删除 <float-menu />",
+  "description": " <float-menu />",
   "main": "app.js",
   "dependencies": {
     "@vant/weapp": "^1.11.7",
     "apifm-wxapi": "^26.2.5",
     "dayjs": "^1.11.19",
-    "miniprogram-ci": "^2.1.31",
     "mp-html": "^2.5.2",
     "wxa-plugin-canvas": "^1.1.12",
     "wxbarcode": "^1.0.2"
@@ -20,14 +19,17 @@
     "url": "git+https://github.com/EastWorld/wechat-app-mall.git"
   },
   "keywords": [
-    "微店",
-    "小店",
-    "微商城"
+    "key1",
+    "key2",
+    "key3"
   ],
   "author": "gooking",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/EastWorld/wechat-app-mall/issues"
   },
-  "homepage": "https://github.com/EastWorld/wechat-app-mall#readme"
+  "homepage": "https://github.com/EastWorld/wechat-app-mall#readme",
+  "devDependencies": {
+    "miniprogram-ci": "^2.1.31"
+  }
 }
