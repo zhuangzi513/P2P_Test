@@ -82,7 +82,6 @@ Page({
       }      
     })
     that.getNotice()
-    this.adPosition()
     this.readConfigVal()
     getApp().configLoadOK = () => {
       this.readConfigVal()
@@ -102,13 +101,6 @@ Page({
       show_buy_dynamic: wx.getStorageSync('show_buy_dynamic'),
       hidden_goods_index: wx.getStorageSync('hidden_goods_index'),
     })
-    const shopMod = wx.getStorageSync('shopMod')
-    const shopInfo = wx.getStorageSync('shopInfo')
-    if (shopMod == '1' && !shopInfo) {
-      wx.redirectTo({
-        url: '/pages/shop/select'
-      })
-    }
   },
   async initBanners(){
     const _data = {}
@@ -117,8 +109,8 @@ Page({
     })
     if (res1.code == 700) {
       wx.showModal({
-        title: '提示',
-        content: '请在后台添加 banner 轮播图片，自定义类型填写 index',
+        title: 'NOTE',
+        content: 'PLS ADD PIC BACKEND',
         showCancel: false
       })
     } else {
@@ -132,9 +124,6 @@ Page({
       navTop: APP.globalData.navTop,
       windowHeight: APP.globalData.windowHeight,
       menuButtonObject: APP.globalData.menuButtonObject 
-    })
-    this.setData({
-      shopInfo: wx.getStorageSync('shopInfo')
     })
     const refreshIndex = wx.getStorageSync('refreshIndex')
     if (refreshIndex) {
@@ -194,44 +183,5 @@ Page({
     wx.navigateTo({
       url: '/pages/search/index'
     })
-  },
-  async adPosition() {
-    let res = await WXAPI.adPosition('indexPop')
-    if (res.code == 0) {
-      this.setData({
-        adPositionIndexPop: res.data
-      })
-    }
-    res = await WXAPI.adPosition('index-live-pic')
-    if (res.code == 0) {
-      this.setData({
-        adPositionIndexLivePic: res.data
-      })
-    }
-  },
-  clickAdPositionIndexLive() {
-    if (!this.data.adPositionIndexLivePic || !this.data.adPositionIndexLivePic.url) {
-      return
-    }
-    wx.navigateTo({
-      url: this.data.adPositionIndexLivePic.url,
-    })
-  },
-  closeAdPositionIndexPop() {
-    this.setData({
-      adPositionIndexPop: null
-    })
-  },
-  clickAdPositionIndexPop() {
-    const adPositionIndexPop = this.data.adPositionIndexPop
-    this.setData({
-      adPositionIndexPop: null
-    })
-    if (!adPositionIndexPop || !adPositionIndexPop.url) {
-      return
-    }
-    wx.navigateTo({
-      url: adPositionIndexPop.url,
-    })
-  },
+  }
 })

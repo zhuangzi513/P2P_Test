@@ -1,18 +1,18 @@
 <view class="main">
-  <scroll-view class="category-container" scroll-y="true" scroll-with-animation="true" scroll-into-view="{{ aaa }}">
+  <scroll-view class="category-container" scroll-y="true" scroll-with-animation="true">
     <van-sidebar custom-class="sidebar-l" active-key="{{ activeCategory }}">
       <van-sidebar-item wx:if="{{item.level == 1}}" id="category{{item.id}}" wx:for="{{firstCategories}}" wx:key="id" data-idx="{{index}}" bindtap="onCategoryClick" title="{{ item.name }}" />
     </van-sidebar>
   </scroll-view>
+
   <scroll-view class="goods-container" scroll-y="true" scroll-top="{{scrolltop}}" wx:if='{{onLoadStatus}}' bindscrolltolower="goodsGoBottom">
     <van-tabs wx:if="{{ categoryMod != 2 && categorySelected.childs && categorySelected.childs.length > 0 }}" custom-class="llargada" bind:change="onSecondCategoryClick" ellipsis="{{ false }}">
-      <van-tab title="全部"></van-tab>
+      <van-tab title="ALL CATEGORIES"></van-tab>
       <van-tab wx:for="{{categorySelected.childs}}" wx:key="id" title="{{ item.name }}"></van-tab>
     </van-tabs>
-    <van-empty wx:if="{{categoryMod != 2 &&  !currentGoods}}" description="暂无商品" />
+    <van-empty wx:if="{{categoryMod != 2 &&  !currentGoods}}" description="EMPTY GOODS" />
     <block wx:if="{{ categoryMod == 2 }}">
       <van-cell title="{{ categorySelected.name }}" is-link url="/pages/goods/list?categoryId={{ categorySelected.id }}" />
-      <image wx:if="{{ adPosition }}" class="adPosition" mode="aspectFill" src="{{adPosition.val}}" mode="widthFix" data-url="{{adPosition.url}}" bindtap="adPositionClick"></image>
       <view class="small-category-box">
         <navigator wx:for="{{categorySelected.childs}}" wx:key="id" url="/pages/goods/list?categoryId={{item.id}}">
           <view class="small-category">
@@ -40,6 +40,7 @@
         </navigator>
       </view>
     </view> -->
+
     <!-- 显示右侧商品 -->
     <wxs module="goodsDetailPage">
     module.exports = {
@@ -60,9 +61,7 @@
     </wxs>
     <van-card
       wx:for="{{currentGoods}}" wx:key="id"
-      price="{{item.minPrice}}"
-      desc="{{item.numberSells ? '已售' + item.numberSells : ''}}"
-      tag="{{item.gotScore ? (item.gotScore + (item.gotScoreType ? '%' : '') + '积分') : ''}}"
+      price="{{item.priceLow}}"
       title="{{item.name}}"
       title-class="title-class-apifm"
       thumb="{{item.pic}}"
@@ -75,5 +74,3 @@
     </van-card>
   </scroll-view>
 </view>
-
-<goods-pop skuCurGoodsBaseInfo="{{ skuCurGoods }}" />

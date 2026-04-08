@@ -6,31 +6,25 @@ import Poster from 'wxa-plugin-canvas/poster/poster'
 
 Page({
   data: {
-    createTabs: false, //绘制tabs
+    createTabs: false,
     goodsDetail: {},
-    hasMoreSelect: false,
     selectSizePrice: 0,
     selectSizeOPrice: 0,
     totalScoreToPay: 0,
-    shopNum: 0,
+    goodsStatus: 0,
     hideShopPopup: true,
-    buyNumber: 0,
-    buyNumMin: 1,
-    buyNumMax: 0,
     propertyChildIds: "",
     propertyChildNames: "",
-    canSubmit: false,
-    shopType: "addShopCar",
   },
   bindscroll(e) {
     if (this.data.tabclicked) {
       return
     }
     this.getTopHeightFunction()
-    var tabsHeight = this.data.tabsHeight //顶部距离（tabs高度）
-    if (this.data.tabs[0].topHeight-tabsHeight<=0 && 0 < this.data.tabs[1].topHeight-tabsHeight) { //临界值，根据自己的需求来调整
+    var tabsHeight = this.data.tabsHeight
+    if (this.data.tabs[0].topHeight-tabsHeight<=0 && 0 < this.data.tabs[1].topHeight-tabsHeight) {
       this.setData({
-        active: this.data.tabs[0].tabs_name //设置当前标签栏
+        active: this.data.tabs[0].tabs_name
       })
     } else if (this.data.tabs.length == 2) {
       this.setData({
@@ -47,14 +41,12 @@ Page({
     }
   },
   onLoad(e) {
-    // e.id = 122843
-    // 读取分享链接中的邀请人编号
     if (e && e.inviter_id) {
       wx.setStorageSync('referrer', e.inviter_id)
     }
-    // 读取小程序码中的邀请人编号
+
     if (e && e.scene) {
-      const scene = decodeURIComponent(e.scene) // 处理扫码进商品详情页面的逻辑
+      const scene = decodeURIComponent(e.scene)
       if (scene && scene.split(',').length >= 2) {
         e.id = scene.split(',')[0]
         wx.setStorageSync('referrer', scene.split(',')[1])
@@ -65,7 +57,6 @@ Page({
     if (!goodsDetailSkuShowType) {
       goodsDetailSkuShowType = 0
     }
-    // 补偿写法
     getApp().configLoadOK = () => {
       this.readConfigVal()
     }
@@ -76,41 +67,35 @@ Page({
     })
     this.readConfigVal()
     this.getGoodsDetail(this.data.goodsId)
-    this.shippingCartInfo()
-    this.goodsAddition()
-    // 弹出编辑昵称头像框
     getApp().initNickAvatarUrlPOP(this)
   },
   readConfigVal() {
-    // 读取系统参数
     const hide_reputation = wx.getStorageSync('hide_reputation')
     let tabs = [{
-      tabs_name: '商品简介',
+      tabs_name: 'Introduction',
       view_id: 'swiper-container',
       topHeight: 0
     }, {
-      tabs_name: '商品详情',
+      tabs_name: 'Description',
       view_id: 'goods-des-info',
       topHeight: 0,
     }, {
-      tabs_name: '商品评价',
+      tabs_name: 'Comments',
       view_id: 'reputation',
       topHeight: 0,
     }]
     if (hide_reputation == '1') {
-      // 隐藏评价
       tabs = [{
-        tabs_name: '商品简介',
+        tabs_name: 'Introduction',
         view_id: 'swiper-container',
         topHeight: 0
       }, {
-        tabs_name: '商品详情',
+        tabs_name: 'Description',
         view_id: 'goods-des-info',
         topHeight: 0,
       }]
     } else {
-      // 读取评价
-      if (!this.data.reputation) { // 保证只读取一次
+      if (!this.data.reputation) {
         this.reputation(this.data.goodsId)
       }
     }
@@ -119,26 +104,11 @@ Page({
       tabs
     })
   },
-  async goodsAddition() {
-    const res = await WXAPI.goodsAddition(this.data.goodsId)
-    if (res.code == 0) {
-      this.setData({
-        goodsAddition: res.data,
-        hasMoreSelect: true,
-      })
-    }
-  },
-  async shippingCartInfo() {
-    const number = await TOOLS.showTabBarBadge(true)
-    this.setData({
-      shopNum: number
-    })
-  },
   onShow() {
     this.setData({
-      createTabs: true //绘制tabs
+      createTabs: true
     })
-    //计算tabs高度
+
     var query = wx.createSelectorQuery();
     query.select('#tabs').boundingClientRect((rect) => {
       var tabsHeight = rect.height
@@ -220,12 +190,7 @@ Page({
         goodsDetail: goodsDetailRes.data,
         selectSizePrice: goodsDetailRes.data.basicInfo.minPrice,
         selectSizeOPrice: goodsDetailRes.data.basicInfo.originalPrice,
-        totalScoreToPay: goodsDetailRes.data.basicInfo.minScore,
-        buyNumMax: goodsDetailRes.data.basicInfo.stores,
-        buyNumber: (goodsDetailRes.data.basicInfo.stores > 0) ? 1 : 0
-      }
-      if (goodsDetailRes.data.properties) {
-        _data.hasMoreSelect = true
+        goodsStatus: goodsDetailRes.data.basicInfo.goodsStaus
       }
       that.data.goodsDetail = goodsDetailRes.data;
       if (goodsDetailRes.data.basicInfo.videoId) {
@@ -236,9 +201,13 @@ Page({
     }
   },
   tobuy: function () {
-    this.setData({
-      shopType: "tobuy"
-    });
+    if (this.data.goodsStatus > 1) {
+	wx.showToast({
+          title: 'already been locked',
+          icon: 'none',
+        })
+	return
+    }
     wx.navigateTo({
       url: '/pages/want/index',
     })
@@ -253,10 +222,16 @@ Page({
       title: this.data.goodsDetail.basicInfo.name,
       path: '/pages/goods-details/index?id=' + this.data.goodsDetail.basicInfo.id + '&inviter_id=' + wx.getStorageSync('uid'),
       success: function (res) {
-        // 转发成功
+	wx.showToast({
+          title: 'successfully shared',
+          icon: 'none',
+        })
       },
       fail: function (res) {
-        // 转发失败
+	wx.showToast({
+          title: 'failed shared',
+          icon: 'none',
+        })
       }
     }
     return _data
@@ -320,8 +295,8 @@ Page({
   previewImage(e) {
     const url = e.currentTarget.dataset.url
     wx.previewImage({
-      current: url, // 当前显示图片的http链接
-      urls: [url] // 需要预览的图片http链接列表
+      current: url,
+      urls: [url]
     })
   },
   previewImage2(e) {
@@ -331,8 +306,8 @@ Page({
       urls.push(ele.pic)
     })
     wx.previewImage({
-      current: url, // 当前显示图片的http链接
-      urls // 需要预览的图片http链接列表
+      current: url,
+      urls
     })
   },
   onTabsChange(e) {

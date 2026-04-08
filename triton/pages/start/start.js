@@ -3,13 +3,12 @@ const CONFIG = require('../../config.js')
 Page({
   data: {
     swiperMaxNumber: 0,
-    swiperCurrent: 0
+    swiperCurrent: 0,
+    userId: 0
+
   },
   onLoad(e){
-    // e.shopId = 6040 // 测试，测试完了注释掉
-    this.data.shopId = e.shopId
     this.readConfigVal()
-    // 补偿写法
     getApp().configLoadOK = () => {
       this.readConfigVal()
     }
@@ -32,20 +31,19 @@ Page({
     const app_show_pic_version = wx.getStorageSync('app_show_pic_version')
     if (app_show_pic_version && app_show_pic_version == CONFIG.version) {
       if (shopMod==1) {
-        this.goShopSelectPage()
+        this.goSelectPage()
       } else {
         wx.switchTab({
           url: '/pages/index/index',
         })
       }
     } else {
-      // 展示启动页
       const res = await WXAPI.banners({
         type: 'app'
       })
       if (res.code == 700) {
         if (shopMod==1) {
-          this.goShopSelectPage()
+          this.goSelectPage()
         } else {
           wx.switchTab({
             url: '/pages/index/index',
@@ -98,7 +96,7 @@ Page({
         data: CONFIG.version
       })
       if (shopMod == 1) {
-        this.goShopSelectPage()
+        this.goSelectPage()
       } else {
         wx.switchTab({
           url: '/pages/index/index',
@@ -106,28 +104,36 @@ Page({
       }
     } else {
       wx.showToast({
-        title: '当前无网络',
+        title: 'cannot connect to internet',
         icon: 'none',
       })
     }
   },
-  async goShopSelectPage() {
-    if (!this.data.shopId) {
-      wx.redirectTo({
-        url: '/pages/shop/select'
+  async goSelectPage() {
+    if (!this.data.userId) {
+      wx.showToast({
+        title: 'NOT IMPLEMENT YET, goSelectPage',
+        icon: 'none',
       })
+
+      //wx.redirectTo({
+      //  url: '/pages/shop/select'
+      //})
       return
     }
-    // 有传入门店ID
-    const res = await WXAPI.shopSubdetail(this.data.shopId)
+    const res = await WXAPI.shopSubdetail(this.data.userId)
     if (res.code != 0) {
-      wx.redirectTo({
-        url: '/pages/shop/select'
+      wx.showToast({
+        title: 'NOT IMPLEMENT YET, goSelectPage',
+        icon: 'none',
       })
+      //wx.redirectTo({
+      //  url: '/pages/shop/select'
+      //})
       return
     }
     wx.setStorageSync('shopInfo', res.data.info)
-    wx.setStorageSync('shopIds', res.data.info.id)
+    wx.setStorageSync('userIds', res.data.info.id)
     wx.switchTab({
       url: '/pages/index/index'
     })

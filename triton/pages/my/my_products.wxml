@@ -1,15 +1,3 @@
-<navigator wx:if="{{shopInfo}}" url="/pages/shop/select">
-  <view class="jd-shop-selector">
-    <view class="jd-shop-info">
-      <image src="/images/order-details/icon-address.png"></image>
-      <text class="jd-shop-name">{{shopInfo.name}}</text>
-    </view>
-    <view class="jd-shop-change">
-      <text>切换</text>
-      <image src="/images/icon/next.png"></image>
-    </view>
-  </view>
-</navigator>
 <wxs module="goodsDetailPage">
 module.exports = {
   url : function(item) {
@@ -42,8 +30,6 @@ module.exports = {
 
 
 <view class="jd-main-container">
-  <image wx:if="{{ adPositionIndexLivePic }}" class="jd-live-banner" src="{{ adPositionIndexLivePic.val }}" mode="widthFix" bindtap="clickAdPositionIndexLive"></image>
-  
   <view class="jd-section-header">
     <view class="jd-section-title">
       <image class="jd-section-icon" src="../../images/home/goodslist.png"></image>
@@ -70,10 +56,3 @@ module.exports = {
   </view>
   <van-divider wx:if="{{ !loadingMoreHidden }}" custom-class="jd-end-divider" contentPosition="center">— 已经到底啦 —</van-divider>
 </view>
-
-<van-overlay show="{{ adPositionIndexPop }}">
-  <view class="adPositionIndexPop">
-    <image src="{{ adPositionIndexPop.val }}" mode="widthFix" bindtap="clickAdPositionIndexPop"></image>
-    <van-icon custom-class="close" name="close" size="64rpx" color="#fff" bind:click="closeAdPositionIndexPop" />
-  </view>
-</van-overlay>

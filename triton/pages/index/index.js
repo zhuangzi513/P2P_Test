@@ -149,13 +149,6 @@ Page({
       show_buy_dynamic: wx.getStorageSync('show_buy_dynamic'),
       hidden_goods_index: wx.getStorageSync('hidden_goods_index'),
     })
-    const shopMod = wx.getStorageSync('shopMod')
-    const shopInfo = wx.getStorageSync('shopInfo')
-    if (shopMod == '1' && !shopInfo) {
-      wx.redirectTo({
-        url: '/pages/shop/select'
-      })
-    }
   },
   async initBanners(){
     const _data = {}
@@ -165,8 +158,8 @@ Page({
     })
     if (res1.code == 700) {
       wx.showModal({
-        title: '提示',
-        content: '请在后台添加 banner 轮播图片，自定义类型填写 index',
+        title: 'NOTE',
+        content: 'PLS add pic backend',
         showCancel: false
       })
     } else {
@@ -180,9 +173,6 @@ Page({
       navTop: APP.globalData.navTop,
       windowHeight: APP.globalData.windowHeight,
       menuButtonObject: APP.globalData.menuButtonObject
-    })
-    this.setData({
-      shopInfo: wx.getStorageSync('shopInfo')
     })
     TOOLS.showTabBarBadge()
     this.goodsDynamicV2()
