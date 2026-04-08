@@ -57,45 +57,30 @@
         "pagePath": "pages/index/index",
         "iconPath": "images/nav/home-off.png",
         "selectedIconPath": "images/nav/home-on.png",
-        "text": "首页"
+        "text": "first"
       },
       {
         "pagePath": "pages/category/category",
         "iconPath": "images/nav/fl-off.png",
         "selectedIconPath": "images/nav/fl-on.png",
-        "text": "分类"
-      },
-      {
-        "pagePath": "pages/coupons/index",
-        "iconPath": "images/nav/coupon-off.png",
-        "selectedIconPath": "images/nav/coupon-on.png",
-        "text": "优惠券"
-      },
-      {
-        "pagePath": "pages/shop-cart/index",
-        "iconPath": "images/nav/cart-off.png",
-        "selectedIconPath": "images/nav/cart-on.png",
-        "text": "购物车"
+        "text": "second"
       },
       {
         "pagePath": "pages/my/index",
         "iconPath": "images/nav/my-off.png",
         "selectedIconPath": "images/nav/my-on.png",
-        "text": "我的"
+        "text": "fifth"
       }
     ]
   },
   "permission": {
     "scope.userLocation": {
-      "desc": "获取离你最近的门店"
+      "desc": "permission"
     }
   },
   "usingComponents": {
-    "fuwuxieyi": "/components/fuwuxieyi/index",
-    "goods-pop": "/components/goods-pop/index",
     "login": "/components/login/index",
     "bind-mobile": "/components/bind-mobile/index",
-    "payment": "/components/payment/index",
     "mp-html": "mp-html",
     "van-notice-bar": "@vant/weapp/notice-bar/index",
     "van-search": "@vant/weapp/search/index",

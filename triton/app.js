@@ -11,46 +11,37 @@ App({
       WXAPI.setMerchantId(CONFIG.merchantId)
     }
     const that = this;
-    // 检测新版本
     const updateManager = wx.getUpdateManager()
     updateManager.onUpdateReady(function () {
       wx.showModal({
-        title: '更新提示',
-        content: '新版本已经准备好，是否重启应用？',
+        title: 'update ready tips',
+        content: 'update content',
         success(res) {
           if (res.confirm) {
-            // 新的版本已经下载好，调用 applyUpdate 应用新版本并重启
             updateManager.applyUpdate()
           }
         }
       })
     })
-    /**
-     * 初次加载判断网络情况
-     * 无网络状态下根据实际情况进行调整
-     */
+
     wx.getNetworkType({
       success(res) {
         const networkType = res.networkType
         if (networkType === 'none') {
           that.globalData.isConnected = false
           wx.showToast({
-            title: '当前无网络',
+            title: 'toast network lose',
             icon: 'loading',
             duration: 2000
           })
         }
       }
     });
-    /**
-     * 监听网络状态变化
-     * 可根据业务需求进行调整
-     */
     wx.onNetworkStatusChange(function(res) {
       if (!res.isConnected) {
         that.globalData.isConnected = false
         wx.showToast({
-          title: '网络已断开',
+          title: 'toast network status change',
           icon: 'loading',
           duration: 2000
         })
@@ -67,17 +58,17 @@ App({
         if (this.configLoadOK) {
           this.configLoadOK()
         }
-        // wx.setStorageSync('shopMod', '1') // 测试用，不要取消注释
+        // wx.setStorageSync('shopMod', '1')
       }
     })
-    // ---------------检测navbar高度
+
     let menuButtonObject = wx.getMenuButtonBoundingClientRect();
-    console.log("小程序胶囊信息",menuButtonObject)
+    console.log("menubutton bounding:",menuButtonObject)
     wx.getSystemInfo({
       success: res => {
         let statusBarHeight = res.statusBarHeight,
-          navTop = menuButtonObject.top,//胶囊按钮与顶部的距离
-          navHeight = statusBarHeight + menuButtonObject.height + (menuButtonObject.top - statusBarHeight)*2;//导航高度
+          navTop = menuButtonObject.top,
+          navHeight = statusBarHeight + menuButtonObject.height + (menuButtonObject.top - statusBarHeight)*2;
         this.globalData.navHeight = navHeight;
         this.globalData.navTop = navTop;
         this.globalData.windowHeight = res.windowHeight;
@@ -91,7 +82,6 @@ App({
   },
 
   onShow (e) {
-    // 保存邀请人
     if (e && e.query && e.query.inviter_id) {
       wx.setStorageSync('referrer', e.query.inviter_id)
       if (e.shareTicket) {
@@ -120,12 +110,10 @@ App({
         })
       }
     }
-    // 自动登录
+
     AUTH.checkHasLogined().then(isLogined => {
       if (!isLogined) {
-        // 未登录
         if (CONFIG.openIdAutoRegister) {
-          // 进行登陆，用户不存在则注册
           AUTH.authorize().then( aaa => {
             if (CONFIG.bindSeller) {
               AUTH.bindSeller()
@@ -137,10 +125,8 @@ App({
             })
           })
         } else {
-          // 只是登陆
           AUTH.login20241025().then( res => {
             if (res.code == 0) {
-              // 登陆成功
               if (CONFIG.bindSeller) {
                 AUTH.bindSeller()
               }
@@ -150,7 +136,6 @@ App({
                 }
               })
             } else {
-              // 用户没注册
               if (this.loginFail) {
                 this.loginFail()
               }
@@ -158,7 +143,6 @@ App({
           })
         }
       } else {
-        // 已登录
         if (CONFIG.bindSeller) {
           AUTH.bindSeller()
         }
@@ -181,11 +165,11 @@ App({
           popavatarUrl: this.globalData.apiUserInfoMap.base.avatarUrl ? this.globalData.apiUserInfoMap.base.avatarUrl : '',
         })
       }
-    }, 3000) // 3秒后弹出
+    }, 3000)
   },
   globalData: {
     isConnected: true,
     sdkAppID: CONFIG.sdkAppID,
-    apiUserInfoMap: undefined, // 当前登陆用户信息: base/ext/idcard/saleDistributionTeam
+    apiUserInfoMap: undefined,
   }
 })

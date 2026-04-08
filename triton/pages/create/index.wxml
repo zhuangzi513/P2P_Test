@@ -1,6 +1,6 @@
 <view class="container">
   <view class="info-tip">
-    当前关联ID: {{id}}
+    related to {{id}}
   </view>
 
   <view class="form-item">

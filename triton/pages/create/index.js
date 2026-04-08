@@ -11,8 +11,8 @@ Page({
     sizeZ: '',
     priceHigh: '',
     priceLow: '',
-    imageList: [],   // 图片临时路径数组
-    videoList: [],   // 视频临时文件对象数组
+    imageList: [],
+    videoList: [],
     submitting: false,
   },
 
@@ -20,11 +20,10 @@ Page({
     const id = options.id || '';
     this.setData({ id });
     if (!id) {
-      wx.showToast({ title: '缺少关联ID', icon: 'none' });
+      wx.showToast({ title: 'ERROR: No ID provided', icon: 'none' });
     }
   },
 
-  // 输入监听
   onColorInput(e) {
     this.setData({ color: e.detail.value });
   },
@@ -44,11 +43,10 @@ Page({
     this.setData({ priceLow: e.detail.value });
   },
 
-  // 选择图片
   chooseImage() {
     const remain = 9 - this.data.imageList.length;
     if (remain <= 0) {
-      wx.showToast({ title: '最多选择9张图片', icon: 'none' });
+      wx.showToast({ title: 'Limiation: 9 pics', icon: 'none' });
       return;
     }
     wx.chooseMedia({
@@ -57,10 +55,9 @@ Page({
       sizeType: ['compressed'],
       sourceType: ['album', 'camera'],
       success: (res) => {
-        // 增加文件大小校验
         const validFiles = res.tempFiles.filter(file => file.size <= 10 * 1024 * 1024);
         if (validFiles.length < res.tempFiles.length) {
-          wx.showToast({ title: '部分图片超过10MB已过滤', icon: 'none' });
+          wx.showToast({ title: 'files whose size overflows, deleted', icon: 'none' });
         }
         const newPaths = validFiles.map(item => item.tempFilePath);
         this.setData({
@@ -70,7 +67,6 @@ Page({
     });
   },
 
-  // 删除图片
   deleteImage(e) {
     const index = e.currentTarget.dataset.index;
     const newList = [...this.data.imageList];
@@ -78,11 +74,10 @@ Page({
     this.setData({ imageList: newList });
   },
 
-  // 选择视频
   chooseVideo() {
     const remain = 3 - this.data.videoList.length;
     if (remain <= 0) {
-      wx.showToast({ title: '最多选择3个视频', icon: 'none' });
+      wx.showToast({ title: 'Limitation: 3 videos', icon: 'none' });
       return;
     }
     wx.chooseMedia({
@@ -102,7 +97,6 @@ Page({
     });
   },
 
-  // 删除视频
   deleteVideo(e) {
     const index = e.currentTarget.dataset.index;
     const newList = [...this.data.videoList];
@@ -110,7 +104,6 @@ Page({
     this.setData({ videoList: newList });
   },
 
-  // 预览图片
   previewImage(e) {
     const url = e.currentTarget.dataset.url;
     wx.previewImage({
@@ -119,11 +112,9 @@ Page({
     });
   },
 
-  // 提交表单
   async submit() {
     if (this.data.submitting) return;
 
-    // 校验必填（原逻辑修正）
     if (!this.data.color.trim()) {
       wx.showToast({ title: '请输入颜色', icon: 'none' });
       return;

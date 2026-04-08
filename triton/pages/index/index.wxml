@@ -1,26 +1,8 @@
-<navigator wx:if="{{shopInfo}}" url="/pages/shop/select">
-  <view class="jd-shop-selector">
-    <view class="jd-shop-info">
-      <image src="/images/order-details/icon-address.png"></image>
-      <text class="jd-shop-name">{{shopInfo.name}}</text>
-    </view>
-    <view class="jd-shop-change">
-      <text>切换</text>
-      <image src="/images/icon/next.png"></image>
-    </view>
-  </view>
-</navigator>
 <wxs module="goodsDetailPage">
 module.exports = {
   url : function(item) {
-    if (item.supplyType == 'cps_jd') {
-      return '/packageCps/pages/goods-details/cps-jd?id=' + item.goodsId
-    } else if (item.supplyType == 'vop_jd') {
+    if (item.supplyType == 'vop_jd') {
       return '/pages/goods-details/vop?id=' + item.yyId + '&goodsId=' + item.id
-    } else if (item.supplyType == 'cps_pdd') {
-      return '/packageCps/pages/goods-details/cps-pdd?id=' + item.goodsId
-    } else if (item.supplyType == 'cps_taobao') {
-      return '/packageCps/pages/goods-details/cps-taobao?id=' + item.goodsId
     } else {
       return '/pages/goods-details/index?id=' + item.goodsId
     }
@@ -41,7 +23,7 @@ module.exports = {
         <swiper-item>
           <view class="jd-dynamic-item">
             <image mode="aspectFill" src="{{item.avatarUrl}}"></image>
-            <text>{{item.nick}} 购买了 {{item.goodsName}}</text>
+            <text>{{item.nick}} buy {{item.goodsName}}</text>
           </view>
         </swiper-item>
       </navigator>
@@ -75,17 +57,14 @@ module.exports = {
   </swiper>
 </view>
 <view class="jd-main-container">
-  <image wx:if="{{ adPositionIndexLivePic }}" class="jd-live-banner" src="{{ adPositionIndexLivePic.val }}" mode="widthFix" bindtap="clickAdPositionIndexLive"></image>
   
-  
-  <!-- 爆品推荐开始 -->
   <block wx:if="{{goodsRecommend.length > 0}}">
     <view class="jd-section-header">
       <view class="jd-section-title">
         <image class="jd-section-icon" src="../../images/home/recommend.png"></image>
-        <text class="jd-section-name">爆品推荐</text>
+        <text class="jd-section-name">recommand</text>
       </view>
-      <view class="jd-section-more">更多 ></view>
+      <view class="jd-section-more"></view>
     </view>
     <view class="jd-goods-grid">
       <view class="jd-goods-card" wx:for="{{goodsRecommend}}" wx:key="id" bindtap="toDetailsTap" data-id="{{item.id}}" data-supplytype="{{item.supplyType}}" data-yyid="{{item.yyId}}">
@@ -106,13 +85,11 @@ module.exports = {
       </view>
     </view>
   </block>
-  <!-- 爆品推荐结束 -->
   
-  <!-- 商品列表开始 -->
   <view class="jd-section-header">
     <view class="jd-section-title">
       <image class="jd-section-icon" src="../../images/home/goodslist.png"></image>
-      <text class="jd-section-name">为你推荐</text>
+      <text class="jd-section-name">goodslist</text>
     </view>
   </view>
   <view class="jd-goods-grid">
@@ -133,12 +110,5 @@ module.exports = {
       </view>
     </view>
   </view>
-  <van-divider wx:if="{{ !loadingMoreHidden }}" custom-class="jd-end-divider" contentPosition="center">— 已经到底啦 —</van-divider>
+  <van-divider wx:if="{{ !loadingMoreHidden }}" custom-class="jd-end-divider" contentPosition="center">already to the bottom</van-divider>
 </view>
-
-<van-overlay show="{{ adPositionIndexPop }}">
-  <view class="adPositionIndexPop">
-    <image src="{{ adPositionIndexPop.val }}" mode="widthFix" bindtap="clickAdPositionIndexPop"></image>
-    <van-icon custom-class="close" name="close" size="64rpx" color="#fff" bind:click="closeAdPositionIndexPop" />
-  </view>
-</van-overlay>
