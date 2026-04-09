@@ -152,10 +152,6 @@
       <view class="menu-label">帮助中心</view>
       <text class="arrow">›</text>
     </navigator>
-    <view wx:if="{{ customerServiceType == 'QW' }}" class="menu-item" bind:tap="customerService">
-      <view class="menu-label">联系客服</view>
-      <text class="arrow">›</text>
-    </view>
     <navigator url="/pages/my/setting" class="menu-item">
       <view class="menu-label">系统设置</view>
       <text class="arrow">›</text>

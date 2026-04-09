@@ -3,23 +3,21 @@ const AUTH = require('../../utils/auth')
 const TOOLS = require('../../utils/tools.js')
 const CONFIG = require('../../config.js')
 Page({
-	data: {
+    data: {
     balance:0.00,
     freeze:0,
     score:0,
     growth:0,
     score_sign_continuous:0,
-    rechargeOpen: false, // 是否开启充值[预存]功能
+    rechargeOpen: false,
 
-    // 用户订单统计数据
     count_id_no_confirm: 0,
     count_id_no_pay: 0,
     count_id_no_reputation: 0,
     count_id_no_transfer: 0,
     nick: undefined,
-    cardsExpanded: false, // 会员卡展开状态
+    cardsExpanded: false,
     
-    // 会员等级配置（根据不同等级显示不同图标和样式）
     vipLevelConfig: {
       1: { icon: '🥇', name: '黄金会员' },
       2: { icon: '💎', name: '白金会员' },
@@ -28,27 +26,24 @@ Page({
       5: { icon: '🔱', name: '皇冠会员' }
     }
   },
-	onLoad() {
+  onLoad() {
     this.readConfigVal()
-    // 补偿写法
     getApp().configLoadOK = () => {
       this.readConfigVal()
     }
-	},
+  },
   onShow() {
     AUTH.checkHasLogined().then(isLogined => {
       if (isLogined) {
         this.getUserApiInfo();
         this.getUserAmount();
         this.orderStatistics();
-        this.cardMyList();
         TOOLS.showTabBarBadge();
       } else {
         getApp().loginOK = () => {
           this.getUserApiInfo();
           this.getUserAmount();
           this.orderStatistics();
-          this.cardMyList();
           TOOLS.showTabBarBadge();
         }
       }
@@ -139,17 +134,6 @@ Page({
       url: "/pages/create/index?id=" + _uniqueID
     })
   },
-  async cardMyList() {
-    const res = await WXAPI.cardMyList(wx.getStorageSync('token'))
-    if (res.code == 0) {
-      const myCards = res.data.filter(ele => { return ele.status == 0 })
-      if (myCards.length > 0) {
-        this.setData({
-          myCards: res.data
-        })
-      }
-    }
-  },
   editNick() {
     this.setData({
       nickShow: true
@@ -209,26 +193,6 @@ Page({
       title: '设置成功',
     })
     this.getUserApiInfo()
-  },
-  goUserCode() {
-    wx.navigateTo({
-      url: '/pages/my/user-code',
-    })
-  },
-  customerService() {
-    wx.openCustomerServiceChat({
-      extInfo: {url: wx.getStorageSync('customerServiceChatUrl')},
-      corpId: wx.getStorageSync('customerServiceChatCorpId'),
-      success: res => {},
-      fail: err => {
-        console.error(err)
-      }
-    })
-  },
-  copyUid() {
-    wx.setClipboardData({
-      data: this.data.apiUserInfoMap.base.id + '',
-    })
   },
   login() {
     wx.navigateTo({

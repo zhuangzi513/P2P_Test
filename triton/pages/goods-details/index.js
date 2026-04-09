@@ -6,15 +6,24 @@ import Poster from 'wxa-plugin-canvas/poster/poster'
 
 Page({
   data: {
+    userID: "",
+    goodsId: "",
     createTabs: false,
     goodsDetail: {},
     selectSizePrice: 0,
     selectSizeOPrice: 0,
     totalScoreToPay: 0,
-    goodsStatus: 0,
+    goodsStatus: 0, //0: origin, 1: price offered, 2: locked, during deel, 3: saled, close
     hideShopPopup: true,
     propertyChildIds: "",
     propertyChildNames: "",
+    showDialog: false,
+    formData: {
+      phone: '',
+      price: '',
+      email_ex: '',
+      remark: ''
+    }
   },
   bindscroll(e) {
     if (this.data.tabclicked) {
@@ -200,18 +209,6 @@ Page({
       that.setData(_data)
     }
   },
-  tobuy: function () {
-    if (this.data.goodsStatus > 1) {
-	wx.showToast({
-          title: 'already been locked',
-          icon: 'none',
-        })
-	return
-    }
-    wx.navigateTo({
-      url: '/pages/want/index',
-    })
-  },
   stepChange(event) {
     this.setData({
       buyNumber: event.detail
@@ -341,5 +338,56 @@ Page({
       }
     })
   },
+  tobuy: function () {
+    this.setData({ showDialog: true });
+    if (this.data.goodsStatus > 2) {
+	wx.showToast({
+          title: 'already been locked',
+          icon: 'none',
+        })
+	return
+    }
+  },
+
+  hideDialog(reset = true) {
+    this.setData({ showDialog: false });
+    if (reset) {
+      this.setData({
+	      formData: { phone: '', price: '', email_ex:'', remark: '' }
+      });
+    }
+  },
+
+  onPhoneInput(e) {
+    this.setData({ 'formData.phone': e.detail.value });
+  },
+  onPriceInput(e) {
+    this.setData({ 'formData.price': e.detail.value });
+  },
+  onEmailExInput(e) {
+    this.setData({ 'formData.email': e.detail.value });
+  },
+  onRemarkInput(e) {
+    this.setData({ 'formData.remark': e.detail.value });
+  },
+
+  cancelDialog() {
+    this.hideDialog(true);
+  },
+
+  submitDialog() {
+    const { phone, price, email_ex, remark } = this.data.formData;
+    if (!price) {
+      wx.showToast({ title: 'no price', icon: 'none' });
+      return;
+    }
+    if (!phone || !email_ex) {
+      wx.showToast({ title: 'no contact', icon: 'none' });
+      return;
+    }
+    wx.showToast({ title: 'successfully commited', icon: 'success' });
+    WXAPI.commitBuy(phone, price, email_ex, remark, this.data.goodsId, this.data.userID);
+    this.hideDialog(true);
+  }
 })
 

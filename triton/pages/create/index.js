@@ -1,9 +1,8 @@
-// pages/upload/upload.js
-
 import WXAPI from 'apifm-wxapi';
 
 Page({
   data: {
+    userID: '',
     id: '',
     color: '',
     sizeX: '',
@@ -138,13 +137,10 @@ Page({
     wx.showLoading({ title: '上传中...', mask: true });
 
     try {
-      // 1. 上传所有图片（使用WXAPI.uploadFile）
       const imageUrls = await this.uploadFiles(this.data.imageList, 'image');
 
-      // 2. 上传所有视频（使用WXAPI.uploadFile）
       const videoUrls = await this.uploadFiles(this.data.videoList.map(v => v.tempFilePath), 'video');
 
-      // 3. 调用数据库API保存数据
       const result = await this.callAssociateAPI({
         id: this.data.id,
         color: this.data.color.trim(),
@@ -171,10 +167,8 @@ Page({
     }
   },
 
-  // 上传文件（使用WXAPI.uploadFile）
   uploadFiles(filePaths, type) {
     if (!filePaths.length) return Promise.resolve([]);
-    // 并发控制，每次最多同时上传3个文件，避免请求阻塞
     const concurrency = 3;
     const results = [];
     let index = 0;
@@ -185,7 +179,7 @@ Page({
       return WXAPI.uploadFile(filePaths[currentIndex])
         .then(res => {
           if (res.code === 0 && res.data) {
-            results[currentIndex] = res.data.url; // 确保顺序
+            results[currentIndex] = res.data.url;
           } else {
             throw new Error(res.message || `上传${type}失败`);
           }
@@ -200,13 +194,11 @@ Page({
     for (let i = 0; i < Math.min(concurrency, filePaths.length); i++) {
       promises.push(uploadNext());
     }
-    return Promise.all(promises).then(() => results.filter(url => url)); // 过滤掉可能的空值
+    return Promise.all(promises).then(() => results.filter(url => url));
   },
 
-  // 调用数据库API
   callAssociateAPI(params) {
     return new Promise((resolve, reject) => {
-      // 使用WXAPI.add方法向指定集合添加数据
       WXAPI.add('goods', params).then(res => {
         if (res.code === 0) {
           resolve(res);
