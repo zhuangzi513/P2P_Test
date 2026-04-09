@@ -173,7 +173,7 @@ Page({
       this.data.categorySelected.id = _categoryId
       this.categories();
     }
-  }
+  },
   goodsGoBottom() {
     this.data.page++
     this.getGoodsList()

@@ -24,15 +24,15 @@
       "disablePlugins": [],
       "outputPath": ""
     },
-    "miniprogramRoot":"./" ,
+    "miniprogramRoot": "./",
     "useIsolateContext": true,
     "userConfirmedBundleSwitch": false,
     "packNpmManually": false,
     "packNpmRelationList": [
-	    {
-		    "packageJsonPath": "./package.json",
-		    "miniprogramNpmDistDir": "./"
-	    }
+      {
+        "packageJsonPath": "./package.json",
+        "miniprogramNpmDistDir": "./"
+      }
     ],
     "minifyWXSS": true,
     "disableUseStrict": false,

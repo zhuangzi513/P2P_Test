@@ -81,7 +81,7 @@
   </scroll-view>
   <van-goods-action>
     <van-goods-action-icon icon="{{faved?'like':'like-o'}}" text="FAV" bind:click="addFav" />
-    <van-goods-action-button text="{{goodsDetail.basicInfo.goodsStatus < 2 ? "BUY" : "ORDERED"}}" type="warning" bind:click="tobuy" />
+    <van-goods-action-button text="{{goodsDetail.basicInfo.goodsStatus}}" type="warning" bind:click="tobuy" />
   </van-goods-action>
 </view>
 
