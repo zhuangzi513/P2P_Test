@@ -6,6 +6,7 @@
   align-items: center;
   justify-content: space-between;
   box-sizing: border-box;
+  background-color: #BAFFBA;
 }
 .space {
   height:20rpx;
@@ -31,14 +32,14 @@
   justify-content: center;
   align-items: center;
 }
-.no-data .line {
+.no-data {
   width:132rpx;
   height:2rpx;
   background: #999;
 }
 .no-data .txt {
   font-size:26rpx;
-  color:rgba(153,153,153,1);
+  color:rgba(0,115,0,1);
   margin: 0 16rpx;
 }
 .ad-img {
@@ -67,6 +68,7 @@ page {
   font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica,
     Segoe UI, Arial, Roboto, 'PingFang SC', 'miui', 'Hiragino Sans GB', 'Microsoft Yahei',
     sans-serif;
+  background-color: #E4FFED;
 }
 .block-btn {
   padding: 0 32rpx;
@@ -81,5 +83,27 @@ page {
 .characteristic {
   padding: 0 24rpx;
   font-size: 24rpx;
-  color: #999;
+  color: #026302;
+  text-shadow: 4rpx 4rpx 6rpx rgba(0,115,0,0.3);
+}
+
+.button-hover {
+  background-color: #048242;
+  opacity: 0.8;
+}
+
+.divider-icon-center {
+  display: flex;
+  align-items: center;
+  margin: 40rpx 0;
+}
+
+.line {
+  flex: 1;
+  height: 2rpx;
+  background-color: #047004;
+}
+
+.divider-icon-center icon {
+  margin: 0 20rpx;
 }

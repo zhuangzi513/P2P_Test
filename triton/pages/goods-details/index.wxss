@@ -13,7 +13,7 @@ textarea {
 }
 
 .container {
-  background-color: #F2f2f2;
+  background-color: #BAFFBA;
   min-height: 100vh;
   padding-bottom: 100rpx;
 }
@@ -51,14 +51,14 @@ swiper-item image {
   height: 748rpx;
 }
 
-.goods-info {
-  background-color: #fff;
+.goods-info-card {
+  background-color: #E4FFED;
   padding-top: 35rpx;
   width: 100%;
-  position: relative;
+  display: flex;
 }
 
-.goods-info-top-container {
+.goods-info-bottom-container {
   display: flex;
   justify-content: space-between;
 }
@@ -111,7 +111,7 @@ swiper-item image {
   padding: 0 30rpx;
   font-size: 32rpx;
   line-height: 1.4;
-  color: #000;
+  color: #047004;
   /* padding-bottom: 26rpx; */
 }
 
@@ -135,13 +135,14 @@ swiper-item image {
 }
 
 .goods-profile .p {
-  color: #e64340;
+  color: #047504;
   font-size: 20pt;
   margin-left: 30rpx;
 }
 
 .goods-profile .p text {
   font-size: 12pt;
+  color: #047504;
 }
 
 .goods-profile .r {

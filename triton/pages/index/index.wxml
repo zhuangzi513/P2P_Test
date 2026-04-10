@@ -17,28 +17,19 @@ module.exports = {
       </view>
     </swiper-item>
   </swiper>
-  <view wx:if="{{ goodsDynamicV2 && show_buy_dynamic == '1' }}" class="jd-buy-dynamic">
-    <swiper class="jd-dynamic-swiper" autoplay circular vertical>
-      <navigator wx:for="{{ goodsDynamicV2 }}" wx:key="index" url="{{ goodsDetailPage.url(item) }}">
-        <swiper-item>
-          <view class="jd-dynamic-item">
-            <image mode="aspectFill" src="{{item.avatarUrl}}"></image>
-            <text>{{item.nick}} buy {{item.goodsName}}</text>
-          </view>
-        </swiper-item>
-      </navigator>
-    </swiper>
-  </view>
 </view>
+
 <view class="jd-category-container">
   <view class="jd-category-grid">
-    <view class="jd-category-item" wx:for="{{categories}}" wx:key="id" bindtap="tabClick" data-id="{{item.id}}">
+    <view class="jd-category-item" wx:for="{{categories}}" wx:key="id" bindtap="tabClick" data-id="{{item.id}}"
+          hover-class="button-hover" hover-start-time="50" hover-stay-time="150" hover-stop-propagation="true">
       <view class="jd-category-icon-wrap">
         <image mode="aspectFill" src="{{item.icon}}"></image>
       </view>
       <text class="jd-category-name">{{item.name}}</text>
     </view>
-    <view class="jd-category-item" wx:for="{{cmsCategories}}" wx:key="id" bindtap="tabClickCms" data-idx="{{ index }}">
+    <view class="jd-category-item" wx:for="{{cmsCategories}}" wx:key="id" bindtap="tabClickCms" data-idx="{{ index }}"
+          hover-class="button-hover" hover-start-time="50" hover-stay-time="150" hover-stop-propagation="true">
       <view class="jd-category-icon-wrap">
         <image mode="aspectFill" src="{{item.icon}}"></image>
       </view>
@@ -46,19 +37,11 @@ module.exports = {
     </view>
   </view>
 </view>
-<view class="jd-notice-container" wx:if="{{noticeList}}">
-  <swiper class="jd-notice-swiper" vertical autoplay circular interval="8000">
-    <swiper-item wx:for="{{noticeList.dataList}}" wx:key="id">
-      <van-notice-bar wx:if="{{noticeList}}" mode="link" text="{{ item.title }}" background="#FFF5F5"
-        data-id="{{ item.id }}" speed="30" bind:click="goNotice" color="#E4393C">
-        <image slot="left-icon" class="jd-notice-icon" src="../../images/home/notice.png"></image>
-      </van-notice-bar>
-    </swiper-item>
-  </swiper>
-</view>
+
 <view class="jd-main-container">
-  
+
   <block wx:if="{{goodsRecommend.length > 0}}">
+
     <view class="jd-section-header">
       <view class="jd-section-title">
         <image class="jd-section-icon" src="../../images/home/recommend.png"></image>
@@ -66,7 +49,9 @@ module.exports = {
       </view>
       <view class="jd-section-more"></view>
     </view>
+
     <view class="jd-goods-grid">
+
       <view class="jd-goods-card" wx:for="{{goodsRecommend}}" wx:key="id" bindtap="toDetailsTap" data-id="{{item.id}}" data-supplytype="{{item.supplyType}}" data-yyid="{{item.yyId}}">
         <view class="jd-goods-img-wrap">
           <image src="{{item.pic}}" mode="aspectFill" lazy-load="true" />
@@ -79,10 +64,10 @@ module.exports = {
               <text class="jd-price-symbol">¥</text>
               <text class="jd-price-num">{{item.minPrice}}</text>
             </view>
-            <view wx:if="{{item.originalPrice && item.originalPrice > 0}}" class="jd-goods-original-price">¥{{item.originalPrice}}</view>
           </view>
         </view>
       </view>
+
     </view>
   </block>
   
@@ -92,23 +77,26 @@ module.exports = {
       <text class="jd-section-name">goodslist</text>
     </view>
   </view>
+
   <view class="jd-goods-grid">
     <view class="jd-goods-card" wx:for="{{goods}}" wx:key="id" bindtap="toDetailsTap" data-id="{{item.id}}" data-supplytype="{{item.supplyType}}" data-yyid="{{item.yyId}}">
       <view class="jd-goods-img-wrap">
         <image src="{{item.pic}}" mode="aspectFill" lazy-load="true" />
       </view>
+
       <view class="jd-goods-info">
         <view class="jd-goods-name">{{item.name}}</view>
-        <view wx:if="{{item.characteristic}}" class="jd-goods-desc">{{item.characteristic}}</view>
         <view class="jd-goods-price-box">
           <view class="jd-goods-price">
             <text class="jd-price-symbol">¥</text>
             <text class="jd-price-num">{{item.minPrice}}</text>
           </view>
-          <view wx:if="{{item.originalPrice && item.originalPrice > 0}}" class="jd-goods-original-price">¥{{item.originalPrice}}</view>
         </view>
       </view>
+
     </view>
   </view>
+
+
   <van-divider wx:if="{{ !loadingMoreHidden }}" custom-class="jd-end-divider" contentPosition="center">already to the bottom</van-divider>
 </view>

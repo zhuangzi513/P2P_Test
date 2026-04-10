@@ -1,12 +1,15 @@
 <view class="container">
-  <van-sticky wx:if="{{createTabs}}">
-    <view id="tabs" class="tabs-container">
-      <van-tabs sticky bind:click="onTabsChange" custom-class="" active="{{ active }}">
-        <van-tab wx:for="{{tabs}}" title="{{item.tabs_name}}" name="{{item.tabs_name}}"/>
-      </van-tabs>
-    </view>
-  </van-sticky>
+
   <scroll-view class="scroll-container" scroll-into-view="{{toView}}" scroll-y="true" scroll-with-animation="true" bindscroll="bindscroll">
+    
+    <view class="goods-title">{{goodsDetail.basicInfo.name}}</view>
+
+    <view class="divider-icon-center">
+      <view class="line"></view>
+      <icon type="success" size="16" color="#07c160"></icon>
+      <view class="line"></view>
+    </view>
+
     <view class="swiper-container" id="swiper-container">
       <swiper class="swiper_box" indicator-dots="true" indicator-active-color="#fff"
         autoplay="{{!goodsDetail.basicInfo.videoId}}" circular>
@@ -19,43 +22,26 @@
       </swiper>
     </view>
 
-
-    <view class="goods-info">
-
-      <view class="goods-info-top-container">
-        <view class="goods-profile">
-          <view class="p"><text>¥</text> {{goodsDetail.basicInfopriceHigh}}</view>
-        </view>
-        <view class="goods-info-fx">
-          <view class='item left'>
-            <van-icon name="share-o" size="24px" />
-            <view class="icon-title">SHARE</view>
-            <button open-type='share'></button>
-          </view>
-
-          <view class='item' bindtap="likeIt">
-            <view class="p"><text>Liked by</text>{{goodsDetail.basicInfo.admireCount}}</view>
-            <view class="icon-title">CCCCC</view>
-          </view>
-        </view>
-      </view>
-
-
-
-      <view class="goods-title">{{goodsDetail.basicInfo.name}}</view>
-      <view wx:if="{{ goodsDetail.basicInfo.purchaseNotes }}" class="goods-des-info">
+    <view class="goods-info-card">
+      <view class="goods-des-info">
         <view class="label-title"> 
-          <view class="left">AAAAAAAAAAAAAAAAAAAAAAAAAA</view>
+          <view class="left">AAAAAAAAAAAAAAAAAAAA</view>
         </view>
         <view class="characteristic"><text>{{ goodsDetail.basicInfo.purchaseNotes }}</text></view>
       </view>
-      <view wx:if="{{ goodsDetail.basicInfo.characteristic }}" class="goods-des-info">
+
+      <view class="goods-des-info">
         <view class="label-title"> 
           <view class="left">BBBBBBBBBBBBBBBBBBBB</view>
         </view>
         <view class="characteristic"><text>{{ goodsDetail.basicInfo.characteristic }}</text></view>
       </view>
+    </view>
 
+    <view class="divider-icon-center">
+      <view class="line"></view>
+      <icon type="success" size="16" color="#07c160"></icon>
+      <view class="line"></view>
     </view>
 
     <view class="goods-des-info" id="goods-des-info">
@@ -66,6 +52,15 @@
         <mp-html content="{{goodsDetail.content}}" />
       </view>
     </view>
+
+
+    <view class="divider-icon-center">
+      <view class="line"></view>
+      <icon type="success" size="16" color="#07c160"></icon>
+      <view class="line"></view>
+    </view>
+
+
     <van-cell-group id="reputation" wx:if="{{reputation}}" custom-class="vw100 reputation-cell-group">
       <block wx:for="{{reputation.result}}" wx:key="id">
         <van-cell custom-class="reputation-cell" title="{{ item.user.nick }}"
@@ -88,6 +83,24 @@
     <van-goods-action-icon icon="{{faved?'like':'like-o'}}" text="FAV" bind:click="addFav" />
     <van-goods-action-button text="{{goodsDetail.basicInfo.goodsStatus < 2 ? "BUY" : "ORDERED"}}" type="warning" bind:click="tobuy" />
   </van-goods-action>
+</view>
+
+<view class="goods-bottom-container">
+  <view class="goods-profile">
+    <view class="p"><text>¥</text> {{goodsDetail.basicIf.priceHigh}}</view>
+  </view>
+  <view class="goods-info-fx">
+    <view class='item left'>
+      <van-icon name="share-o" size="24px" />
+      <view class="icon-title">SHARE</view>
+      <button open-type='share'></button>
+    </view>
+
+    <view class='item' bindtap="likeIt">
+      <view class="p"><text>Liked by</text>{{goodsDetail.basicInfo.admireCount}}</view>
+      <view class="icon-title">CCCCC</view>
+    </view>
+  </view>
 </view>
 
 <view class="dialog-mask" wx:if="{{showDialog}}">

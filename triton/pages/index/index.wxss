@@ -1,13 +1,7 @@
-/* ==========================
-   京东风格 - 首页样式
-   配色: 京东红 #E4393C, 黑色 #333, 灰色 #999, 浅灰 #F5F5F5
-   ========================== */
-
 page {
-  background-color: #F5F5F5;
+  background-color: #E4FFED;
 }
 
-/* ========== 顶部搜索栏 ========== */
 .jd-search-container {
   background: linear-gradient(135deg, #E4393C 0%, #D81E06 100%);
   padding: 20rpx 24rpx 24rpx;
@@ -114,7 +108,6 @@ page {
   height: 24rpx;
 }
 
-/* ========== 轮播图 ========== */
 .jd-banner-container {
   width: 100%;
   height: 400rpx;
@@ -183,13 +176,12 @@ page {
   white-space: nowrap;
 }
 
-/* ========== 分类导航 ========== */
 .jd-category-container {
   background: #FFFFFF;
   padding: 28rpx 16rpx 32rpx;
   margin: 0 24rpx 20rpx;
   border-radius: 16rpx;
-  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4rpx 16rpx rgba(0, 115, 0, 0.1);
 }
 
 .jd-category-grid {
@@ -215,7 +207,7 @@ page {
   margin-bottom: 12rpx;
   border-radius: 16rpx;
   background: linear-gradient(135deg, #FFF5F5 0%, #FFFFFF 100%);
-  box-shadow: 0 2rpx 8rpx rgba(228, 57, 60, 0.1);
+  box-shadow: 0 2rpx 8rpx rgba(0, 115, 0, 0.1);
   transition: all 0.3s ease;
 }
 
@@ -225,13 +217,14 @@ page {
 }
 
 .jd-category-name {
-  font-size: 24rpx;
-  color: #333;
+  font-size: 32rpx;
+  color: #026302;
   text-align: center;
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  text-shadow: 4rpx 4rpx 6rpx rgba(0,255,0,0.3);
 }
 
 /* ========== 公告通知 ========== */
@@ -431,7 +424,6 @@ page {
   color: #999;
 }
 
-/* ========== 商品网格（推荐、列表） ========== */
 .jd-goods-grid {
   display: flex;
   flex-wrap: wrap;
@@ -445,7 +437,7 @@ page {
   background: #FFFFFF;
   border-radius: 12rpx;
   overflow: hidden;
-  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
+  box-shadow: 0 8rpx 16rpx rgba(7, 255, 11, 0.3);
   transition: all 0.3s ease;
 }
 
@@ -518,230 +510,7 @@ page {
   margin-left: 8rpx;
 }
 
-/* ========== 砍价商品 ========== */
-.jd-kanjia-container {
-  padding: 0 24rpx 20rpx;
-  display: flex;
-  flex-direction: column;
-  gap: 20rpx;
-}
-
-.jd-kanjia-card {
-  display: flex;
-  background: #FFFFFF;
-  border-radius: 12rpx;
-  overflow: hidden;
-  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
-  padding: 20rpx;
-}
-
-.jd-kanjia-img-wrap {
-  width: 200rpx;
-  height: 200rpx;
-  border-radius: 8rpx;
-  overflow: hidden;
-  flex-shrink: 0;
-  margin-right: 20rpx;
-  background: #F9F9F9;
-}
-
-.jd-kanjia-img-wrap image {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-.jd-kanjia-info {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.jd-kanjia-title {
-  font-size: 30rpx;
-  font-weight: bold;
-  color: #333;
-  line-height: 1.3;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  margin-bottom: 8rpx;
-}
-
-.jd-kanjia-desc {
-  font-size: 24rpx;
-  color: #999;
-  line-height: 1.3;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  margin-bottom: 12rpx;
-}
-
-.jd-kanjia-progress {
-  margin-bottom: 16rpx;
-}
-
-.jd-kanjia-bar {
-  border-radius: 3rpx !important;
-}
-
-.jd-kanjia-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.jd-kanjia-price {
-  display: flex;
-  align-items: baseline;
-}
-
-.jd-kanjia-price .jd-price-symbol {
-  font-size: 26rpx;
-}
-
-.jd-kanjia-price .jd-price-num {
-  font-size: 40rpx;
-}
-
-.jd-kanjia-btn {
-  min-width: 140rpx;
-  height: 56rpx;
-  line-height: 56rpx;
-  text-align: center;
-  background: linear-gradient(135deg, #FF6B6B 0%, #E4393C 100%);
-  color: #FFFFFF;
-  border-radius: 28rpx;
-  font-size: 26rpx;
-  font-weight: bold;
-  padding: 0 24rpx;
-  box-shadow: 0 4rpx 12rpx rgba(228, 57, 60, 0.3);
-}
-
-/* ========== 拼团商品 ========== */
-.jd-pingtuan-container {
-  padding: 0 0 20rpx;
-  display: flex;
-  flex-direction: column;
-  gap: 24rpx;
-}
-
-.jd-pingtuan-card {
-  background: #FFFFFF;
-  overflow: hidden;
-  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.08);
-  transition: all 0.3s ease;
-}
-
-.jd-pingtuan-img-wrap {
-  width: 100%;
-  height: 420rpx;
-  position: relative;
-  overflow: hidden;
-  background: linear-gradient(135deg, #F9F9F9 0%, #FFFFFF 100%);
-}
-
-.jd-pingtuan-img-wrap image {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-.jd-pingtuan-tag {
-  position: absolute;
-  top: 16rpx;
-  left: 16rpx;
-  background: linear-gradient(135deg, #FF6B6B 0%, #E4393C 100%);
-  color: #FFFFFF;
-  font-size: 22rpx;
-  padding: 8rpx 16rpx;
-  border-radius: 20rpx 20rpx 20rpx 4rpx;
-  font-weight: bold;
-  box-shadow: 0 2rpx 8rpx rgba(228, 57, 60, 0.4);
-}
-
-.jd-pingtuan-info {
-  padding: 20rpx;
-}
-
-.jd-pingtuan-title {
-  font-size: 30rpx;
-  font-weight: bold;
-  color: #333;
-  line-height: 1.3;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  margin-bottom: 8rpx;
-  min-height: 78rpx;
-}
-
-.jd-pingtuan-desc {
-  font-size: 24rpx;
-  color: #999;
-  line-height: 1.3;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  margin-bottom: 16rpx;
-}
-
-.jd-pingtuan-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.jd-pingtuan-price {
-  display: flex;
-  align-items: baseline;
-}
-
-.jd-pingtuan-price .jd-price-symbol {
-  font-size: 26rpx;
-}
-
-.jd-pingtuan-price .jd-price-num {
-  font-size: 40rpx;
-}
-
-.jd-pingtuan-btn {
-  min-width: 140rpx;
-  height: 56rpx;
-  line-height: 56rpx;
-  text-align: center;
-  background: linear-gradient(135deg, #FF6B6B 0%, #E4393C 100%);
-  color: #FFFFFF;
-  border-radius: 28rpx;
-  font-size: 26rpx;
-  font-weight: bold;
-  padding: 0 24rpx;
-  box-shadow: 0 4rpx 12rpx rgba(228, 57, 60, 0.3);
-}
-
-/* ========== 优惠券悬浮按钮 ========== */
-.jd-coupon-float {
-  position: fixed;
-  right: 24rpx;
-  bottom: 120rpx;
-  width: 104rpx;
-  height: 104rpx;
-  background: linear-gradient(135deg, #FF6B6B 0%, #E4393C 100%);
-  border-radius: 50%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
   box-shadow: 0 8rpx 32rpx rgba(228, 57, 60, 0.45);
-  z-index: 100;
-  animation: float-bounce 3s ease-in-out infinite;
-}
 
 @keyframes float-bounce {
   0%, 100% {
@@ -752,40 +521,6 @@ page {
   }
 }
 
-.jd-coupon-float image {
-  width: 52rpx;
-  height: 52rpx;
-  margin-bottom: 4rpx;
-  filter: brightness(0) invert(1);
-}
-
-.jd-coupon-float text {
-  font-size: 22rpx;
-  color: #FFFFFF;
-  font-weight: bold;
-  letter-spacing: 1rpx;
-}
-
-/* ========== 弹窗广告 ========== */
-.adPositionIndexPop {
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.adPositionIndexPop image {
-  max-width: 600rpx;
-  border-radius: 16rpx;
-}
-
-.adPositionIndexPop .close {
-  margin-top: 48rpx;
-}
-
-/* ========== 底部分割线 ========== */
 .jd-end-divider {
   margin-top: 40rpx !important;
   margin-bottom: 40rpx !important;
@@ -793,24 +528,20 @@ page {
   font-size: 24rpx !important;
 }
 
-/* ========== 滚动条隐藏 ========== */
 ::-webkit-scrollbar {
   width: 0;
   height: 0;
   color: transparent;
 }
 
-/* ========== 通用间距 ========== */
 .space {
   height: 24rpx;
 }
 
-/* ========== 兼容旧样式 ========== */
 .container {
-  background-color: #F5F5F5;
+  background-color: #BAFFBA;
 }
 
-/* Van组件自定义样式 */
 .van-card__price-integer {
   font-size: 36rpx !important;
   color: #E4393C !important;
@@ -826,7 +557,6 @@ page {
   font-size: 26rpx !important;
 }
 
-/* ========== 响应式优化 ========== */
 @media (max-width: 375px) {
   .jd-section-name {
     font-size: 32rpx;
