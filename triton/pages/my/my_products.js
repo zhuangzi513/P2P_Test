@@ -6,56 +6,16 @@ const APP = getApp()
 Page({
   data: {
     inputVal: "",
-    loadingHidden: false, // loading
     selectCurrent: 0,
-    categories: [],
     goods: [],
     loadingMoreHidden: true,
-    coupons: [],
-    curPage: 1,
     pageSize: 20
   },
   toModifyTap: function(e) {
     console.log(e);
     const id = e.currentTarget.dataset.id
-    const supplytype = e.currentTarget.dataset.supplytype
-    const yyId = e.currentTarget.dataset.yyid
-    if (supplytype == 'vop_jd') {
-      wx.navigateTo({
-        url: `/pages/goods-details/vop?id=${yyId}&goodsId=${id}`,
-      })
-    } else {
-      wx.navigateTo({
-        url: `/pages/my/edit_product?id=${id}`,
-      })
-    }
-  },
-  tapBanner(e) {
-    const item = e.currentTarget.dataset.item
-    if (item.linkType == 1) {
-      wx.navigateToMiniProgram({
-        appId: item.appid,
-        path: item.linkUrl || '',
-      })
-    } else {
-      if (item.linkUrl) {
-        wx.navigateTo({
-          url: item.linkUrl
-        })
-      }
-    }
-  },
-  adClick: function(e) {
-    const url = e.currentTarget.dataset.url
-    if (url) {
-      wx.navigateTo({
-        url
-      })
-    }
-  },
-  bindTypeTap: function(e) {
-    this.setData({
-      selectCurrent: e.index
+    wx.navigateTo({
+      url: `/pages/my/edit_product?id=${id}`,
     })
   },
   onLoad: function(e) {
@@ -72,8 +32,6 @@ Page({
         }
       }
     })
-    this.initBanners()
-    // https://www.yuque.com/apifm/nu0f75/wg5t98
     WXAPI.my_goodsv2().then(res => {
       if (res.code === 0){
         that.setData({
@@ -101,22 +59,6 @@ Page({
       show_buy_dynamic: wx.getStorageSync('show_buy_dynamic'),
       hidden_goods_index: wx.getStorageSync('hidden_goods_index'),
     })
-  },
-  async initBanners(){
-    const _data = {}
-    const res1 = await WXAPI.banners({
-      type: 'index'
-    })
-    if (res1.code == 700) {
-      wx.showModal({
-        title: 'NOTE',
-        content: 'PLS ADD PIC BACKEND',
-        showCancel: false
-      })
-    } else {
-      _data.banners = res1.data
-    }
-    this.setData(_data)
   },
   onShow: function(e){
     this.setData({
@@ -178,10 +120,5 @@ Page({
     });
     this.getMyGoodsList(userID)
     wx.stopPullDownRefresh()
-  },
-  goSearch(){
-    wx.navigateTo({
-      url: '/pages/search/index'
-    })
   }
 })

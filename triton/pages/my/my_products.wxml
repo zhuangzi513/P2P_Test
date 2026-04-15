@@ -1,33 +1,10 @@
 <wxs module="goodsDetailPage">
 module.exports = {
   url : function(item) {
-    if (item.supplyType == 'cps_jd') {
-      return '/packageCps/pages/goods-details/cps-jd?id=' + item.goodsId
-    } else if (item.supplyType == 'vop_jd') {
-      return '/pages/goods-details/vop?id=' + item.yyId + '&goodsId=' + item.id
-    } else if (item.supplyType == 'cps_pdd') {
-      return '/packageCps/pages/goods-details/cps-pdd?id=' + item.goodsId
-    } else if (item.supplyType == 'cps_taobao') {
-      return '/packageCps/pages/goods-details/cps-taobao?id=' + item.goodsId
-    } else {
-      return '/pages/goods-details/index?id=' + item.goodsId
-    }
+    return '/pages/goods-details/index?id=' + item.goodsId
   }
 }
 </wxs>
-
-
-
-<view class="jd-banner-container">
-  <swiper class="jd-banner-swiper" indicator-dots="true" indicator-color="rgba(255,255,255,0.5)" indicator-active-color="#E4393C" autoplay circular>
-    <swiper-item wx:for="{{banners}}" wx:key="id">
-      <view class="jd-banner-item">
-        <image mode="aspectFill" bindtap="tapBanner" data-item="{{ item }}" src="{{item.picUrl}}" />
-      </view>
-    </swiper-item>
-  </swiper>
-</view>
-
 
 <view class="jd-main-container">
   <view class="jd-section-header">
@@ -54,5 +31,5 @@ module.exports = {
       </view>
     </view>
   </view>
-  <van-divider wx:if="{{ !loadingMoreHidden }}" custom-class="jd-end-divider" contentPosition="center">— 已经到底啦 —</van-divider>
+  <van-divider wx:if="{{ !loadingMoreHidden }}" custom-class="jd-end-divider" contentPosition="center">NO MORE</van-divider>
 </view>

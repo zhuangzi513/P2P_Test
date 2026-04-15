@@ -1,21 +1,10 @@
 <view class="page-container">
-  <!-- 顶部装饰背景 -->
   <view class="header-bg"></view>
   
-  <!-- 主要内容区域 -->
   <view class="content-wrapper">
     
-    <!-- 账户安全模块 -->
     <view class="section-card">
-      <view class="section-header">
-        <view class="section-title">
-          <view class="title-icon">🔐</view>
-          <text class="title-text">账户安全</text>
-        </view>
-      </view>
-      
       <view class="menu-list">
-        <!-- 绑定手机 -->
         <view class="menu-item" wx:if="{{userMobile}}">
           <view class="item-left">
             <view class="item-icon">📱</view>
@@ -41,43 +30,9 @@
             <view class="bind-btn" bind:tap="bindMobile">立即绑定</view>
           </view>
         </view>
-        
-        <!-- 交易密码 -->
-        <navigator class="menu-item-nav" wx:if="{{apiUserInfoMap.base.pwdPay}}" url="/pages/pwd-pay/modify" hover-class="menu-item-hover">
-          <view class="menu-item">
-            <view class="item-left">
-              <view class="item-icon">🔑</view>
-              <view class="item-info">
-                <text class="item-title">交易密码</text>
-                <text class="item-subtitle">保护资金安全</text>
-              </view>
-            </view>
-            <view class="item-right">
-              <text class="item-value">修改密码</text>
-              <text class="arrow">›</text>
-            </view>
-          </view>
-        </navigator>
-        
-        <navigator class="menu-item-nav" wx:else url="/pages/pwd-pay/set" hover-class="menu-item-hover">
-          <view class="menu-item">
-            <view class="item-left">
-              <view class="item-icon">🔑</view>
-              <view class="item-info">
-                <text class="item-title">交易密码</text>
-                <text class="item-subtitle">保护资金安全</text>
-              </view>
-            </view>
-            <view class="item-right">
-              <text class="item-value">立即设置</text>
-              <text class="arrow">›</text>
-            </view>
-          </view>
-        </navigator>
       </view>
     </view>
     
-    <!-- 个人资料模块 -->
     <view class="section-card">
       <view class="section-header">
         <view class="section-title">
@@ -87,7 +42,6 @@
       </view>
       
       <view class="menu-list">
-        <!-- 修改资料 -->
         <navigator class="menu-item-nav" url="/pages/my/info" hover-class="menu-item-hover">
           <view class="menu-item">
             <view class="item-left">
@@ -103,7 +57,6 @@
           </view>
         </navigator>
         
-        <!-- 收货地址 -->
         <navigator class="menu-item-nav" url="/pages/select-address/index" hover-class="menu-item-hover">
           <view class="menu-item">
             <view class="item-left">
@@ -121,7 +74,6 @@
       </view>
     </view>
     
-    <!-- 我的收藏模块 -->
     <view class="section-card">
       <view class="section-header">
         <view class="section-title">

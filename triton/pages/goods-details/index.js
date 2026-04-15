@@ -347,6 +347,10 @@ Page({
         })
 	return
     }
+    //wx.navigateTo({
+    //  url: "/pages/order/order-details?id=" + this.data.goodsId 
+    //})
+
   },
 
   hideDialog(reset = true) {
@@ -386,8 +390,14 @@ Page({
       return;
     }
     wx.showToast({ title: 'successfully commited', icon: 'success' });
-    WXAPI.commitBuy(phone, price, email_ex, remark, this.data.goodsId, this.data.userID);
+    const res = await WXAPI.commitBuy(phone, price, email_ex, remark, this.data.goodsId, this.data.userID);
     this.hideDialog(true);
+    if (res.code == 0) {
+      order_data = res.data
+      wx.navigateTo({
+        url: "/pages/order/order-details?id=" + order_data.orderID
+      })
+    }
   }
 })
 
