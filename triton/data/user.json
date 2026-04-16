@@ -1,0 +1,112 @@
+[
+  {
+    "userID": "U10001",
+    "nickname": "张三",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJVMTAwMDEifQ.u1",
+    "level": "VIP3",
+    "contact": { "phone": "13800001111", "email": "zhang3@example.com" },
+    "address": [{ "addressId": "ADDR001", "receiver": "张三", "phone": "13800001111", "province": "广东省", "city": "深圳市", "district": "南山区", "detail": "科技园路100号", "isDefault": true }],
+    "goodsList": ["G1001", "G1003", "G1015"],
+    "ordersList": ["ORD202410001", "ORD202410003", "ORD202410021", "ORD202410045"],
+    "favsList": ["G1002", "G1007", "G1012", "G1018"]
+  },
+  {
+    "userID": "U10002",
+    "nickname": "李四",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJVMTAwMDIifQ.u2",
+    "level": "VIP1",
+    "contact": { "phone": "13912345678", "email": "li4@example.com" },
+    "address": [{ "addressId": "ADDR003", "receiver": "李四", "phone": "13912345678", "province": "上海市", "city": "上海市", "district": "浦东新区", "detail": "世纪大道88号", "isDefault": true }],
+    "goodsList": ["G1002", "G1008"],
+    "ordersList": ["ORD202410002", "ORD202410005", "ORD202410018", "ORD202410032", "ORD202410047"],
+    "favsList": ["G1001", "G1005", "G1014"]
+  },
+  {
+    "userID": "U10003",
+    "nickname": "王五",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJVMTAwMDMifQ.u3",
+    "level": "VIP2",
+    "contact": { "phone": "13777778888", "email": "wang5@example.com" },
+    "address": [{ "addressId": "ADDR004", "receiver": "王五", "phone": "13777778888", "province": "浙江省", "city": "杭州市", "district": "西湖区", "detail": "文三路100号", "isDefault": true }],
+    "goodsList": ["G1004", "G1011", "G1019"],
+    "ordersList": ["ORD202410004", "ORD202410012", "ORD202410029"],
+    "favsList": ["G1006", "G1013"]
+  },
+  {
+    "userID": "U10004",
+    "nickname": "赵六",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJVMTAwMDQifQ.u4",
+    "level": "VIP0",
+    "contact": { "phone": "13666666666", "email": "zhao6@example.com" },
+    "address": [{ "addressId": "ADDR005", "receiver": "赵六", "phone": "13666666666", "province": "江苏省", "city": "南京市", "district": "鼓楼区", "detail": "中山路200号", "isDefault": true }],
+    "goodsList": ["G1005", "G1014"],
+    "ordersList": ["ORD202410008", "ORD202410016", "ORD202410025", "ORD202410039"],
+    "favsList": ["G1003", "G1009", "G1017"]
+  },
+  {
+    "userID": "U10005",
+    "nickname": "周七七",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJVMTAwMDUifQ.u5",
+    "level": "VIP2",
+    "contact": { "phone": "13588889999", "email": "zhou77@example.com" },
+    "address": [{ "addressId": "ADDR006", "receiver": "周七七", "phone": "13588889999", "province": "四川省", "city": "成都市", "district": "武侯区", "detail": "天府大道1号", "isDefault": true }],
+    "goodsList": ["G1006", "G1012"],
+    "ordersList": ["ORD202410006", "ORD202410014", "ORD202410028", "ORD202410041", "ORD202410049"],
+    "favsList": ["G1002", "G1010", "G1016", "G1020"]
+  },
+  {
+    "userID": "U10006",
+    "nickname": "吴九",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJVMTAwMDYifQ.u6",
+    "level": "VIP1",
+    "contact": { "phone": "13456789012", "email": "wu9@example.com" },
+    "address": [{ "addressId": "ADDR007", "receiver": "吴九", "phone": "13456789012", "province": "湖北省", "city": "武汉市", "district": "洪山区", "detail": "珞喻路1000号", "isDefault": true }],
+    "goodsList": ["G1007", "G1017"],
+    "ordersList": ["ORD202410009", "ORD202410019", "ORD202410035"],
+    "favsList": ["G1001", "G1008", "G1015"]
+  },
+  {
+    "userID": "U10007",
+    "nickname": "郑十",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJVMTAwMDcifQ.u7",
+    "level": "VIP3",
+    "contact": { "phone": "13322223333", "email": "zheng10@example.com" },
+    "address": [{ "addressId": "ADDR008", "receiver": "郑十", "phone": "13322223333", "province": "北京市", "city": "北京市", "district": "朝阳区", "detail": "建国门外大街1号", "isDefault": true }],
+    "goodsList": ["G1009", "G1013", "G1018"],
+    "ordersList": ["ORD202410007", "ORD202410011", "ORD202410023", "ORD202410036", "ORD202410044"],
+    "favsList": ["G1004", "G1011", "G1019"]
+  },
+  {
+    "userID": "U10008",
+    "nickname": "钱多多",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJVMTAwMDgifQ.u8",
+    "level": "VIP1",
+    "contact": { "phone": "13144445555", "email": "qiandd@example.com" },
+    "address": [{ "addressId": "ADDR009", "receiver": "钱多多", "phone": "13144445555", "province": "广东省", "city": "广州市", "district": "天河区", "detail": "珠江新城30号", "isDefault": true }],
+    "goodsList": ["G1010", "G1020"],
+    "ordersList": ["ORD202410010", "ORD202410017", "ORD202410027", "ORD202410038"],
+    "favsList": ["G1005", "G1012"]
+  },
+  {
+    "userID": "U10009",
+    "nickname": "孙小美",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJVMTAwMDkifQ.u9",
+    "level": "VIP2",
+    "contact": { "phone": "13011112222", "email": "sunxm@example.com" },
+    "address": [{ "addressId": "ADDR010", "receiver": "孙小美", "phone": "13011112222", "province": "重庆市", "city": "重庆市", "district": "渝中区", "detail": "解放碑88号", "isDefault": true }],
+    "goodsList": ["G1015", "G1016"],
+    "ordersList": ["ORD202410013", "ORD202410022", "ORD202410030", "ORD202410042"],
+    "favsList": ["G1003", "G1007", "G1014"]
+  },
+  {
+    "userID": "U10010",
+    "nickname": "李雷雷",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJVMTAwMTAifQ.u10",
+    "level": "VIP0",
+    "contact": { "phone": "13233334444", "email": "lilei@example.com" },
+    "address": [{ "addressId": "ADDR011", "receiver": "李雷雷", "phone": "13233334444", "province": "湖南省", "city": "长沙市", "district": "岳麓区", "detail": "麓山南路1号", "isDefault": true }],
+    "goodsList": [],
+    "ordersList": ["ORD202410015", "ORD202410020", "ORD202410026", "ORD202410034", "ORD202410043", "ORD202410048"],
+    "favsList": ["G1001", "G1006", "G1009", "G1018"]
+  }
+]
