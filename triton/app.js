@@ -1,15 +1,23 @@
 const WXAPI = require('apifm-wxapi')
 const CONFIG = require('config.js')
 const AUTH = require('utils/auth')
+
+
+
+
 App({
   onLaunch: function() {
-    const subDomain = wx.getExtConfigSync().subDomain
-    if (subDomain) {
-      WXAPI.init(subDomain)
+    if (!wx.cloud) {
+      console.error('请使用 2.2.3 或以上基础库以使用云能力');
     } else {
-      WXAPI.init(CONFIG.subDomain)
-      WXAPI.setMerchantId(CONFIG.merchantId)
+      wx.cloud.init({
+        env: 'your-env-id',  // 替换为你的云环境ID
+        traceUser: true
+      });
     }
+    this.fetchUserId();
+
+
     const that = this;
     const updateManager = wx.getUpdateManager()
     updateManager.onUpdateReady(function () {
@@ -50,17 +58,6 @@ App({
         wx.hideToast()
       }
     })
-    WXAPI.queryConfigBatch('mallName,WITHDRAW_MIN,ALLOW_SELF_COLLECTION,order_hx_uids,subscribe_ids,share_profile,adminUserIds,goodsDetailSkuShowType,shopMod,needIdCheck,balance_pay_pwd,shipping_address_gps,shipping_address_region_level,shopping_cart_vop_open,cps_open,recycle_open,categoryMod,hide_reputation,show_seller_number,show_goods_echarts,show_buy_dynamic,goods_search_show_type,show_3_seller,show_quan_exchange_score,show_score_exchange_growth,show_score_sign,fx_subscribe_ids,share_pic,orderPeriod_open,order_pay_user_balance,wxpay_api_url,sphpay_open,fx_type,invoice_subscribe_ids,zt_open_hx,withdrawal,customerServiceChatCorpId,customerServiceChatUrl,invoice_open,alipay,comment_subscribe_ids,notice_subscribe_ids,hidden_goods_index,create_order_ext,needBindMobile,invoice_share_pic,hot_search_words').then(res => {
-      if (res.code == 0) {
-        res.data.forEach(config => {
-          wx.setStorageSync(config.key, config.value)
-        })
-        if (this.configLoadOK) {
-          this.configLoadOK()
-        }
-        // wx.setStorageSync('shopMod', '1')
-      }
-    })
 
     let menuButtonObject = wx.getMenuButtonBoundingClientRect();
     console.log("menubutton bounding:",menuButtonObject)
@@ -79,6 +76,31 @@ App({
         console.log(err);
       }
     })
+  },
+
+  fetchUserId() {
+    if (this.globalData.userId) {
+      return Promise.resolve(this.globalData.userId);
+    }
+
+    const cachedUserId = wx.getStorageSync('userId');
+    if (cachedUserId) {
+      this.globalData.userId = cachedUserId;
+      return Promise.resolve(cachedUserId);
+    }
+
+    return wx.cloud.callFunction({
+      name: 'getUserInfo',
+      data: {}
+    }).then(res => {
+      const { userId, openid } = res.result;
+      this.globalData.userID = userId;
+      wx.setStorageSync('userID', userId);
+      return userId;
+    }).catch(err => {
+      console.error('获取用户ID失败', err);
+      return null;
+    });
   },
 
   onShow (e) {
@@ -111,50 +133,17 @@ App({
       }
     }
 
-    AUTH.checkHasLogined().then(isLogined => {
-      if (!isLogined) {
-        if (CONFIG.openIdAutoRegister) {
-          AUTH.authorize().then( aaa => {
-            if (CONFIG.bindSeller) {
-              AUTH.bindSeller()
-            }
-            this.getUserApiInfo().then(() => {
-              if (this.loginOK) {
-                this.loginOK()
-              }
-            })
-          })
-        } else {
-          AUTH.login20241025().then( res => {
-            if (res.code == 0) {
-              if (CONFIG.bindSeller) {
-                AUTH.bindSeller()
-              }
-              this.getUserApiInfo().then(() => {
-                if (this.loginOK) {
-                  this.loginOK()
-                }
-              })
-            } else {
-              if (this.loginFail) {
-                this.loginFail()
-              }
-            }
-          })
-        }
-      } else {
-        if (CONFIG.bindSeller) {
-          AUTH.bindSeller()
-        }
-        this.getUserApiInfo()
-      }
-    })
+    this.getUserApiInfo()
   },
   async getUserApiInfo() {
-    const res = await WXAPI.userDetail(wx.getStorageSync('token'))
-    if (res.code == 0) {
-      this.globalData.apiUserInfoMap = res.data
-    }
+    const res = wx.cloud.callFunction({
+      name: 'getUserDetail',
+      data: {}
+    }).then(res => {
+      this.globalData.apiUserInfoMap = res.result
+    }).catch(err => {
+      console.error('获取用户ID失败', err);
+    });
   },
   initNickAvatarUrlPOP(_this) {
     setTimeout(() => {
@@ -171,5 +160,6 @@ App({
     isConnected: true,
     sdkAppID: CONFIG.sdkAppID,
     apiUserInfoMap: undefined,
+    userID : 0,
   }
 })
