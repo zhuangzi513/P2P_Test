@@ -1,6 +1,7 @@
-const WXAPI = require('apifm-wxapi')
 const TOOLS = require('../../utils/tools.js')
 const AUTH = require('../../utils/auth')
+const { callCloudFunction } = require('../../utils/cloud.js');
+
 const APP = getApp()
 
 Page({
@@ -32,13 +33,12 @@ Page({
         }
       }
     })
-    WXAPI.my_goodsv2().then(res => {
-      if (res.code === 0){
-        that.setData({
-          my_products: res.data.result
-        })
-      }      
-    })
+    const res = callCloudFunction('my_goodsv2', {userID:getStorageSync('userID')});
+    if (res.code === 0){
+      that.setData({
+        my_products: res.data.result
+      })
+    }      
     that.getNotice()
     this.readConfigVal()
     getApp().configLoadOK = () => {
@@ -46,16 +46,16 @@ Page({
     }
   },
   readConfigVal() {
-    const mallName = wx.getStorageSync('mallName')
-    if (!mallName) {
+    const userName = wx.getStorageSync('userName')
+    if (!userName) {
       return
     }
     this.categories()
     wx.setNavigationBarTitle({
-      title: mallName
+      title: userName
     })
     this.setData({
-      mallName:wx.getStorageSync('mallName')?wx.getStorageSync('mallName'):'',
+      userName:wx.getStorageSync('userName')?wx.getStorageSync('userName'):'',
       show_buy_dynamic: wx.getStorageSync('show_buy_dynamic'),
       hidden_goods_index: wx.getStorageSync('hidden_goods_index'),
     })
@@ -81,11 +81,7 @@ Page({
       title: ''
     })
     // https://www.yuque.com/apifm/nu0f75/wg5t98
-    const res = await WXAPI.my_goodsv2({
-      userId: myUserId,
-      page: this.data.curPage,
-      pageSize: this.data.pageSize
-    })
+    const res = await callCloudFunction('my_goodsv2', { userID: myUserId, page: this.data.curPage, pageSize: this.data.pageSize })
     wx.hideLoading()
     if (res.code == 404 || res.code == 700) {
       let newData = {

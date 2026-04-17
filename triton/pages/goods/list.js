@@ -1,4 +1,4 @@
-const WXAPI = require('apifm-wxapi')
+const { callCloudFunction } = require('../../utils/cloud.js');
 const TOOLS = require('../../utils/tools.js') // TOOLS.showTabBarBadge();
 Page({
 
@@ -57,7 +57,7 @@ Page({
     if (this.data.categoryId) {
       _data.categoryId = this.data.categoryId
     }
-    const res = await WXAPI.goodsv2(_data)
+    const res = await callCloudFunction('goodsv2', _data)
     wx.hideLoading()
     if (res.code == 0) {
       if (this.data.page == 1) {
@@ -118,7 +118,7 @@ Page({
     })
     this.search()
   },
-  async addShopCar(e) {
+  async addWantItem(e) {
     const curGood = this.data.goods.find(ele => {
       return ele.id == e.currentTarget.dataset.id
     })
@@ -133,37 +133,20 @@ Page({
       return
     }
     if (!curGood.propertyIds && !curGood.hasAddition) {
-      // 直接调用加入购物车方法
-      const res = await WXAPI.shippingCarInfoAddItem(wx.getStorageSync('token'), curGood.id, 1, [])
-      if (res.code == 2000) {
-        wx.navigateTo({
-            url: '/pages/login/index',
-        })
-        return
-      }
-      if (res.code == 30002) {
-        // 需要选择规格尺寸
-        this.setData({
-          skuCurGoods: curGood
-        })
-      } else if (res.code == 0) {
+      const res = await callCloudFunction('shippingCarInfoAddItem', {wx.getStorageSync('userID'), goodsID: curGood.id})
+      if (res.code == 0) {
         wx.showToast({
           title: '加入成功',
           icon: 'success'
         })
         wx.showTabBar()
-        TOOLS.showTabBarBadge() // 获取购物车数据，显示TabBarBadge
+        TOOLS.showTabBarBadge()
       } else {
         wx.showToast({
           title: res.msg,
           icon: 'none'
         })
       }
-    } else {
-      // 需要选择 SKU 和 可选配件
-      this.setData({
-        skuCurGoods: curGood
-      })
     }
   },
 })

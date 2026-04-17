@@ -1,7 +1,8 @@
-const WXAPI = require('apifm-wxapi')
 const AUTH = require('../../utils/auth')
 const TOOLS = require('../../utils/tools.js')
 const CONFIG = require('../../config.js')
+const { callCloudFunction } = require('../../utils/cloud.js');
+
 Page({
     data: {
     balance:0.00,
@@ -36,13 +37,11 @@ Page({
     AUTH.checkHasLogined().then(isLogined => {
       if (isLogined) {
         this.getUserApiInfo();
-        this.getUserAmount();
         this.orderStatistics();
         TOOLS.showTabBarBadge();
       } else {
         getApp().loginOK = () => {
           this.getUserApiInfo();
-          this.getUserAmount();
           this.orderStatistics();
           TOOLS.showTabBarBadge();
         }
@@ -64,7 +63,7 @@ Page({
     })
   },
   async getUserApiInfo() {
-    const res = await WXAPI.userDetail(wx.getStorageSync('token'))
+    const res = await callCloudFunction('userDetail', { userID: wx.getStorageSync('userID'});
     if (res.code == 0) {
       let _data = {}
       _data.apiUserInfoMap = res.data
@@ -83,56 +82,25 @@ Page({
       this.setData(_data);
     }
   },
-  async memberCheckedChange() {
-    const res = await WXAPI.peisongMemberChangeWorkStatus(wx.getStorageSync('token'))
-    if (res.code != 0) {
-      wx.showToast({
-        title: res.msg,
-        icon: 'none'
-      })
-    } else {
-      this.getUserApiInfo()
-    }
-  },
-  getUserAmount: function () {
-    var that = this;
-    WXAPI.userAmount(wx.getStorageSync('token')).then(function (res) {
-      if (res.code == 0) {
-        that.setData({
-          balance: res.data.balance.toFixed(2),
-          freeze: res.data.freeze.toFixed(2),
-          score: res.data.score,
-          growth: res.data.growth
-        });
-      }
-    })
-  },
   handleOrderCount: function (count) {
     return count > 99 ? '99+' : count;
   },
   orderStatistics: function () {
-    WXAPI.orderStatistics(wx.getStorageSync('token')).then((res) => {
-      if (res.code == 0) {
-        const {
-          count_id_no_confirm,
-          count_id_no_pay,
-          count_id_no_reputation,
-          count_id_no_transfer,
-        } = res.data || {}
-        this.setData({
-          count_id_no_confirm: this.handleOrderCount(count_id_no_confirm),
-          count_id_no_pay: this.handleOrderCount(count_id_no_pay),
-          count_id_no_reputation: this.handleOrderCount(count_id_no_reputation),
-          count_id_no_transfer: this.handleOrderCount(count_id_no_transfer),
-        })
-      }
-    })
-  },
-  createA() {
-    _uniqueID = 0;//userID|time
-    wx.navigateTo({
-      url: "/pages/create/index?id=" + _uniqueID
-    })
+    const res = await callCloudFunction('orderStatistics', { userID: wx.getStorageSync('userID')});
+    if (res.code == 0) {
+      const {
+        count_id_no_confirm,
+        count_id_no_pay,
+        count_id_no_reputation,
+        count_id_no_transfer,
+      } = res.data || {}
+      this.setData({
+        count_id_no_confirm: this.handleOrderCount(count_id_no_confirm),
+        count_id_no_pay: this.handleOrderCount(count_id_no_pay),
+        count_id_no_reputation: this.handleOrderCount(count_id_no_reputation),
+        count_id_no_transfer: this.handleOrderCount(count_id_no_transfer),
+      })
+    }
   },
   editNick() {
     this.setData({
@@ -152,7 +120,7 @@ Page({
       nick: this.data.nick,
     }
     // https://www.yuque.com/apifm/nu0f75/ykr2zr
-    const res = await WXAPI.modifyUserInfoV2(postData)
+    const res = await callCloudFunction('modifyUserInfoV2', postData);
     if (res.code != 0) {
       wx.showToast({
         title: res.msg,
@@ -169,7 +137,7 @@ Page({
   async onChooseAvatar(e) {
     console.log(e);
     const avatarUrl = e.detail.avatarUrl
-    let res = await WXAPI.uploadFileV2(wx.getStorageSync('token'), avatarUrl)
+    let res = await callCloudFunction('uploadFileV2', {userID: wx.getStorageSync('userID'), URL: avatarUrl});
     if (res.code != 0) {
       wx.showToast({
         title: res.msg,
@@ -178,10 +146,7 @@ Page({
       return
     }
     // https://www.yuque.com/apifm/nu0f75/ykr2zr
-    res = await WXAPI.modifyUserInfoV2({
-      token: wx.getStorageSync('token'),
-      avatarUrl: res.data.url,
-    })
+    res = await callCloudFunction('modifyUserInfoV2', {userID: wx.getStorageSync('userID'), avatarUrl: res.data.url});
     if (res.code != 0) {
       wx.showToast({
         title: res.msg,

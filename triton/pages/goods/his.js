@@ -1,5 +1,7 @@
-const WXAPI = require('apifm-wxapi')
 const dayjs = require("dayjs")
+const { callCloudFunction } = require('../../utils/cloud.js');
+
+
 Page({
 
   /**
@@ -49,13 +51,13 @@ Page({
       title: '',
     })
     // https://www.yuque.com/apifm/nu0f75/stigxd
-    const res = await WXAPI.myBuyGoodsHisV2({
+    const res = await callCloudFunction('myBuyGoodsHisV2', {
       page: this.data.page,
       nameLike: this.data.name || '',
       dateBuyBegin: this.data.dateBuyBegin || '',
       dateBuyEnd: this.data.dateBuyEnd || '',
       categoryId: this.data.categoryId || '',
-      token: wx.getStorageSync('token'),
+      userID: wx.getStorageSync('userID'),
       pageSize: 20,
     })
     wx.hideLoading()
@@ -85,7 +87,7 @@ Page({
   },
   async categories() {
     // https://www.yuque.com/apifm/nu0f75/racmle
-    const res = await WXAPI.goodsCategory()
+    const res = await callCloudFunction('goodsCategory');
     if (res.code == 0) {
       const categories = res.data
       categories.forEach(p => {

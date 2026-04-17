@@ -1,7 +1,8 @@
-const WXAPI = require('apifm-wxapi')
 const TOOLS = require('../../utils/tools.js')
 const AUTH = require('../../utils/auth')
 const APP = getApp()
+
+const { callCloudFunction } = require('../../utils/cloud.js');
 
 Page({
   data: {
@@ -31,7 +32,6 @@ Page({
     }
   },
   tabClickCms(e) {
-    // 文章分类点击
     const category = this.data.cmsCategories[e.currentTarget.dataset.idx]
     wx.navigateTo({
       url: '/pages/cms/list?categoryId=' + category.id,
@@ -119,15 +119,13 @@ Page({
     this.initBanners()
     this.cmsCategories()
     // https://www.yuque.com/apifm/nu0f75/wg5t98
-    WXAPI.goodsv2({
-      recommendStatus: 1
-    }).then(res => {
-      if (res.code === 0){
-        that.setData({
-          goodsRecommend: res.data.result
-        })
-      }      
-    })
+    const res = await callCloudFunction('goodsV2', { recommendStatus: 1});
+    if (res.code === 0){
+      that.setData({
+        goodsRecommend: res.data.result
+      })
+    }      
+
     that.getNotice()
     // 读取系统参数
     this.readConfigVal()
@@ -153,9 +151,7 @@ Page({
   async initBanners(){
     const _data = {}
     // 读取头部轮播图
-    const res1 = await WXAPI.banners({
-      type: 'index'
-    })
+    const res1 = await callCloudFunction('banners', { type: 'index' });
     if (res1.code == 700) {
       wx.showModal({
         title: 'NOTE',
@@ -183,9 +179,7 @@ Page({
     }
   },
   async goodsDynamicV2(){
-    const res = await WXAPI.goodsDynamicV2({
-      type: 0
-    })
+    const res = await callCloudFunction('goodsDynamicV2', { type: 0 });
     if (res.code == 0) {
       this.setData({
         goodsDynamicV2: res.data.result
@@ -193,7 +187,7 @@ Page({
     }
   },
   async categories(){
-    const res = await WXAPI.goodsCategory()
+    const res = await callCloudFunction('goodsCategory', {});
     let categories = [];
     if (res.code == 0) {
       const _categories = res.data.filter(ele => {
@@ -214,11 +208,7 @@ Page({
     wx.showLoading({
       title: ''
     })
-    const res = await WXAPI.goodsv2({
-      categoryId: categoryId,
-      page: this.data.curPage,
-      pageSize: this.data.pageSize
-    })
+    const res = await callCloudFunction('goodsV2', { categoryId: categoryId, page: this.data.curPage, pageSize: this.data.pageSize });
     wx.hideLoading()
     if (res.code == 404 || res.code == 700) {
       let newData = {
@@ -295,7 +285,7 @@ Page({
     })
   },
   async cmsCategories() {
-    const res = await WXAPI.cmsCategories()
+    const res = await callCloudFunction('cmsCategories', {})
     if (res.code == 0) {
       const cmsCategories = res.data.filter(ele => {
         return ele.type == 'index'

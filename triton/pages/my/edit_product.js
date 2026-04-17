@@ -1,4 +1,6 @@
 import WXAPI from 'apifm-wxapi';
+const { callCloudFunction } = require('../../utils/cloud.js');
+
 
 Page({
   data: {
@@ -23,7 +25,7 @@ Page({
   async fetchDetail() {
     wx.showLoading({ title: 'loading...' });
     try {
-      const res = await WXAPI.query('goods', { id: this.data.goodId });
+      const res = await callCloudFunction('queryGoods', {id : this.data.goodId });
       if (res.code === 0 && res.data && res.data.length > 0) {
         const p = res.data[0];
         this.setData({
@@ -129,15 +131,12 @@ Page({
 
   uploadFile(filePath, type) {
     return new Promise((resolve, reject) => {
-      WXAPI.uploadFile(filePath)
-        .then(res => {
-          if (res.code === 0 && res.data && res.data.url) {
-            resolve(res.data.url);
-          } else {
-            reject(res.message || 'FAILED TO UPLOAD file');
-          }
-        })
-        .catch(reject);
+      const res = await callCloudFunction('uploadFile', {path:filePath});
+      if (res.code === 0 && res.data && res.data.url) {
+        resolve(res.data.url);
+      } else {
+        reject(res.message || 'FAILED TO UPLOAD file');
+      }
     });
   },
 
@@ -154,15 +153,19 @@ Page({
     wx.showLoading({ title: 'SAVING...' });
 
     try {
-      const res = await WXAPI.updateTableData('goods', {
-        id: goodId,
-        color: form.color.trim(),
-        size: form.size.trim(),
-        price: priceNum,
-        description: form.description.trim(),
-        images: imageList.map(i => i.url),
-        videos: videoList.map(v => v.url)
-      });
+      const res = await callCloudFunction('updateGoodsData',
+	      { id: goodId,
+	        info: {
+		  color: form.color.trim(), 
+	          sizeX: form.sizeX.trim(),
+	          sizeY: form.sizeY.trim(),
+	          sizeZ: form.sizeZ.trim(),
+                  price: priceNum,
+                  description: form.description.trim(),
+                  images: imageList.map(i => i.url),
+                  videos: videoList.map(v => v.url)
+		}
+	      });
       wx.hideLoading();
       if (res.code === 0) {
         wx.showToast({ title: 'SUCCESSFULLY UPDATED', icon: 'success' });

@@ -1,13 +1,13 @@
-const WXAPI = require('apifm-wxapi')
 const TOOLS = require('../../utils/tools.js')
 const AUTH = require('../../utils/auth')
 const CONFIG = require('../../config.js')
+const { callCloudFunction } = require('../../utils/cloud.js');
 import Poster from 'wxa-plugin-canvas/poster/poster'
 
 Page({
   data: {
     userID: "",
-    goodsId: "",
+    goodsID: "",
     createTabs: false,
     goodsDetail: {},
     selectSizePrice: 0,
@@ -61,7 +61,7 @@ Page({
         wx.setStorageSync('referrer', scene.split(',')[1])
       }
     }
-    this.data.goodsId = e.id
+    this.data.goodsID = e.id
     let goodsDetailSkuShowType = wx.getStorageSync('goodsDetailSkuShowType')
     if (!goodsDetailSkuShowType) {
       goodsDetailSkuShowType = 0
@@ -75,7 +75,7 @@ Page({
       customerServiceType: CONFIG.customerServiceType
     })
     this.readConfigVal()
-    this.getGoodsDetail(this.data.goodsId)
+    this.getGoodsDetail(this.data.goodsID)
     getApp().initNickAvatarUrlPOP(this)
   },
   readConfigVal() {
@@ -105,7 +105,7 @@ Page({
       }]
     } else {
       if (!this.data.reputation) {
-        this.reputation(this.data.goodsId)
+        this.reputation(this.data.goodsID)
       }
     }
     this.setData({
@@ -155,7 +155,7 @@ Page({
     }).exec()
   },
   async goodsFavCheck() {
-    const res = await WXAPI.goodsFavCheck(wx.getStorageSync('token'), this.data.goodsId)
+    const res = await callCloudFunction('goodsFavCheck', { userID: wx.getStorageSync('userID'), goodsID: this.data.goodsID)
     if (res.code == 0) {
       this.setData({
         faved: true
@@ -170,11 +170,13 @@ Page({
     AUTH.checkHasLogined().then(isLogined => {
       if (isLogined) {
         if (this.data.faved) {
-          WXAPI.goodsFavDelete(wx.getStorageSync('token'), '', this.data.goodsId).then(res => {
+          const res = await callCloudFunction('goodsFavDelete', {userID: wx.getStorageSync('userID'), goodID: this.data.goodsID});
+          if (res.code == 0) {
             this.goodsFavCheck()
           })
         } else {
-          WXAPI.goodsFavPut(wx.getStorageSync('token'), this.data.goodsId).then(res => {
+          const res = await callCloudFunction('WXAPI.goodsFavPut', {userID: wx.getStorageSync('userID'), goodID: this.data.goodsID});
+          if (res.code == 0) {
             this.goodsFavCheck()
           })
         }
@@ -185,10 +187,10 @@ Page({
       }
     })
   },
-  async getGoodsDetail(goodsId) {
-    const token = wx.getStorageSync('token')
+  async getGoodsDetail(goodsID) {
+    const userID = wx.getStorageSync('userID')
     const that = this;
-    const goodsDetailRes = await WXAPI.goodsDetail(goodsId, token ? token : '')
+    const goodsDetailRes = await callCloudFunction('goodsDetail', (goodsID, userID : userID,  goodsID: goodsID)
     if (goodsDetailRes.code == 0) {
       if (!goodsDetailRes.data.pics || goodsDetailRes.data.pics.length == 0) {
         goodsDetailRes.data.pics = [{
@@ -217,7 +219,7 @@ Page({
   onShareAppMessage() {
     let _data = {
       title: this.data.goodsDetail.basicInfo.name,
-      path: '/pages/goods-details/index?id=' + this.data.goodsDetail.basicInfo.id + '&inviter_id=' + wx.getStorageSync('uid'),
+      path: '/pages/goods-details/index?id=' + this.data.goodsDetail.basicInfo.id + '&inviter_id=' + wx.getStorageSync('userID'),
       success: function (res) {
 	wx.showToast({
           title: 'successfully shared',
@@ -235,17 +237,17 @@ Page({
   },
   onShareTimeline() {
     let title = this.data.goodsDetail.basicInfo.name
-    let query = 'id=' + this.data.goodsDetail.basicInfo.id + '&inviter_id=' + wx.getStorageSync('uid')
+    let query = 'id=' + this.data.goodsDetail.basicInfo.id + '&inviter_id=' + wx.getStorageSync('userID')
     return {
       title,
       query,
       imageUrl: this.data.goodsDetail.basicInfo.pic
     }
   },
-  reputation: function (goodsId) {
+  reputation: function (goodsID) {
     var that = this;
     WXAPI.goodsReputationV2({
-      goodsId: goodsId
+      goodsID: goodsID
     }).then(function (res) {
       if (res.code == 0) {
         res.data.result.forEach(ele => {
@@ -347,9 +349,9 @@ Page({
         })
 	return
     }
-    //wx.navigateTo({
-    //  url: "/pages/order/order-details?id=" + this.data.goodsId 
-    //})
+    wx.navigateTo({
+      url: "/pages/order/order-details?id=" + this.data.goodsID 
+    })
 
   },
 
@@ -390,7 +392,7 @@ Page({
       return;
     }
     wx.showToast({ title: 'successfully commited', icon: 'success' });
-    const res = await WXAPI.commitBuy(phone, price, email_ex, remark, this.data.goodsId, this.data.userID);
+    const res = await WXAPI.commitBuy(phone, price, email_ex, remark, this.data.goodsID, this.data.userID);
     this.hideDialog(true);
     if (res.code == 0) {
       order_data = res.data

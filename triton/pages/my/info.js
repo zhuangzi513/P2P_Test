@@ -1,5 +1,6 @@
-const WXAPI = require('apifm-wxapi')
 const AUTH = require('../../utils/auth')
+const { callCloudFunction } = require('../../utils/cloud.js');
+
 Page({
   data: {
     avatarUrl: undefined,
@@ -31,7 +32,7 @@ Page({
     })
   },
   async getUserApiInfo() {
-    const res = await WXAPI.userDetail(wx.getStorageSync('token'))
+    const res = await callCloudFunction('userDetail', {userID:wx.getStorageSync('userID')})
     if (res.code == 0) {
       let _data = {}
       _data.apiUserInfoMap = res.data
@@ -56,7 +57,7 @@ Page({
       nick: this.data.nick
     }
     if (this.data.avatarUrlTmpFile) {
-      const res = await WXAPI.uploadFileV2(wx.getStorageSync('token'), this.data.avatarUrlTmpFile)
+      const res = await callCloudFunction('uploadFileV2', {userID:wx.getStorageSync('userID'), URL:this.data.avatarUrlTmpFile})
       if (res.code == 0) {
         postData.avatarUrl = res.data.url
       }
@@ -65,7 +66,7 @@ Page({
       postData.gender = this.data.genderIndex*1 + 1
     }
     // https://www.yuque.com/apifm/nu0f75/ykr2zr
-    const res = await WXAPI.modifyUserInfoV2(postData)
+    const res = await callCloudFunction('modifyUserInfoV2', postData)
     if (res.code != 0) {
       wx.showToast({
         title: res.msg,

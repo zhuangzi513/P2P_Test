@@ -1,33 +1,24 @@
-const WXAPI = require('apifm-wxapi')
 const AUTH = require('../../utils/auth')
+const { callCloudFunction } = require('../../utils/cloud.js');
 
 Page({
   data: {
   },
   onLoad: function (options) {
-    AUTH.checkHasLogined().then(isLogined => {
-      if (isLogined) {
-        this.goodsFavList()
-      } else {
-        getApp().loginOK = () => {
-          this.goodsFavList()
-        }
-      }
-    })
+    this.goodsFavList()
   },
   onShow: function () {
   },
   async goodsFavList() {
-    // 搜索商品
     wx.showLoading({
       title: '加载中',
     })
     const _data = {
-      token: wx.getStorageSync('token'),
+      userID: wx.getStorageSync('userID'),
       page: 1,
       pageSize: 10000,
     }    
-    const res = await WXAPI.goodsFavList(_data)
+    const res = await callCloudFunction('goodsFavList', _data);
     wx.hideLoading()
     if (res.code == 0) {
       res.data.forEach(ele => {
@@ -47,8 +38,8 @@ Page({
   async removeFav(e){
     const idx = e.currentTarget.dataset.idx
     const fav = this.data.goods[idx]
-    const res = await WXAPI.goodsFavDeleteV2({
-      token: wx.getStorageSync('token'),
+    const res = await callCloudFunction('goodsFavDeleteV2', {
+      userID: wx.getStorageSync('userID'),
       goodsId: fav.goodsId,
       type: fav.type
     })

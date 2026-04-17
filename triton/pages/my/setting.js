@@ -1,6 +1,7 @@
 const CONFIG = require('../../config.js')
-const WXAPI = require('apifm-wxapi')
 const AUTH = require('../../utils/auth')
+const { callCloudFunction } = require('../../utils/cloud.js')
+
 Page({
   data: {
     enableDebug: wx.getSystemInfoSync().enableDebug
@@ -14,7 +15,7 @@ Page({
     this.getUserApiInfo()
   },
   async getUserApiInfo() {
-    const res = await WXAPI.userDetail(wx.getStorageSync('token'))
+    const res = await callCloudFunction('userDetail', {userID:wx.getStorageSync('userID'})
     if (res.code == 0) {
       let _data = {}
       _data.apiUserInfoMap = res.data
