@@ -57,7 +57,7 @@ Page({
           content: '',
           success: function(res) {
             if (res.confirm) {
-              const res = callCloudFunction('orderDelivery', {userID: wx.getStorageSync('uerID'), orderID:orderId});
+              const res = await callCloudFunction('orderDelivery', {userID: wx.getStorageSync('uerID'), orderID:orderId});
               if (res.code == 0) {
                 that.orderDetail()
               }

@@ -33,7 +33,7 @@ Page({
         }
       }
     })
-    const res = callCloudFunction('my_goodsv2', {userID:getStorageSync('userID')});
+    const res = await callCloudFunction('my_goodsv2', {userID:getStorageSync('userID')});
     if (res.code === 0){
       that.setData({
         my_products: res.data.result

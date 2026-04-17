@@ -47,7 +47,7 @@ Page({
       content: '',
       success: function(res) {
         if (res.confirm) {
-          result = callCloudFunction('orderClose', { userID:wx.getStorageSync('userID'), orderID:orderId});
+          result = await callCloudFunction('orderClose', { userID:wx.getStorageSync('userID'), orderID:orderId});
             if (result.code == 0) {
               that.data.page = 1
               that.orderList()
@@ -77,7 +77,7 @@ Page({
   _toPayTap: function (orderId, money){
     const _this = this
     if (money <= 0) {
-      const res = callCloudFunction('orderPay', {userID:wx.getStorageSync('userID'), orderID:orderId);
+      const res = await callCloudFunction('orderPay', {userID:wx.getStorageSync('userID'), orderID:orderId);
       if (res.code == 0) {
         _this.data.page = 1
         _this.orderList()
@@ -121,7 +121,7 @@ Page({
 
   },
   getOrderStatistics() {
-    const res = callCloudFunction('orderStatistics', {userID:wx.getStorageSync('token')})
+    const res = await callCloudFunction('orderStatistics', {userID:wx.getStorageSync('token')})
     if (res.code == 0) {
       const badges = this.data.badges;
       badges[1] = res.data.count_id_no_pay
