@@ -1,9 +1,6 @@
-const WXAPI = require('apifm-wxapi')
 const CONFIG = require('config.js')
 const AUTH = require('utils/auth')
-
-
-
+onst { callCloudFunction } = require('../../utils/cloud.js');
 
 App({
   onLaunch: function() {
@@ -79,24 +76,24 @@ App({
   },
 
   fetchUserId() {
-    if (this.globalData.userId) {
-      return Promise.resolve(this.globalData.userId);
+    if (this.globalData.userID) {
+      return Promise.resolve(this.globalData.userID);
     }
 
-    const cachedUserId = wx.getStorageSync('userId');
+    const cachedUserId = wx.getStorageSync('userID');
     if (cachedUserId) {
-      this.globalData.userId = cachedUserId;
+      this.globalData.userID = cachedUserId;
       return Promise.resolve(cachedUserId);
     }
 
     return wx.cloud.callFunction({
-      name: 'getUserInfo',
+      name: 'getUserId',
       data: {}
     }).then(res => {
-      const { userId, openid } = res.result;
-      this.globalData.userID = userId;
-      wx.setStorageSync('userID', userId);
-      return userId;
+      const { userID} = res.result;
+      this.globalData.userID = userID;
+      wx.setStorageSync('userID', userID);
+      return userID;
     }).catch(err => {
       console.error('获取用户ID失败', err);
       return null;
@@ -106,52 +103,25 @@ App({
   onShow (e) {
     if (e && e.query && e.query.inviter_id) {
       wx.setStorageSync('referrer', e.query.inviter_id)
-      if (e.shareTicket) {
-        wx.getShareInfo({
-          shareTicket: e.shareTicket,
-          success: res => {
-            wx.login({
-              success(loginRes) {
-                if (loginRes.code) {
-                  WXAPI.shareGroupGetScore(
-                    loginRes.code,
-                    e.query.inviter_id,
-                    res.encryptedData,
-                    res.iv
-                  ).then(_res => {
-                    console.log(_res)
-                  }).catch(err => {
-                    console.error(err)
-                  })
-                } else {
-                  console.error('登录失败！' + loginRes.errMsg)
-                }
-              }
-            })
-          }
-        })
-      }
     }
 
-    this.getUserApiInfo()
+    this.getUserDetailInfo()
   },
-  async getUserApiInfo() {
-    const res = wx.cloud.callFunction({
-      name: 'getUserDetail',
-      data: {}
-    }).then(res => {
-      this.globalData.apiUserInfoMap = res.result
-    }).catch(err => {
-      console.error('获取用户ID失败', err);
-    });
+
+  async getUserDetailInfo() {
+    const res = await callCloudFunction('userDetail', {userID: wx.getStorageSync('userID')});
+    if (res.code == 0) {
+        this.globalData.userDetailInfo = res.data;
+    }
   },
+
   initNickAvatarUrlPOP(_this) {
     setTimeout(() => {
-      if (this.globalData.apiUserInfoMap && (!this.globalData.apiUserInfoMap.base.nick || !this.globalData.apiUserInfoMap.base.avatarUrl)) {
+      if (this.globalData.userDetailInfo && (!this.globalData.userDetailInfo.base.nick || !this.globalData.userDetailInfo.base.avatarUrl)) {
         _this.setData({
           nickPopShow: true,
-          popnick: this.globalData.apiUserInfoMap.base.nick ? this.globalData.apiUserInfoMap.base.nick : '',
-          popavatarUrl: this.globalData.apiUserInfoMap.base.avatarUrl ? this.globalData.apiUserInfoMap.base.avatarUrl : '',
+          popnick: this.globalData.userDetailInfo.base.nick ? this.globalData.userDetailInfo.base.nick : '',
+          popavatarUrl: this.globalData.userDetailInfo.base.avatarUrl ? this.globalData.userDetailInfo.base.avatarUrl : '',
         })
       }
     }, 3000)
@@ -159,7 +129,7 @@ App({
   globalData: {
     isConnected: true,
     sdkAppID: CONFIG.sdkAppID,
-    apiUserInfoMap: undefined,
+    userDetailInfo: undefined,
     userID : 0,
   }
 })

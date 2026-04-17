@@ -127,7 +127,6 @@ Page({
     }      
 
     that.getNotice()
-    // 读取系统参数
     this.readConfigVal()
     getApp().configLoadOK = () => {
       this.readConfigVal()
@@ -150,7 +149,6 @@ Page({
   },
   async initBanners(){
     const _data = {}
-    // 读取头部轮播图
     const res1 = await callCloudFunction('banners', { type: 'index' });
     if (res1.code == 700) {
       wx.showModal({

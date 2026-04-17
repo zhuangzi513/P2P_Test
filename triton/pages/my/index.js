@@ -5,13 +5,6 @@ const { callCloudFunction } = require('../../utils/cloud.js');
 
 Page({
     data: {
-    balance:0.00,
-    freeze:0,
-    score:0,
-    growth:0,
-    score_sign_continuous:0,
-    rechargeOpen: false,
-
     count_id_no_confirm: 0,
     count_id_no_pay: 0,
     count_id_no_reputation: 0,
@@ -116,10 +109,9 @@ Page({
       return
     }
     const postData = {
-      token: wx.getStorageSync('token'),
+      token: wx.getStorageSync('usrID'),
       nick: this.data.nick,
     }
-    // https://www.yuque.com/apifm/nu0f75/ykr2zr
     const res = await callCloudFunction('modifyUserInfoV2', postData);
     if (res.code != 0) {
       wx.showToast({

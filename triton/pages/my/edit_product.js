@@ -153,7 +153,9 @@ Page({
 
     try {
       const res = await callCloudFunction('updateGoodsData',
-	      { id: goodId,
+	      { 
+		goodID: goodId,
+		ownerID: userID,
 	        info: {
 		  color: form.color.trim(), 
 	          sizeX: form.sizeX.trim(),

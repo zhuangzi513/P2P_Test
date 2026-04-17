@@ -1,43 +1,43 @@
- callCloudFunction('banners', { type: 'app' });
- callCloudFunction('banners', { type: 'index' });
- callCloudFunction('cmsCategories', {})
- callCloudFunction('goSelectPage', {});
- callCloudFunction('goodsCategory');
- callCloudFunction('goodsCategory', { })
- callCloudFunction('goodsCategory', {});
- callCloudFunction('goodsDetail', (goodsID, userID : userID,  goodsID: goodsID)
- callCloudFunction('goodsDynamicV2', { type: 0 });
- callCloudFunction('goodsFavCheck', { userID: wx.getStorageSync('userID'), goodsID: this.data.goodsID})
- callCloudFunction('goodsFavDelete', {userID: wx.getStorageSync('userID'), goodID: this.data.goodsID});
- callCloudFunction('goodsFavDeleteV2', {
- callCloudFunction('goodsFavList', _data);
- callCloudFunction('goodsFavPut', {userID: wx.getStorageSync('userID'), goodID: this.data.goodsID});
- callCloudFunction('goodsV2', { categoryId: categoryId, page: this.data.curPage, pageSize: this.data.pageSize });
- callCloudFunction('goodsV2', { recommendStatus: 1});
- callCloudFunction('goodsv2', _data)
- callCloudFunction('goodsv2',{ categoryId, page: this.data.page, pageSize: this.data.pageSize });
- callCloudFunction('modifyUserInfoV2', postData)
- callCloudFunction('modifyUserInfoV2', postData);
- callCloudFunction('modifyUserInfoV2', {userID: wx.getStorageSync('userID'), avatarUrl: res.data.url});
- callCloudFunction('myBuyGoodsHisV2', {
- callCloudFunction('my_goodsv2', { userID: myUserId, page: this.data.curPage, pageSize: this.data.pageSize })
- callCloudFunction('noticeList', {userID: wx.getStorageSync("userID"), pageSize: 5}).then(function (res) {
- callCloudFunction('orderDetail', { userID:wx.getStorageSync('userID'), orderID:this.data.orderId})
- callCloudFunction('orderList', postData);
- callCloudFunction('orderStatistics', { userID: wx.getStorageSync('userID')});
- callCloudFunction('queryGoods', {id : this.data.goodId });
- callCloudFunction('shippingCarInfoAddItem', {wx.getStorageSync('userID'), goodsID: curGood.id})
- callCloudFunction('updateGoodsData',
- callCloudFunction('uploadFile', {path:filePath});
- callCloudFunction('uploadFileV2', {userID: wx.getStorageSync('userID'), URL: avatarUrl});
- callCloudFunction('uploadFileV2', {userID:wx.getStorageSync('userID'), URL:this.data.avatarUrlTmpFile})
- callCloudFunction('userDetail', { userID: wx.getStorageSync('userID'});
- callCloudFunction('userDetail', {userID:wx.getStorageSync('userID')})
- callCloudFunction('userDetail', {userID:wx.getStorageSync('userID')});
- callCloudFunction('userDetail', {userID:wx.getStorageSync('userID'})
- callCloudFunction('videoDetail', {videoID:videoId});
- callCloudFunction('my_goodsv2', {userID:getStorageSync('userID')});
- callCloudFunction('orderClose', { userID:wx.getStorageSync('userID'), orderID:orderId});
- callCloudFunction('orderDelivery', {userID: wx.getStorageSync('uerID'), orderID:orderId});
- callCloudFunction('orderPay', {userID:wx.getStorageSync('userID'), orderID:orderId);
- callCloudFunction('orderStatistics', {userID:wx.getStorageSync('token')})
+ banners
+ banners
+ cmsCategories
+ goSelectPage
+ goodsCategory
+ goodsCategory
+ goodsCategory
+ goodsDetail
+ goodsDynamicV2
+ goodsFavCheck
+ goodsFavDelete
+ goodsFavDeleteV2
+ goodsFavList
+ goodsFavPut
+ goodsV2
+ goodsV2
+ goodsv2
+ goodsv2
+ modifyUserInfoV2
+ modifyUserInfoV2
+ modifyUserInfoV2
+ myBuyGoodsHisV2
+ my_goodsv2
+ noticeList
+ orderDetail
+ orderList
+ orderStatistics
+ queryGoods
+ shippingCarInfoAddItem
+ updateGoodsData
+ uploadFile
+ uploadFileV2
+ uploadFileV2
+ userDetail
+ userDetail
+ userDetail
+ userDetail
+ videoDetail
+ my_goodsv2
+ orderClose
+ orderDelivery
+ orderPay
+ orderStatistics
