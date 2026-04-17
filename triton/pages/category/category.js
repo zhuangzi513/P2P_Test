@@ -1,6 +1,6 @@
-const WXAPI = require('apifm-wxapi')
 const AUTH = require('../../utils/auth')
 const TOOLS = require('../../utils/tools.js') // TOOLS.showTabBarBadge();
+const { callCloudFunction } = require('../../utils/cloud.js');
 
 Page({
   data: {
@@ -30,7 +30,7 @@ Page({
     wx.showLoading({
       title: 'LOADING tile',
     })
-    const res = await WXAPI.goodsCategory()
+    const res = await callCloudFunction('goodsCategory', { })
     wx.hideLoading()
     let activeCategory = 0
     let categorySelected = this.data.categorySelected
@@ -74,11 +74,7 @@ Page({
     } else if(this.data.categorySelected && this.data.categorySelected.id) {
       categoryId = this.data.categorySelected.id
     }
-    const res = await WXAPI.goodsv2({
-      categoryId,
-      page: this.data.page,
-      pageSize: this.data.pageSize
-    })
+    const res = await callCloudFunction('goodsv2',{ categoryId, page: this.data.page, pageSize: this.data.pageSize });
     wx.hideLoading()
     if (res.code == 700) {
       if (this.data.page == 1) {
@@ -132,7 +128,6 @@ Page({
     const idx = e.detail.index
     let secondCategoryId = ''
     if (idx) {
-      // 点击了具体的分类
       secondCategoryId = this.data.categorySelected.childs[idx-1].id
     }
     this.setData({
@@ -151,13 +146,13 @@ Page({
   },
   onShareAppMessage() {    
     return {
-      title: '"' + wx.getStorageSync('mallName') + '" ' + wx.getStorageSync('share_profile'),
+      title: '"' + wx.getStorageSync('userName') + '" ' + wx.getStorageSync('share_profile'),
       path: '/pages/index/index?inviter_id=' + wx.getStorageSync('uid')
     }
   },
   onShareTimeline() {    
     return {
-      title: '"' + wx.getStorageSync('mallName') + '" ' + wx.getStorageSync('share_profile'),
+      title: '"' + wx.getStorageSync('userName') + '" ' + wx.getStorageSync('share_profile'),
       query: '',
       imageUrl: this.data.goodsDetail.basicInfo.pic
     }

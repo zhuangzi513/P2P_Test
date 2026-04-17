@@ -1,4 +1,3 @@
-import WXAPI from 'apifm-wxapi';
 const { callCloudFunction } = require('../../utils/cloud.js');
 
 

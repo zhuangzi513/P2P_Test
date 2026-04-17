@@ -134,16 +134,16 @@ Page({
     }
   },
   readConfigVal() {
-    const mallName = wx.getStorageSync('mallName')
-    if (!mallName) {
+    const userName = wx.getStorageSync('userName')
+    if (!userName) {
       return
     }
     this.categories()
     wx.setNavigationBarTitle({
-      title: mallName
+      title: userName
     })
     this.setData({
-      mallName:wx.getStorageSync('mallName')?wx.getStorageSync('mallName'):'',
+      userName:wx.getStorageSync('userName')?wx.getStorageSync('userName'):'',
       show_buy_dynamic: wx.getStorageSync('show_buy_dynamic'),
       hidden_goods_index: wx.getStorageSync('hidden_goods_index'),
     })
@@ -239,20 +239,20 @@ Page({
   },
   onShareAppMessage: function() {
     return {
-      title: '"' + wx.getStorageSync('mallName') + '" ' + wx.getStorageSync('share_profile'),
-      path: '/pages/index/index?inviter_id=' + wx.getStorageSync('uid')
+      title: '"' + wx.getStorageSync('userName') + '" ' + wx.getStorageSync('share_profile'),
+      path: '/pages/index/index?inviter_id=' + wx.getStorageSync('userID')
     }
   },
   onShareTimeline() {    
     return {
-      title: '"' + wx.getStorageSync('mallName') + '" ' + wx.getStorageSync('share_profile'),
-      query: 'inviter_id=' + wx.getStorageSync('uid'),
+      title: '"' + wx.getStorageSync('userName') + '" ' + wx.getStorageSync('share_profile'),
+      query: 'inviter_id=' + wx.getStorageSync('userID'),
       imageUrl: wx.getStorageSync('share_pic')
     }
   },
   getNotice: function() {
     var that = this;
-    WXAPI.noticeList({pageSize: 5}).then(function (res) {
+    const res = await callCloudFunction('noticeList', {userID: wx.getStorageSync("userID"), pageSize: 5}).then(function (res) {
       if (res.code == 0) {
         that.setData({
           noticeList: res.data

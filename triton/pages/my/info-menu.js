@@ -1,4 +1,3 @@
-const WXAPI = require('apifm-wxapi')
 const AUTH = require('../../utils/auth')
 const { callCloudFunction } = require('../../utils/cloud.js');
 
