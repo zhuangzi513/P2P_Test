@@ -57,10 +57,12 @@ Page({
           content: '',
           success: function(res) {
             if (res.confirm) {
-              const res = await callCloudFunction('orderDelivery', {userID: wx.getStorageSync('uerID'), orderID:orderId});
-              if (res.code == 0) {
-                that.orderDetail()
-              }
+              callCloudFunction('orderDelivery', {userID: wx.getStorageSync('uerID'), orderID:orderId}).then(result=> {
+                if (result.code == 0) {
+                  that.orderDetail()
+                }
+              })
+
             }
           }
       })

@@ -15,7 +15,7 @@ Page({
     this.getUserApiInfo()
   },
   async getUserApiInfo() {
-    const res = await callCloudFunction('userDetail', {userID:wx.getStorageSync('userID'})
+    const res = await callCloudFunction('userDetail', {userID:wx.getStorageSync('userID')})
     if (res.code == 0) {
       let _data = {}
       _data.apiUserInfoMap = res.data

@@ -56,7 +56,7 @@ Page({
     })
   },
   async getUserApiInfo() {
-    const res = await callCloudFunction('userDetail', { userID: wx.getStorageSync('userID'});
+    const res = await callCloudFunction('userDetail', { userID: wx.getStorageSync('userID')});
     if (res.code == 0) {
       let _data = {}
       _data.apiUserInfoMap = res.data
@@ -79,21 +79,22 @@ Page({
     return count > 99 ? '99+' : count;
   },
   orderStatistics: function () {
-    const res = await callCloudFunction('orderStatistics', { userID: wx.getStorageSync('userID')});
-    if (res.code == 0) {
-      const {
-        count_id_no_confirm,
-        count_id_no_pay,
-        count_id_no_reputation,
-        count_id_no_transfer,
-      } = res.data || {}
-      this.setData({
-        count_id_no_confirm: this.handleOrderCount(count_id_no_confirm),
-        count_id_no_pay: this.handleOrderCount(count_id_no_pay),
-        count_id_no_reputation: this.handleOrderCount(count_id_no_reputation),
-        count_id_no_transfer: this.handleOrderCount(count_id_no_transfer),
-      })
-    }
+    callCloudFunction('orderStatistics', { userID: wx.getStorageSync('userID')}).then(res=> {
+      if (res.code == 0) {
+        const {
+          count_id_no_confirm,
+          count_id_no_pay,
+          count_id_no_reputation,
+          count_id_no_transfer,
+        } = res.data || {}
+        this.setData({
+          count_id_no_confirm: this.handleOrderCount(count_id_no_confirm),
+          count_id_no_pay: this.handleOrderCount(count_id_no_pay),
+          count_id_no_reputation: this.handleOrderCount(count_id_no_reputation),
+          count_id_no_transfer: this.handleOrderCount(count_id_no_transfer),
+        })
+      }
+    })
   },
   editNick() {
     this.setData({

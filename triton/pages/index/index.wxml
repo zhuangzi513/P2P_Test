@@ -44,7 +44,6 @@ module.exports = {
 
     <view class="jd-section-header">
       <view class="jd-section-title">
-        <image class="jd-section-icon" src="../../images/home/recommend.png"></image>
         <text class="jd-section-name">recommand</text>
       </view>
       <view class="jd-section-more"></view>
@@ -73,7 +72,6 @@ module.exports = {
   
   <view class="jd-section-header">
     <view class="jd-section-title">
-      <image class="jd-section-icon" src="../../images/home/goodslist.png"></image>
       <text class="jd-section-name">goodslist</text>
     </view>
   </view>

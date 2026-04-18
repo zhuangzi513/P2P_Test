@@ -24,6 +24,7 @@
       "disablePlugins": [],
       "outputPath": ""
     },
+    "cloudfunctionRoot": "cloudfunctions/",
     "miniprogramRoot": "./",
     "useIsolateContext": true,
     "userConfirmedBundleSwitch": false,
@@ -39,6 +40,7 @@
     "minifyWXML": true,
     "showES6CompileOption": false,
     "useCompilerPlugins": false,
+    "ignoreDevUnusedFiles": true,
     "ignoreUploadUnusedFiles": true,
     "useStaticServer": true,
     "condition": false
@@ -46,20 +48,7 @@
   "compileType": "miniprogram",
   "simulatorType": "wechat",
   "simulatorPluginLibVersion": {},
-  "condition": {
-    "plugin": {
-      "list": []
-    },
-    "game": {
-      "list": []
-    },
-    "gamePlugin": {
-      "list": []
-    },
-    "miniprogram": {
-      "list": []
-    }
-  },
+  "condition": {},
   "editorSetting": {
     "tabIndent": "insertSpaces",
     "tabSize": 2
@@ -68,5 +57,7 @@
     "ignore": [],
     "include": []
   },
-  "appid": "wxffe63b8bf92fea11"
+  "appid": "wxffe63b8bf92fea11",
+  "projectname": "%E5%A4%A9%E4%BD%BF%E7%AB%A5%E8%A3%85",
+  "libVersion": "3.15.1"
 }

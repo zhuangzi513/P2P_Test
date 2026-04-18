@@ -17,6 +17,9 @@ page {
 .category-container {
   width: 180rpx;
   height: 100%;
+  color:#005000;
+  display: flexbox;
+  box-shadow: 0 8rpx 16rpx rgba(7, 255, 11, 0.3);
 }
 .goods-container {
   flex: 1;
@@ -25,6 +28,9 @@ page {
 
 .medium-category {
   margin: 32rpx 0;
+  color:#005000;
+  display: flexbox;
+  box-shadow: 0 8rpx 16rpx rgba(7, 255, 11, 0.3);
 }
 .medium-category .line {
   width:60rpx;
@@ -57,9 +63,7 @@ page {
 }
 .sidebar-l {
   width: 190rpx !important;
-}
-.adPosition {
-  width: 100%;
+  color:#005000
 }
 .title-class-apifm {
   word-break: break-all;

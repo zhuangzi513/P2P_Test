@@ -130,12 +130,14 @@ Page({
 
   uploadFile(filePath, type) {
     return new Promise((resolve, reject) => {
-      const res = await callCloudFunction('uploadFile', {path:filePath});
-      if (res.code === 0 && res.data && res.data.url) {
-        resolve(res.data.url);
-      } else {
-        reject(res.message || 'FAILED TO UPLOAD file');
-      }
+      callCloudFunction('uploadFile', {path:filePath}).then(res => {
+        if (res.code === 0 && res.data && res.data.url) {
+          resolve(res.data.url);
+        } else {
+          reject(res.message || 'FAILED TO UPLOAD file');
+        }
+      })
+
     });
   },
 

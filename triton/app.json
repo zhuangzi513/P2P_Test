@@ -1,26 +1,21 @@
 {
+  "cloud": true,
   "pages": [
     "pages/start/start",
     "pages/index/index",
-    "pages/notice/index",
-    "pages/notice/show",
     "pages/category/category",
     "pages/goods/list",
-    "pages/goods/list-vop",
     "pages/goods/fav",
     "pages/goods/his",
     "pages/goods-details/index",
     "pages/my/index",
-    "pages/sign/index",
-    "pages/my/feedback",
     "pages/my/info",
-    "pages/my/setting",
     "pages/my/info-menu",
-    "pages/my/user-code",
-    "pages/login/index",
-    "pages/vip/index",
-    "pages/vip/detail",
-    "pages/vip/history"
+    "pages/my/edit_product",
+    "pages/my/my_products",
+    "pages/my/setting",
+    "pages/orders/index",
+    "pages/orders/order-details"
   ],
   "requiredPrivateInfos": [
     "getLocation",
@@ -125,5 +120,6 @@
     "van-checkbox": "@vant/weapp/checkbox/index",
     "van-checkbox-group": "@vant/weapp/checkbox-group/index"
   },
+  "lazyCodeLoading": "requiredComponents",
   "sitemapLocation": "sitemap.json"
 }

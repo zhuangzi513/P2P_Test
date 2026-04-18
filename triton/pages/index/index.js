@@ -56,7 +56,7 @@ Page({
       })
     } else if (supplytype == 'cps_taobao') {
       wx.navigateTo({
-        url: `/packageCps/pages/goods-details/cps-taobao?id=${id}`,
+        url: `/packageCps/pages/goods-details/cps-taobao?id=${id}`
       })
     } else {
       wx.navigateTo({
@@ -119,12 +119,14 @@ Page({
     this.initBanners()
     this.cmsCategories()
     // https://www.yuque.com/apifm/nu0f75/wg5t98
-    const res = await callCloudFunction('goodsV2', { recommendStatus: 1});
-    if (res.code === 0){
-      that.setData({
-        goodsRecommend: res.data.result
-      })
-    }      
+    callCloudFunction('goodsV2', { recommendStatus: 1}).then(res => {
+      if (res.code === 0){
+        that.setData({
+          goodsRecommend: res.data.result
+        })
+      }  
+    });
+    
 
     that.getNotice()
     this.readConfigVal()
@@ -250,13 +252,13 @@ Page({
   },
   getNotice: function() {
     var that = this;
-    const res = await callCloudFunction('noticeList', {userID: wx.getStorageSync("userID"), pageSize: 5}).then(function (res) {
+    callCloudFunction('noticeList', {userID: wx.getStorageSync("userID"), pageSize: 5}).then(function (res) {
       if (res.code == 0) {
         that.setData({
           noticeList: res.data
         });
       }
-    })
+    });
   },
   onReachBottom: function() {
     this.setData({

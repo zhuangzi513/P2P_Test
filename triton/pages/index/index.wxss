@@ -282,7 +282,7 @@ page {
 .jd-section-name {
   font-size: 36rpx;
   font-weight: bold;
-  color: #333;
+  color: #047504;
   position: relative;
 }
 
@@ -299,7 +299,7 @@ page {
 
 .jd-section-more {
   font-size: 26rpx;
-  color: #999;
+  color: #047504;
   display: flex;
   align-items: center;
 }
@@ -446,7 +446,7 @@ page {
   height: 345rpx;
   position: relative;
   overflow: hidden;
-  background: #F9F9F9;
+  background: #a4bea6;
 }
 
 .jd-goods-img-wrap image {
@@ -461,7 +461,9 @@ page {
 
 .jd-goods-name {
   font-size: 28rpx;
-  color: #333;
+  border: #005000;
+  color: #005000;
+  font-weight: bold;
   line-height: 1.4;
   height: 78rpx;
   overflow: hidden;
@@ -492,15 +494,16 @@ page {
 .jd-goods-price {
   display: flex;
   align-items: baseline;
-  color: #E4393C;
+  color: #022c12;
 }
 
 .jd-goods-price .jd-price-symbol {
-  font-size: 24rpx;
+  font-size: 36rpx;
 }
 
 .jd-goods-price .jd-price-num {
   font-size: 36rpx;
+  color: #086008;
 }
 
 .jd-goods-original-price {
@@ -510,7 +513,6 @@ page {
   margin-left: 8rpx;
 }
 
-  box-shadow: 0 8rpx 32rpx rgba(228, 57, 60, 0.45);
 
 @keyframes float-bounce {
   0%, 100% {

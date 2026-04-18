@@ -133,7 +133,7 @@ Page({
       return
     }
     if (!curGood.propertyIds && !curGood.hasAddition) {
-      const res = await callCloudFunction('shippingCarInfoAddItem', {wx.getStorageSync('userID'), goodsID: curGood.id})
+      const res = await callCloudFunction('shippingCarInfoAddItem', {userID:wx.getStorageSync('userID'), goodsID: curGood.id})
       if (res.code == 0) {
         wx.showToast({
           title: '加入成功',

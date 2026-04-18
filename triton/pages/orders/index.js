@@ -47,12 +47,14 @@ Page({
       content: '',
       success: function(res) {
         if (res.confirm) {
-          result = await callCloudFunction('orderClose', { userID:wx.getStorageSync('userID'), orderID:orderId});
+          callCloudFunction('orderClose', { userID:wx.getStorageSync('userID'), orderID:orderId}).then(result => {
             if (result.code == 0) {
               that.data.page = 1
               that.orderList()
               that.getOrderStatistics()
             }
+          });
+
           }
         }
     })
@@ -77,12 +79,14 @@ Page({
   _toPayTap: function (orderId, money){
     const _this = this
     if (money <= 0) {
-      const res = await callCloudFunction('orderPay', {userID:wx.getStorageSync('userID'), orderID:orderId);
-      if (res.code == 0) {
-        _this.data.page = 1
-        _this.orderList()
-        _this.getOrderStatistics()
+      callCloudFunction('orderPay', {userID:wx.getStorageSync('userID'), orderID:orderId}).then(res=> {
+        if (res.code == 0) {
+          _this.data.page = 1
+          _this.orderList()
+          _this.getOrderStatistics()
+        }
       })
+
     } else {
       this.setData({
         orderId,
@@ -121,17 +125,19 @@ Page({
 
   },
   getOrderStatistics() {
-    const res = await callCloudFunction('orderStatistics', {userID:wx.getStorageSync('token')})
-    if (res.code == 0) {
-      const badges = this.data.badges;
-      badges[1] = res.data.count_id_no_pay
-      badges[2] = res.data.count_id_no_transfer
-      badges[3] = res.data.count_id_no_confirm
-      badges[4] = res.data.count_id_no_reputation
-      this.setData({
-        badges
-      })
-    }
+    callCloudFunction('orderStatistics', {userID:wx.getStorageSync('token')}).then(res=> {
+      if (res.code == 0) {
+        const badges = this.data.badges;
+        badges[1] = res.data.count_id_no_pay
+        badges[2] = res.data.count_id_no_transfer
+        badges[3] = res.data.count_id_no_confirm
+        badges[4] = res.data.count_id_no_reputation
+        this.setData({
+          badges
+        })
+      }
+    })
+
   },
   onShow: function() {
   },

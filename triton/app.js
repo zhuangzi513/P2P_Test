@@ -1,6 +1,6 @@
 const CONFIG = require('config.js')
 const AUTH = require('utils/auth')
-onst { callCloudFunction } = require('../../utils/cloud.js');
+const { callCloudFunction } = require('../../utils/cloud.js')
 
 App({
   onLaunch: function() {

@@ -132,30 +132,22 @@ Page({
     }
   },
   async addFav() {
-    AUTH.checkHasLogined().then(isLogined => {
-      if (isLogined) {
         if (this.data.faved) {
           const res = await callCloudFunction('goodsFavDelete', {userID: wx.getStorageSync('userID'), goodID: this.data.goodsID});
           if (res.code == 0) {
             this.goodsFavCheck()
-          })
+          }
         } else {
           const res = await callCloudFunction('goodsFavPut', {userID: wx.getStorageSync('userID'), goodID: this.data.goodsID});
           if (res.code == 0) {
             this.goodsFavCheck()
-          })
+          }
         }
-      } else {
-        wx.navigateTo({
-          url: '/pages/login/index',
-        })
-      }
-    })
   },
   async getGoodsDetail(goodsID) {
     const userID = wx.getStorageSync('userID')
     const that = this;
-    const goodsDetailRes = await callCloudFunction('goodsDetail', (goodsID, userID : userID,  goodsID: goodsID)
+    const goodsDetailRes = await callCloudFunction('goodsDetail', {userID : userID,  goodsID: goodsID});
     if (goodsDetailRes.code == 0) {
       if (!goodsDetailRes.data.pics || goodsDetailRes.data.pics.length == 0) {
         goodsDetailRes.data.pics = [{
@@ -211,12 +203,14 @@ Page({
   },
   getVideoSrc: function (videoId) {
     var that = this;
-    const res = await callCloudFunction('videoDetail', {videoID:videoId});
-    if (res.code == 0) {
-      that.setData({
-        videoMp4Src: res.data.fdMp4
-      });
-    }
+    callCloudFunction('videoDetail', {videoID:videoId}).then(res=> {
+      if (res.code == 0) {
+        that.setData({
+          videoMp4Src: res.data.fdMp4
+        });
+      }
+    })
+
   },
   closePop() {
     this.setData({

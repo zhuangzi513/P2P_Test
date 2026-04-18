@@ -1,7 +1,7 @@
 <view class="main">
   <scroll-view class="category-container" scroll-y="true" scroll-with-animation="true">
     <van-sidebar custom-class="sidebar-l" active-key="{{ activeCategory }}">
-      <van-sidebar-item wx:if="{{item.level == 1}}" id="category{{item.id}}" wx:for="{{firstCategories}}" wx:key="id" data-idx="{{index}}" bindtap="onCategoryClick" title="{{ item.name }}" />
+      <van-sidebar-item wx:if="{{item.level == 1}}" id="category{{item.id}}" wx:for="{{firstCategories}}" wx:key="id" data-idx="{{index}}" bindtap="onCategoryClick" title="{{ item.name }}" class="medium-category" />
     </van-sidebar>
   </scroll-view>
 
