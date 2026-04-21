@@ -1,0 +1,100 @@
+<wxs module="goodsDetailPage">
+module.exports = {
+  url : function(item) {
+    if (item.supplyType == 'vop_jd') {
+      return '/pages/goods-details/vop?id=' + item.yyId + '&goodsId=' + item.id
+    } else {
+      return '/pages/goods-details/index?id=' + item.goodsId
+    }
+  }
+}
+</wxs>
+<view class="jd-banner-container">
+  <swiper class="jd-banner-swiper" indicator-dots="true" indicator-color="rgba(255,255,255,0.5)" indicator-active-color="#E4393C" autoplay circular>
+    <swiper-item wx:for="{{banners}}" wx:key="id">
+      <view class="jd-banner-item">
+        <image mode="aspectFill" bindtap="tapBanner" data-item="{{ item }}" src="{{item.picUrl}}" />
+      </view>
+    </swiper-item>
+  </swiper>
+</view>
+
+<view class="jd-category-container">
+  <view class="jd-category-grid">
+    <view class="jd-category-item" wx:for="{{categories}}" wx:key="id" bindtap="tabClick" data-id="{{item.id}}"
+          hover-class="button-hover" hover-start-time="50" hover-stay-time="150" hover-stop-propagation="true">
+      <view class="jd-category-icon-wrap">
+        <image mode="aspectFill" src="{{item.icon}}"></image>
+      </view>
+      <text class="jd-category-name">{{item.name}}</text>
+    </view>
+    <view class="jd-category-item" wx:for="{{cmsCategories}}" wx:key="id" bindtap="tabClickCms" data-idx="{{ index }}"
+          hover-class="button-hover" hover-start-time="50" hover-stay-time="150" hover-stop-propagation="true">
+      <view class="jd-category-icon-wrap">
+        <image mode="aspectFill" src="{{item.icon}}"></image>
+      </view>
+      <text class="jd-category-name">{{item.name}}</text>
+    </view>
+  </view>
+</view>
+
+<view class="jd-main-container">
+
+  <block wx:if="{{goodsRecommend.length > 0}}">
+
+    <view class="jd-section-header">
+      <view class="jd-section-title">
+        <text class="jd-section-name">recommand</text>
+      </view>
+      <view class="jd-section-more"></view>
+    </view>
+
+    <view class="jd-goods-grid">
+
+      <view class="jd-goods-card" wx:for="{{goodsRecommend}}" wx:key="id" bindtap="toDetailsTap" data-id="{{item.id}}" data-supplytype="{{item.supplyType}}" data-yyid="{{item.yyId}}">
+        <view class="jd-goods-img-wrap">
+          <image src="{{item.pic}}" mode="aspectFill" lazy-load="true" />
+        </view>
+        <view class="jd-goods-info">
+          <view class="jd-goods-name">{{item.name}}</view>
+          <view wx:if="{{item.characteristic}}" class="jd-goods-desc">{{item.characteristic}}</view>
+          <view class="jd-goods-price-box">
+            <view class="jd-goods-price">
+              <text class="jd-price-symbol">¥</text>
+              <text class="jd-price-num">{{item.minPrice}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+
+    </view>
+  </block>
+  
+  <view class="jd-section-header">
+    <view class="jd-section-title">
+      <text class="jd-section-name">goodslist</text>
+    </view>
+  </view>
+
+  <view class="jd-goods-grid">
+    <view class="jd-goods-card" wx:for="{{goods}}" wx:key="id" bindtap="toDetailsTap" data-id="{{item.id}}" data-supplytype="{{item.supplyType}}" data-yyid="{{item.yyId}}">
+      <view class="jd-goods-img-wrap">
+        <image src="{{item.pic}}" mode="aspectFill" lazy-load="true" />
+      </view>
+
+      <view class="jd-goods-info">
+        <view class="jd-goods-name">{{item.name}}</view>
+        <view class="jd-goods-price-box">
+          <view class="jd-goods-price">
+            <text class="jd-price-symbol">¥</text>
+            <text class="jd-price-num">{{item.minPrice}}</text>
+          </view>
+        </view>
+      </view>
+
+    </view>
+  </view>
+
+
+  <van-divider wx:if="{{ !loadingMoreHidden }}" custom-class="jd-end-divider" contentPosition="center">already to the bottom</van-divider>
+</view>

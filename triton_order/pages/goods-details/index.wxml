@@ -1,0 +1,137 @@
+<view class="container">
+
+  <scroll-view class="scroll-container" scroll-into-view="{{toView}}" scroll-y="true" scroll-with-animation="true" bindscroll="bindscroll">
+    
+    <view class="goods-title">{{goodsDetail.basicInfo.name}}</view>
+
+    <view class="divider-icon-center">
+      <view class="line"></view>
+      <icon type="success" size="16" color="#07c160"></icon>
+      <view class="line"></view>
+    </view>
+
+    <view class="swiper-container" id="swiper-container">
+      <swiper class="swiper_box" indicator-dots="true" indicator-active-color="#fff"
+        autoplay="{{!goodsDetail.basicInfo.videoId}}" circular>
+        <swiper-item wx:if="{{goodsDetail.basicInfo.videoId}}">
+          <video src="{{videoMp4Src}}" autoplay="true" loop="true" style='width:100%;height:100%;'></video>
+        </swiper-item>
+        <swiper-item wx:for="{{goodsDetail.pics}}" wx:key="id">
+          <image src="{{item.pic}}" class="slide-image" mode="aspectFill" lazy-load="true" bindtap="previewImage2" data-url="{{ item.pic }}" />
+        </swiper-item>
+      </swiper>
+    </view>
+
+    <view class="goods-info-card">
+      <view class="goods-des-info">
+        <view class="label-title"> 
+          <view class="left">AAAAAAAAAAAAAAAAAAAA</view>
+        </view>
+        <view class="characteristic"><text>{{ goodsDetail.basicInfo.purchaseNotes }}</text></view>
+      </view>
+
+      <view class="goods-des-info">
+        <view class="label-title"> 
+          <view class="left">BBBBBBBBBBBBBBBBBBBB</view>
+        </view>
+        <view class="characteristic"><text>{{ goodsDetail.basicInfo.characteristic }}</text></view>
+      </view>
+    </view>
+
+    <view class="divider-icon-center">
+      <view class="line"></view>
+      <icon type="success" size="16" color="#07c160"></icon>
+      <view class="line"></view>
+    </view>
+
+    <view class="goods-des-info" id="goods-des-info">
+      <view class="label-title"> 
+        <view class="left">EEEEEEEEEEEEEEEEE</view>
+      </view>
+      <view class="goods-text">
+        <mp-html content="{{goodsDetail.content}}" />
+      </view>
+    </view>
+
+
+    <view class="divider-icon-center">
+      <view class="line"></view>
+      <icon type="success" size="16" color="#07c160"></icon>
+      <view class="line"></view>
+    </view>
+
+
+    <van-cell-group id="reputation" wx:if="{{reputation}}" custom-class="vw100 reputation-cell-group">
+      <block wx:for="{{reputation.result}}" wx:key="id">
+        <van-cell custom-class="reputation-cell" title="{{ item.user.nick }}"
+          label="{{item.goods.dateReputation}}" border="{{ false }}">
+          <van-image slot="icon" custom-class="avatarUrl-img" src="{{ item.user.avatarUrl ? (item.user.avatarUrl + '_m') : '/images/default.png' }}" round/>
+          <van-rate value="{{ item.goods.goodReputation }}" color="#e64340" readonly />          
+        </van-cell>
+        <van-cell wx:if="{{ item.goods.goodReputationRemark }}" title-class="reputation-cell-reamrk"
+          title="{{item.goods.goodReputationRemark}}" />
+        <view wx:if="{{ item.reputationPics }}" class="reputation-pics">
+          <image wx:for="{{item.reputationPics}}" wx:for-item="picItem" src="{{ picItem.pic }}_m" mode="aspectFill"
+            bindtap="previewImage" data-url="{{ picItem.pic }}"></image>
+        </view>
+        <van-cell wx:if="{{ item.goods.goodReputationReply }}" title-class="reputation-cell-reamrk"
+          title="RRRRResponse: {{item.goods.goodReputationReply}}" />
+      </block>
+    </van-cell-group>
+  </scroll-view>
+  <van-goods-action>
+    <van-goods-action-icon icon="{{faved?'like':'like-o'}}" text="FAV" bind:click="addFav" />
+    <van-goods-action-button text="{{goodsDetail.basicInfo.goodsStatus}}" type="warning" bind:click="tobuy" />
+  </van-goods-action>
+</view>
+
+<view class="goods-bottom-container">
+  <view class="goods-profile">
+    <view class="p"><text>¥</text> {{goodsDetail.basicIf.priceHigh}}</view>
+  </view>
+  <view class="goods-info-fx">
+    <view class='item left'>
+      <van-icon name="share-o" size="24px" />
+      <view class="icon-title">SHARE</view>
+      <button open-type='share'></button>
+    </view>
+
+    <view class='item' bindtap="likeIt">
+      <view class="p"><text>Liked by</text>{{goodsDetail.basicInfo.admireCount}}</view>
+      <view class="icon-title">CCCCC</view>
+    </view>
+  </view>
+</view>
+
+<view class="dialog-mask" wx:if="{{showDialog}}">
+  <view class="dialog-container">
+    <view class="dialog-title">tobuy title</view>
+    
+    <view class="form-item">
+      <text class="label">phone</text>
+      <input class="input" type="number" placeholder="phone" bindinput="onPhoneInput" value="{{formData.phone}}" />
+    </view>
+    
+    <view class="form-item">
+      <text class="label">price</text>
+      <input class="input" type="number" placeholder="price" bindinput="onPriceInput" value="{{formData.price}}" />
+    </view>
+
+    <view class="form-item">
+      <text class="label">email</text>
+      <input class="input" placeholder="email/wx/qq" bindinput="onEmailExInput" value="{{formData.email_ex}}" />
+    </view>
+
+    <view class="form-item">
+      <text class="label">comment</text>
+      <textarea class="textarea" placeholder="other comment" bindinput="onRemarkInput" value="{{formData.remark}}" />
+    </view>
+    
+    <view class="dialog-buttons">
+      <button class="btn-cancel" bindtap="cancelDialog">Cancel</button>
+      <button class="btn-submit" bindtap="submitDialog">Commit</button>
+    </view>
+  </view>
+</view>
+
+<login show="{{ nickPopShow }}" avatarUrl="{{ popavatarUrl }}" name="{{ popnick }}" />

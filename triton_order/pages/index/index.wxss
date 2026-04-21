@@ -1,0 +1,570 @@
+page {
+  background-color: #E4FFED;
+}
+
+.jd-search-container {
+  background: linear-gradient(135deg, #E4393C 0%, #D81E06 100%);
+  padding: 20rpx 24rpx 24rpx;
+  position: relative;
+}
+
+.jd-search {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.jd-search-title {
+  font-weight: bold;
+  font-size: 36rpx;
+  color: #FFFFFF;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-right: 16rpx;
+  letter-spacing: 2rpx;
+}
+
+.jd-search-box {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(10rpx);
+  height: 72rpx;
+  border-radius: 36rpx;
+  padding: 0 28rpx;
+  margin: 0 24rpx 16rpx;
+  box-shadow: 0 6rpx 24rpx rgba(0, 0, 0, 0.12);
+  transition: all 0.3s ease;
+}
+
+.jd-search-icon {
+  width: 32rpx;
+  height: 32rpx;
+  margin-right: 16rpx;
+  flex-shrink: 0;
+  opacity: 0.5;
+}
+
+.jd-search-box input {
+  flex: 1;
+  height: 72rpx;
+  line-height: 72rpx;
+  font-size: 28rpx;
+  color: #333;
+  background: transparent;
+}
+
+.jd-search-placeholder {
+  font-size: 28rpx;
+  color: #999;
+}
+
+/* ========== 门店选择 ========== */
+.jd-shop-selector {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx 24rpx;
+  background: #FFFFFF;
+  margin: 16rpx 24rpx;
+  border-radius: 12rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.06);
+}
+
+.jd-shop-info {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.jd-shop-info image {
+  width: 36rpx;
+  height: 36rpx;
+  margin-right: 12rpx;
+}
+
+.jd-shop-name {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 500;
+}
+
+.jd-shop-change {
+  display: flex;
+  align-items: center;
+  font-size: 26rpx;
+  color: #E4393C;
+}
+
+.jd-shop-change text {
+  margin-right: 8rpx;
+}
+
+.jd-shop-change image {
+  width: 24rpx;
+  height: 24rpx;
+}
+
+.jd-banner-container {
+  width: 100%;
+  height: 400rpx;
+  position: relative;
+  margin-bottom: 20rpx;
+  padding-top: 16rpx;
+}
+
+.jd-banner-swiper {
+  width: 100%;
+  height: 400rpx;
+}
+
+.jd-banner-item {
+  width: 100%;
+  height: 400rpx;
+  padding: 0 24rpx;
+  box-sizing: border-box;
+}
+
+.jd-banner-item image {
+  width: 100%;
+  height: 100%;
+  border-radius: 16rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.1);
+}
+
+/* 购买动态 */
+.jd-buy-dynamic {
+  position: absolute;
+  bottom: 32rpx;
+  left: 48rpx;
+  right: 48rpx;
+  z-index: 10;
+}
+
+.jd-dynamic-swiper {
+  width: 100%;
+  height: 60rpx;
+}
+
+.jd-dynamic-item {
+  display: flex;
+  align-items: center;
+  background: linear-gradient(90deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.4) 100%);
+  backdrop-filter: blur(10rpx);
+  border-radius: 30rpx;
+  padding: 8rpx 20rpx;
+  font-size: 24rpx;
+  color: #FFFFFF;
+}
+
+.jd-dynamic-item image {
+  width: 36rpx;
+  height: 36rpx;
+  border-radius: 50%;
+  margin-right: 12rpx;
+  border: 2rpx solid #FFFFFF;
+  flex-shrink: 0;
+}
+
+.jd-dynamic-item text {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.jd-category-container {
+  background: #FFFFFF;
+  padding: 28rpx 16rpx 32rpx;
+  margin: 0 24rpx 20rpx;
+  border-radius: 16rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 115, 0, 0.1);
+}
+
+.jd-category-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.jd-category-item {
+  width: 20%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 24rpx;
+}
+
+.jd-category-icon-wrap {
+  width: 88rpx;
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12rpx;
+  border-radius: 16rpx;
+  background: linear-gradient(135deg, #FFF5F5 0%, #FFFFFF 100%);
+  box-shadow: 0 2rpx 8rpx rgba(0, 115, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.jd-category-icon-wrap image {
+  width: 64rpx;
+  height: 64rpx;
+}
+
+.jd-category-name {
+  font-size: 32rpx;
+  color: #026302;
+  text-align: center;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-shadow: 4rpx 4rpx 6rpx rgba(0,255,0,0.3);
+}
+
+/* ========== 公告通知 ========== */
+.jd-notice-container {
+  margin: 0 24rpx 20rpx;
+  border-radius: 12rpx;
+  overflow: hidden;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.08);
+}
+
+.jd-notice-swiper {
+  height: 72rpx;
+}
+
+.jd-notice-icon {
+  width: 120rpx;
+  height: 32rpx;
+  margin-right: 16rpx;
+}
+
+/* ========== 主容器 ========== */
+.jd-main-container {
+  min-height: 100vh;
+  padding-bottom: 40rpx;
+}
+
+/* 直播广告横幅 */
+.jd-live-banner {
+  display: block;
+  width: 702rpx;
+  margin: 0 auto 28rpx;
+  border-radius: 16rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.1);
+}
+
+/* ========== 区块标题 ========== */
+.jd-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 32rpx 24rpx 28rpx;
+}
+
+.jd-section-title {
+  display: flex;
+  align-items: center;
+}
+
+.jd-section-icon {
+  width: 40rpx;
+  height: 40rpx;
+  margin-right: 12rpx;
+}
+
+.jd-section-name {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #047504;
+  position: relative;
+}
+
+.jd-section-name::after {
+  content: '';
+  position: absolute;
+  bottom: -6rpx;
+  left: 0;
+  width: 60%;
+  height: 6rpx;
+  background: linear-gradient(90deg, #E4393C 0%, transparent 100%);
+  border-radius: 3rpx;
+}
+
+.jd-section-more {
+  font-size: 26rpx;
+  color: #047504;
+  display: flex;
+  align-items: center;
+}
+
+/* ========== 秒杀商品 ========== */
+.jd-seckill-container {
+  padding: 0 24rpx 20rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+}
+
+.jd-seckill-item {
+  background: linear-gradient(135deg, #FFF5F5 0%, #FFFFFF 100%);
+  border-radius: 16rpx;
+  overflow: hidden;
+  box-shadow: 0 4rpx 20rpx rgba(228, 57, 60, 0.12);
+  position: relative;
+}
+
+.jd-seckill-img-wrap {
+  width: 100%;
+  height: 702rpx;
+  position: relative;
+  overflow: hidden;
+}
+
+.jd-seckill-img-wrap image {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.jd-seckill-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.95) 30%, rgba(255, 255, 255, 1) 60%);
+  padding: 80rpx 24rpx 24rpx;
+}
+
+.jd-seckill-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 16rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.jd-seckill-countdown {
+  background: linear-gradient(135deg, #FFF0F0 0%, #FFE5E5 100%);
+  border-radius: 8rpx;
+  padding: 12rpx 20rpx;
+  margin-bottom: 20rpx;
+  display: inline-block;
+}
+
+.jd-seckill-countdown .van-count-down {
+  color: #E4393C !important;
+  font-size: 26rpx !important;
+  font-weight: bold !important;
+}
+
+.jd-seckill-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.jd-seckill-price {
+  display: flex;
+  align-items: baseline;
+}
+
+.jd-price-symbol {
+  font-size: 32rpx;
+  color: #E4393C;
+  font-weight: bold;
+  margin-right: 4rpx;
+}
+
+.jd-price-num {
+  font-size: 48rpx;
+  color: #E4393C;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.jd-price-del {
+  font-size: 26rpx;
+  color: #999;
+  text-decoration: line-through;
+  margin-left: 16rpx;
+}
+
+.jd-seckill-btn-wrap {
+  flex-shrink: 0;
+}
+
+.jd-seckill-btn {
+  min-width: 160rpx;
+  height: 64rpx;
+  line-height: 64rpx;
+  text-align: center;
+  border-radius: 32rpx;
+  font-size: 28rpx;
+  font-weight: bold;
+  padding: 0 32rpx;
+}
+
+.jd-btn-active {
+  background: linear-gradient(135deg, #FF6B6B 0%, #E4393C 100%);
+  color: #FFFFFF;
+  box-shadow: 0 4rpx 16rpx rgba(228, 57, 60, 0.4);
+}
+
+.jd-btn-disabled {
+  background: #F5F5F5;
+  color: #999;
+}
+
+.jd-goods-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding: 0 24rpx 20rpx;
+  gap: 20rpx;
+}
+
+.jd-goods-card {
+  width: calc(50% - 15rpx);
+  background: #FFFFFF;
+  border-radius: 12rpx;
+  overflow: hidden;
+  box-shadow: 0 8rpx 16rpx rgba(7, 255, 11, 0.3);
+  transition: all 0.3s ease;
+}
+
+.jd-goods-img-wrap {
+  width: 100%;
+  height: 345rpx;
+  position: relative;
+  overflow: hidden;
+  background: #a4bea6;
+}
+
+.jd-goods-img-wrap image {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.jd-goods-info {
+  padding: 16rpx;
+}
+
+.jd-goods-name {
+  font-size: 28rpx;
+  border: #005000;
+  color: #005000;
+  font-weight: bold;
+  line-height: 1.4;
+  height: 78rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  margin-bottom: 8rpx;
+}
+
+.jd-goods-desc {
+  font-size: 24rpx;
+  color: #999;
+  line-height: 1.3;
+  height: 31rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-bottom: 12rpx;
+}
+
+.jd-goods-price-box {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.jd-goods-price {
+  display: flex;
+  align-items: baseline;
+  color: #022c12;
+}
+
+.jd-goods-price .jd-price-symbol {
+  font-size: 36rpx;
+}
+
+.jd-goods-price .jd-price-num {
+  font-size: 36rpx;
+  color: #086008;
+}
+
+.jd-goods-original-price {
+  font-size: 22rpx;
+  color: #999;
+  text-decoration: line-through;
+  margin-left: 8rpx;
+}
+
+
+@keyframes float-bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8rpx);
+  }
+}
+
+.jd-end-divider {
+  margin-top: 40rpx !important;
+  margin-bottom: 40rpx !important;
+  color: #999 !important;
+  font-size: 24rpx !important;
+}
+
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  color: transparent;
+}
+
+.space {
+  height: 24rpx;
+}
+
+.container {
+  background-color: #BAFFBA;
+}
+
+.van-card__price-integer {
+  font-size: 36rpx !important;
+  color: #E4393C !important;
+  font-weight: bold !important;
+}
+
+.van-progress__portion {
+  background: #E4393C !important;
+}
+
+.van-count-down {
+  color: #E4393C !important;
+  font-size: 26rpx !important;
+}
+
+@media (max-width: 375px) {
+  .jd-section-name {
+    font-size: 32rpx;
+  }
+  
+  .jd-goods-name {
+    font-size: 26rpx;
+  }
+}

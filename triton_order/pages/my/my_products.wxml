@@ -1,0 +1,35 @@
+<wxs module="goodsDetailPage">
+module.exports = {
+  url : function(item) {
+    return '/pages/goods-details/index?id=' + item.goodsId
+  }
+}
+</wxs>
+
+<view class="jd-main-container">
+  <view class="jd-section-header">
+    <view class="jd-section-title">
+      <image class="jd-section-icon" src="../../images/home/goodslist.png"></image>
+      <text class="jd-section-name">MY</text>
+    </view>
+  </view>
+  <view class="jd-goods-grid">
+    <view class="jd-goods-card" wx:for="{{goods}}" wx:key="id" bindtap="toModifyTap" data-id="{{item.id}}" data-supplytype="{{item.supplyType}}" data-yyid="{{item.yyId}}">
+      <view class="jd-goods-img-wrap">
+        <image src="{{item.pic}}" mode="aspectFill" lazy-load="true" />
+      </view>
+      <view class="jd-goods-info">
+        <view class="jd-goods-name">{{item.name}}</view>
+        <view wx:if="{{item.characteristic}}" class="jd-goods-desc">{{item.characteristic}}</view>
+        <view class="jd-goods-price-box">
+          <view class="jd-goods-price">
+            <text class="jd-price-symbol">¥</text>
+            <text class="jd-price-num">{{item.minPrice}}</text>
+          </view>
+          <view wx:if="{{item.originalPrice && item.originalPrice > 0}}" class="jd-goods-original-price">¥{{item.originalPrice}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <van-divider wx:if="{{ !loadingMoreHidden }}" custom-class="jd-end-divider" contentPosition="center">NO MORE</van-divider>
+</view>

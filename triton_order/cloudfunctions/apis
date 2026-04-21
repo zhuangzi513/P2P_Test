@@ -1,0 +1,89 @@
+WXAPI = require
+WXAPI.scoreSignLogs
+WXAPI.scoreSign
+WXAPI = require
+WXAPI.userDetail
+WXAPI.userLevelList
+WXAPI = require
+WXAPI.userLevelList
+WXAPI.userLevelBuyLogs
+WXAPI = require
+WXAPI.userLevelDetail
+WXAPI.userLevelPrices
+WXAPI.userAmountV2
+WXAPI.userLevelBuy
+WXAPI = require
+WXAPI.goodsFavCheck
+WXAPI.goodsFavDelete
+WXAPI.goodsFavPut
+WXAPI.goodsDetail
+WXAPI.goodsReputationV2
+WXAPI.videoDetail
+WXAPI.commitBuy
+WXAPI = require
+WXAPI.userDetail
+WXAPI.peisongMemberChangeWorkStatus
+WXAPI.userAmount
+WXAPI.orderStatistics
+WXAPI.modifyUserInfoV2
+WXAPI.uploadFileV2
+WXAPI.modifyUserInfoV2
+WXAPI = require
+WXAPI.userDetail
+WXAPI from 'apifm-wxapi';
+WXAPI.query
+WXAPI.uploadFile
+WXAPI.updateTableData
+WXAPI = require
+WXAPI.userDetail
+WXAPI.uploadFileV2
+WXAPI.modifyUserInfoV2
+WXAPI = require
+WXAPI.userDetail
+WXAPI = require
+WXAPI.userAmount
+WXAPI.dynamicUserCode
+WXAPI = require
+WXAPI.jsonList
+WXAPI.uploadFileV2
+WXAPI.addComment
+WXAPI.jsonSet
+WXAPI = require
+WXAPI.my_goodsv2
+WXAPI.my_goodsv2
+WXAPI = require
+WXAPI.loginWxaMobileV3
+WXAPI = require
+WXAPI.noticeList
+WXAPI = require
+WXAPI.noticeDetail
+WXAPI = require
+WXAPI.goodsv2
+WXAPI.banners
+WXAPI.goodsDynamicV2
+WXAPI.goodsCategory
+WXAPI.goodsv2
+WXAPI.noticeList
+WXAPI.cmsCategories
+WXAPI = require
+WXAPI.goodsCategory
+WXAPI.goodsv2
+WXAPI = require
+WXAPI.goodsFavList
+WXAPI.goodsFavDeleteV2
+WXAPI = require
+WXAPI.goodsv2
+WXAPI.shippingCarInfoAddItem
+WXAPI = require
+WXAPI.jdvopGoodsListV3
+WXAPI.shippingCarInfoAddItem
+WXAPI.goodsDetail
+WXAPI = require
+WXAPI.myBuyGoodsHisV2
+WXAPI.goodsCategory
+WXAPI = require
+WXAPI.banners
+WXAPI.shopSubdetail
+WXAPI from 'apifm-wxapi';
+WXAPI.uploadFile
+WXAPI.add
