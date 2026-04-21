@@ -1,0 +1,11 @@
+{
+        orderID: '',
+        goodID:  '',
+        time:  '',
+        senderID:  '',
+        recverID:  '',
+        senderAddr:  '',
+        recverAddr:  '',
+        orderStatus:  '',
+}
+

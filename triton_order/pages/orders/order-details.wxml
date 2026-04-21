@@ -1,21 +1,14 @@
 <view class="container">
   <view class="status-card">
     <view class="status-header">
-      <view class="status-icon-wrap">
-        <image wx:if  ="{{orderDetail.orderInfo.status<=100}}" class="status-icon" src="/images/order-details/icon-ddgb.png"></image>
-        <image wx:elif="{{orderDetail.orderInfo.status<=200}}" class="status-icon" src="/images/order-details/icon-ddfk.png"></image>
-        <image wx:elif="{{orderDetail.orderInfo.status<=300}}" class="status-icon" src="/images/order-details/icon-ddfh.png"></image>
-        <image wx:elif="{{orderDetail.orderInfo.status<=400}}" class="status-icon" src="/images/order-details/icon-ddsh.png"></image>
-        <image wx:elif="{{orderDetail.orderInfo.status<=500}}" class="status-icon" src="/images/order-details/icon-jycg.png"></image>
-      </view>
       <view class="status-info">
-        <view class="status-title">{{orderDetail.orderInfo.statusStr}}</view>
+        <view class="status-title">{{orderDetail.orderStatusStr}}</view>
         <view class="order-number-text">ID:{{orderDetail.orderInfo.orderNumber}}</view>
       </view>
     </view>
   </view>
 
-  <view  wx:if="{{orderDetail.orderInfo.status==100}}||{{orderDetail.orderInfo.status==200}}" class="container">
+  <view  wx:if="{{orderDetail.orderStatus===200}}" class="container">
     <scroll-view scroll-y enhanced class="scroll-view">
       <view class="section">
         <view class="section-title">BASIC INFO</view>
@@ -67,12 +60,22 @@
               <view class="delete-btn" catchtap="deleteVideo" data-index="{{index}}">-</view>
             </view>
           </block>
-          <view class="add-btn" wx:if="{{videoList.length < 3}}" bindtap="addVideo">+</view>
+          <view class="add-btn" wx:if="{{orderDetail.videoListLen < 3}}" bindtap="addVideo">+</view>
         </view>
       </view>
-      <view class="section">
-        <view class="section-title">ADDRESS INFO</view>
-        <textarea class="textarea" placeholder="INPUT ADDR" value="{{userDetail.address[0]}}" bindinput="onAddrInput" maxlength="200" auto-height />
+      <view class="section" wx:if="{{orderDetail.orderType === 0}}">
+        <view class="section-title">ADDRESS SENDER</view>
+        <textarea class="textarea" placeholder="SENDER ADDR" value="{{orderDetail.senderAddr}}" bindinput="onSenderAddrInput" maxlength="200" auto-height />
+      </view>
+
+      <view class="section" wx:if="{{orderDetail.orderType === 1}}">
+        <view class="section-title">ADDRESS RECVER</view>
+        <textarea class="textarea" placeholder="INPUT ADDR" value="{{orderDetail.recverAddr}}" bindinput="onRecverAddrInput" maxlength="200" auto-height />
+      </view>
+
+      <view class="section" wx:if="{{orderDetail.orderStatus < 200}}">
+        <view class="section-title">POST ID</view>
+        <textarea class="textarea" placeholder="POST ID"    value="{{userDetail.postID}}" bindinput="onPostIDInput" maxlength="200" auto-height />
       </view>
   
       <button class="submit-btn" type="primary" bindtap="submit" loading="{{submitting}}" disabled="{{submitting}}"><button>
@@ -80,121 +83,34 @@
   </view>
 
 
-  <block wx:if="{{orderDetail.logistics}}">
-    <view class="card-section">
-      <view class="card-title">
-        <view class="title-line"></view>
-        <text>POSTMAN</text>
-      </view>
-      
-      <view wx:if="{{orderDetail.logisticsTraces}}" class="logistics-card" bindtap="wuliuDetailsTap" data-id="{{orderDetail.orderInfo.id}}">
-        <view class="logistics-header">
-          <view class="logistics-icon">
-            <image class="icon-img" src="/images/order-details/icon-wuliu.png"></image>
-          </view>
-          <view class="logistics-info">
-            <view class="tracking-number">{{orderDetail.logistics.trackingNumber}}</view>
-            <view class="logistics-status">{{orderDetail.logisticsTraces[orderDetail.logisticsTraces.length-1].AcceptStation}}</view>
-            <view class="logistics-time">{{orderDetail.logisticsTraces[orderDetail.logisticsTraces.length-1].AcceptTime}}</view>
-          </view>
-          <view class="arrow-icon">
-            <van-icon name="arrow" color="#999" />
-          </view>
-        </view>
-      </view>
-      
-      <view wx:else class="logistics-card">
-        <view class="logistics-header">
-          <view class="logistics-icon">
-            <image class="icon-img" src="/images/order-details/icon-wuliu.png"></image>
-          </view>
-          <view class="logistics-info">
-            <view class="tracking-number">{{orderDetail.logistics.trackingNumber}}</view>
-            <view class="logistics-status">EMPTY POSTMAN</view>
-          </view>
-        </view>
-      </view>
-
-      <view wx:if="{{ orderDetail.orderLogisticsShippers && orderDetail.orderLogisticsShippers.length > 0 }}" class="multi-logistics">
-        <van-cell
-          wx:for="{{ orderDetail.orderLogisticsShippers }}"
-          wx:key="id"
-          title="{{ item.shipperName }}: {{ item.trackingNumber }}"
-          label="{{ item.tracesLast }}"
-          center
-          is-link
-          url="/pages/wuliu/index?id={{ item.orderId }}&trackingNumber={{ item.trackingNumber }}"
-        />
-      </view>
-
-      <view class="address-card">
-        <view class="address-icon">
-          <image class="icon-img" src="/images/order-details/icon-address.png"></image>
-        </view>
-        <view class="address-info">
-          <view class="address-name">{{orderDetail.logistics.linkMan}}
-            <text class="address-phone">{{orderDetail.logistics.mobile}}</text>
-          </view>
-          <view class="address-detail">
-            {{orderDetail.logistics.provinceStr}} {{orderDetail.logistics.cityStr}} {{orderDetail.logistics.areaStr}} {{orderDetail.logistics.address}}
-          </view>
-        </view>
-      </view>
-    </view>
-  </block>
-
-  <view wx:if="orderDetail.orderInfo.status>=300}}" class="card-section goods-section">
+  <view wx:if="orderDetail.orderStatus>=200}}" class="card-section goods-section">
     <view class="card-title">
       <view class="title-line"></view>
-      <text>GOOD DETAIL</text>
+      <text>{{orderDetail.orderStatusStr}}</text>
     </view>
     <wxs module="goodsDetailPage">
     module.exports = {
-      url : function(item) {
-        return '/pages/goods-details/index?id=' + item.goodsId
+      url : function(goodsId) {
+        return '/pages/goods-details/index?id=' + goodsId
       }
     }
     </wxs>
     <form bindsubmit="submitReputation">
       <view class="goods-card">
-        <block wx:for="{{orderDetail.goods}}" wx:key="id">
+        <block>
           <van-card
-            num="{{item.number}}"
-            price="{{item.amount}}"
-            desc="{{item.property}}"
-            title="{{item.goodsName}}"
-            thumb="{{item.pic}}"
-            thumb-link="{{ goodsDetailPage.url(item) }}"
+            price="{{orderDetail.price}}"
+            desc ="{{orderDetail.description}}"
+            title="{{goodInfo.goodsName}}"
+            thumb="{{goodInfo.pic}}"
+            thumb-link="{{ goodsDetailPage.url(goodInfo.goodsID) }}"
             centered
-            lazy-load
+            
           />
         </block>
       </view>
     </form>
-    <view class="action-btn-wrap" wx:if="{{orderDetail.orderInfo.status==2}}">
-      <button class="action-btn primary-btn" bind:tap="confirmBtnTap">CONFIRM GOT IT</button>
-    </view>
-  </view>
-
-  <view class="card-section amount-section">
-    <view class="card-title">
-      <view class="title-line"></view>
-      <text>AMOUNT</text>
-    </view>
-    <view class="amount-card">
-      <view class="amount-row">
-        <view class="amount-label">AMOUNT</view>
-        <view class="amount-value">¥ {{orderDetail.orderInfo.amount}}</view>
-      </view>
-      <view class="amount-row">
-        <view class="amount-label">POST PRICE</view>
-        <view class="amount-value">¥ {{orderDetail.orderInfo.amountLogistics}}</view>
-      </view>
-      <view class="amount-row total-row">
-        <view class="amount-label total-label">PAYMENT</view>
-        <view class="amount-value total-value">¥ {{orderDetail.orderInfo.amountReal}}</view>
-      </view>
-    </view>
+    <button class="action-btn primary-btn" disabled="{{updatingDisabled}}"  bind:tap="nextStep">{{orderDetail.nextStep}}</button>
   </view>
 
   <view wx:if="{{ orderDetail.logs && orderDetail.logs.length > 0 }}" class="card-section">

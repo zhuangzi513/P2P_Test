@@ -99,9 +99,6 @@ Page({
       })
       return
     }
-    wx.showToast({
-      title: '设置成功',
-    })
     this.getUserApiInfo()
   },
   login() {
@@ -123,19 +120,19 @@ Page({
     _createInputOrder()
   },
   async _createInputOrder() {
-    const res = await callCloudFunction('createInputOrder', { userID: wx.getStorageSync('userID')});
+    const res = await callCloudFunction('createInputOrder', { recverID: wx.getStorageSync('userID'), recverAddr: wx.getStorageSync('userAddr')});
     if (res.code == 0) {
       new_order_id = res.data.new_input_order_id;
       wx.navigateTo({
         url: '/pages/orders/order-details/?id=' + new_order_id 
       })
     }
-  }
+  },
   createOutputOrder() {
     _createOutputOrder()
   },
   async _createOutputOrder() {
-    const res = await callCloudFunction('createOutputOrder', { userID: wx.getStorageSync('userID')});
+    const res = await callCloudFunction('createOutputOrder', { senderID: wx.getStorageSync('userID'), senderAddr: wx.getStorageSync('userAddr')});
     if (res.code == 0) {
       new_order_id = res.data.new_output_order_id;
       wx.navigateTo({
