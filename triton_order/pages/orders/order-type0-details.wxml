@@ -83,12 +83,12 @@
         <textarea class="textarea" placeholder="POST ID 1"    value="{{userDetail.postID1}}" bindinput="onPostIDInput" maxlength="200" auto-height />
       </view>
   
-      <button class="submit-btn" type="primary" bindtap="submit" loading="{{submitting}}" disabled="{{submitting}}"><button>
+      <button class="submit-btn" type="primary" bindtap="submit" loading="{{submitting}}" disabled="{{submitting}}"></button>
     </scroll-view>
   </view>
 
 
-  <view wx:if="{{orderDetail.orderStatus>0}}" class="card-section goods-section">
+  <view wx:if="{{orderDetail.orderStatus>=0}}" class="card-section goods-section">
     <view class="card-title">
       <view class="title-line"></view>
       <text>{{orderDetail.orderStatusStr}}</text>

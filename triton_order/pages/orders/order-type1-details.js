@@ -11,34 +11,28 @@ Page({
       orderPostID0Needed: false,
       orderPostID1Needed: false,
       enum ORDERSTATUS{
-	INIT,
-        CONFRIM,
-        SEND0,
-        RECVED0,
-        ONSALE,
-        HITTED,
-        SELLED,
+	AGREED,
+        CONFIRM,
         PAYED,
+        SENDTORECVER,
+        RECVED0,
         DONE,
         CANCELLED,
-        SEND1,
-        RECVED1,
+        BACKING,
+        BACKED,
         CLOSE
       },
-      const statusMapType0 = [
-	      'Initialization',
-              'Confirm',
-              'SendToSaler',
-              'ConfirmRecived',
-              'Exhibition',
-              'Hitted',
-              'Selled',
-              'Payed',
-              'Done',
-              'Canceled',
-              'Backing',
-              'Backed',
-              'Closed'
+      const statusMapType1 = [
+	'AGREED',
+        'CONFIRM',
+        'PAYED',
+        'SENDTORECVER',
+        'RECVED0',
+        'DONE',
+        'CANCELLED',
+        'BACKING',
+        'BACKED',
+        'CLOSED'
       ],
       goodInfo: {
         goodID: '',
@@ -107,6 +101,9 @@ Page({
       this.setData({
         orderDetail: res.data,
       })
+      if (!this.data.orderDetail.senderID.strim()) {
+          wx.showToast({ title: 'empty senderID:', icon: 'none' });
+      }
       this.data.orderNextStep = this.data.statusMapType0[this.data.orderDetail.orderStatus+1]
     },
     updateButtonStatus() {
@@ -143,12 +140,7 @@ Page({
       }
       this.data.updatingDisabled = opEnabled;
     },
-    onColorInput(e) { this.setData({ goodInfo.color: e.detail.value }); },
-    onSizeInputX(e) { this.setData({ goodInfo.sizeX: e.detail.value }); },
-    onSizeInputY(e) { this.setData({ goodInfo.sizeY: e.detail.value }); },
-    onSizeInputZ(e) { this.setData({ goodInfo.sizeZ: e.detail.value }); },
     onPriceInput(e) { this.setData({ goodInfo.price: e.detail.value }); },
-    onDescInput(e)  { this.setData({ goodInfo.description: e.detail.value }); },
     onSenderAddrInput(e)  { 
       this.setData({ orderDetail.senderAddr: e.detail.value });
     },

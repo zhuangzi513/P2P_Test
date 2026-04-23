@@ -42,6 +42,8 @@ Page({
       ],
       goodInfo: {
         goodID: '',
+        ownerID: '',
+        bankID: '',
         color: '',
 	sizeX: '',
 	sizeY: '',
@@ -107,6 +109,7 @@ Page({
       this.setData({
         orderDetail: res.data,
       })
+      this.data.orderDetail.senderID = wx:getStorageSync("userID");
       this.data.orderNextStep = this.data.statusMapType0[this.data.orderDetail.orderStatus+1]
     },
     updateButtonStatus() {
@@ -283,6 +286,8 @@ Page({
     submitGood() {
       this.data.goodId = createGoodID();
       this.data.goodInfo.goodID = this.data.goodId;
+      this.data.goodInfo.ownerID = wx:getStorageSync("userID");
+      this.data.goodInfo.bankID = this.data.orderDetail.recverID;
       if (this.data.goodInfo.color.trim()) return wx.showToast({ title: 'COLOR NEEDED', icon: 'none' });
       if (this.data.goodInfo.sizeX.trim()) return wx.showToast({ title: 'SHAPEX NEEDED', icon: 'none' });
       if (this.data.goodInfo.sizeY.trim()) return wx.showToast({ title: 'SHAPEY NEEDED', icon: 'none' });
@@ -293,6 +298,8 @@ Page({
     },
     submitOrder() {
       if (!this.data.orderDetail.goodID.trim()) return wx.showToast({ title: 'EMPTY GOODS', icon: 'none' });
+      if (!this.data.orderDetail.senderID.trim()) return wx.showToast({ title: 'EMPTY senderID', icon: 'none' });
+      if (!this.data.orderDetail.recverID.trim()) return wx.showToast({ title: 'EMPTY recverID', icon: 'none' });
       if (!this.data.orderDetail.orderType.trim()) return wx.showToast({ title: 'ORDER TYPE NEEDED', icon: 'none' });
       if (!this.data.orderDetail.senderAddr.trim()) return wx.showToast({ title: 'SENDERADDR NEEDED', icon: 'none' });
       if (!this.data.orderDetail.recverAddr.trim()) return wx.showToast({ title: 'RECVERADDR NEEDED', icon: 'none' });
@@ -302,6 +309,7 @@ Page({
       } else if (this.data.orderPostID1Needed) {
         if (!orderDetail.postID1.trim()) return wx.showToast({title: "EMPTY POSTID", icon: 'none'});
       }
+      this.data.orderDetail.orderStatus = this.data.orderDetail.orderStatus + 1;
       updateOrderData();
     },
     submit() {
