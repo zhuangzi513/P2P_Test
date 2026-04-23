@@ -10,20 +10,35 @@ Page({
       orderNextStep: "",
       orderPostID0Needed: false,
       orderPostID1Needed: false,
-      statusMapType0:[
-         'Initialization',
-         'Confirm',
-         'SendToSaler',
-         'ConfirmRecived',
-         'Exhibition',
-         'Hitted',
-         'Selled',
-         'Payed',
-         'Done',
-         'Canceled',
-         'Backing',
-         'Backed',
-         'Closed'
+      enum ORDERSTATUS{
+	INIT,
+        CONFRIM,
+        SEND0,
+        RECVED0,
+        ONSALE,
+        HITTED,
+        SELLED,
+        PAYED,
+        DONE,
+        CANCELLED,
+        SEND1,
+        RECVED1,
+        CLOSE
+      },
+      const statusMapType0 = [
+	      'Initialization',
+              'Confirm',
+              'SendToSaler',
+              'ConfirmRecived',
+              'Exhibition',
+              'Hitted',
+              'Selled',
+              'Payed',
+              'Done',
+              'Canceled',
+              'Backing',
+              'Backed',
+              'Closed'
       ],
       goodInfo: {
         goodID: '',
@@ -115,6 +130,9 @@ Page({
         //sender confirm got payed
         opEnabled = isSender;
       } else if (curOrderStatus == 9) {
+        //done
+        opEnabled = false;
+      } else if (curOrderStatus == 10) {
         //any time, cancel should be confirmed by eachother
         opEnabled = !isCanceler;
       } else if (curOrderStatus == 10) {
@@ -123,6 +141,7 @@ Page({
       } else if (curOrderStatus == 11) {
         opEnabled = isSender;
       }
+      this.data.updatingDisabled = opEnabled;
     },
     onColorInput(e) { this.setData({ goodInfo.color: e.detail.value }); },
     onSizeInputX(e) { this.setData({ goodInfo.sizeX: e.detail.value }); },
@@ -137,12 +156,14 @@ Page({
       this.setData({ orderDetail.recverAddr: e.detail.value });
     },
     onPostIDInput(e)  {
-      this.setData({ orderDetail.recverAddr: e.detail.value });
+      if (orderPostID0Needed) {
+        this.setData({ orderDetail.postID0: e.detail.value });
+      } else if (orderPostID1Needed) {
+        this.setData({ orderDetail.postID1: e.detail.value });
+      }
     },
-
-    nextStep()  {
+    async updateOrderData() {
       try {
-        this.data.orderDetail.orderStatus = this.data.orderDetail.orderStatus + 1;
         const res = await callCloudFunction('updateOrderData',
                 orderID: this.data.orderDetail.orderID,
           	orderDetail: this.data.orderDetail
@@ -151,10 +172,17 @@ Page({
           wx.showToast({ title: res.message || 'FAIL TO UPDATE', icon: 'none' });
         }
       } catch (err) {
-        wx.hideLoading();
         wx.showToast({ title: 'INTERNET ERROR', icon: 'none' });
         console.error(err);
       }
+    },
+    cancelOrder()  {
+      this.data.orderDetail.orderStatus = ORDERSTATUS.CANCELLED; 
+      updateOrderData();
+    },
+    nextStep()  {
+      this.data.orderDetail.orderStatus = this.data.orderDetail.orderStatus + 1;
+      updateOrderData();
     },
     previewImage(e) {
       const urls = this.data.imageList.map(i => i.url);
@@ -236,7 +264,23 @@ Page({
 
       });
     },
-    async submitGood() {
+    async updateGoodData() {
+      try {
+        const res = await callCloudFunction('updateGoodsData',
+                {
+                  goodID: this.data.goodId,
+                  ownerID: wx.getStorageSync('userID'),
+                  info: this.data.goodInfo
+                });
+        if (res.code != 0) {
+          wx.showToast({ title: res.message || 'FAIL TO UPDATE', icon: 'none' });
+        }
+      } catch (err) {
+        wx.showToast({ title: 'INTERNET ERROR', icon: 'none' });
+        console.error(err);
+      }
+    },
+    submitGood() {
       this.data.goodId = createGoodID();
       this.data.goodInfo.goodID = this.data.goodId;
       if (this.data.goodInfo.color.trim()) return wx.showToast({ title: 'COLOR NEEDED', icon: 'none' });
@@ -245,52 +289,22 @@ Page({
       if (this.data.goodInfo.sizeZ.trim()) return wx.showToast({ title: 'SHAPEZ NEEDED', icon: 'none' });
       const priceNum = parseFloat(this.data.goodInfo.price);
       if (isNaN(priceNum)) return wx.showToast({ title: 'PRICE NEEDED', icon: 'none' });
-
-      try {
-        const res = await callCloudFunction('updateGoodsData',
-                {
-                  goodID: this.data.goodId,
-                  ownerID: wx.getStorageSync('userID'),
-                  info: this.data.goodInfo
-                });
-        wx.hideLoading();
-        if (res.code != 0) {
-          wx.showToast({ title: res.message || 'FAIL TO UPDATE', icon: 'none' });
-        }
-      } catch (err) {
-        wx.hideLoading();
-        wx.showToast({ title: 'INTERNET ERROR', icon: 'none' });
-        console.error(err);
-      }
+      updateGoodData();
     },
-    async submitOrder() {
+    submitOrder() {
       if (!this.data.orderDetail.goodID.trim()) return wx.showToast({ title: 'EMPTY GOODS', icon: 'none' });
       if (!this.data.orderDetail.orderType.trim()) return wx.showToast({ title: 'ORDER TYPE NEEDED', icon: 'none' });
       if (!this.data.orderDetail.senderAddr.trim()) return wx.showToast({ title: 'SENDERADDR NEEDED', icon: 'none' });
       if (!this.data.orderDetail.recverAddr.trim()) return wx.showToast({ title: 'RECVERADDR NEEDED', icon: 'none' });
 
-      this.data.orderDetail.orderStatus = this.data.orderDetail.orderStatus + 1;
-      if (this.data.orderDetail.orderType === 0) {
-         this.data.orderDetail.orderStatusStr = this.statusMapType0.get(this.data.orderDetail.orderStatus);
-      } else if (this.data.orderDetail.orderType === 1) {
-         this.data.orderDetail.orderStatusStr = this.statusMapType1.get(this.data.orderDetail.orderStatus);
+      if (this.data.orderPostID0Needed) {
+        if (!orderDetail.postID0.trim()) return wx.showToast({title: "EMPTY POSTID", icon: 'none'});
+      } else if (this.data.orderPostID1Needed) {
+        if (!orderDetail.postID1.trim()) return wx.showToast({title: "EMPTY POSTID", icon: 'none'});
       }
-
-      try {
-        const res = await callCloudFunction('updateOrderData',
-                orderID: this.data.orderDetail.orderID,
-          	orderDetail: this.data.orderDetail
-                });
-        if (res.code != 0) {
-          wx.showToast({ title: res.message || 'FAIL TO UPDATE', icon: 'none' });
-        }
-      } catch (err) {
-        wx.hideLoading();
-        wx.showToast({ title: 'INTERNET ERROR', icon: 'none' });
-        console.error(err);
-      }
+      updateOrderData();
     },
-    async submit() {
+    submit() {
       this.setData({ submitting: true });
       wx.showLoading({ title: 'SAVING...' });
       submitGood();

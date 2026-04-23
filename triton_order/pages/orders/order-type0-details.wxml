@@ -8,7 +8,7 @@
     </view>
   </view>
 
-  <view  wx:if="{{orderDetail.orderStatus===0}}" class="container">
+  <view  wx:if="{{orderDetail.orderStatus == -1}}" class="container">
     <scroll-view scroll-y enhanced class="scroll-view">
       <view class="section">
         <view class="section-title">BASIC INFO</view>
@@ -73,9 +73,14 @@
         <textarea class="textarea" placeholder="INPUT ADDR" value="{{orderDetail.recverAddr}}" bindinput="onRecverAddrInput" maxlength="200" auto-height />
       </view>
 
-      <view class="section" wx:if="{{orderDetail.orderStatus < 200}}">
+      <view class="section" wx:if="{{orderPostID0Needed}}">
         <view class="section-title">POST ID</view>
-        <textarea class="textarea" placeholder="POST ID"    value="{{userDetail.postID}}" bindinput="onPostIDInput" maxlength="200" auto-height />
+        <textarea class="textarea" placeholder="POST ID 0"    value="{{userDetail.postID0}}" bindinput="onPostIDInput" maxlength="200" auto-height />
+      </view>
+
+      <view class="section" wx:if="{{orderPostID1Needed}}">
+        <view class="section-title">POST ID</view>
+        <textarea class="textarea" placeholder="POST ID 1"    value="{{userDetail.postID1}}" bindinput="onPostIDInput" maxlength="200" auto-height />
       </view>
   
       <button class="submit-btn" type="primary" bindtap="submit" loading="{{submitting}}" disabled="{{submitting}}"><button>
