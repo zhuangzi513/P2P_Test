@@ -28,7 +28,7 @@
     "miniprogramRoot": "./",
     "useIsolateContext": true,
     "userConfirmedBundleSwitch": false,
-    "packNpmManually": false,
+    "packNpmManually": true,
     "packNpmRelationList": [
       {
         "packageJsonPath": "./package.json",
