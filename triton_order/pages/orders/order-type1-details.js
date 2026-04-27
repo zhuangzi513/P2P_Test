@@ -10,6 +10,10 @@ Page({
       orderNextStep: "",
       orderPostID0Needed: false,
       orderPostID1Needed: false,
+      isOwner: false,
+      isSaler: false,
+      isBuyer: false,
+      canSee: false,
       enum ORDERSTATUS{
 	AGREED,
         CONFIRM,
@@ -52,8 +56,8 @@ Page({
 	orderType: '',
 	goodID:  '',
 	time:  '',
-	senderID:  '',
-	recverID:  '',
+	salerID:  '',
+	buyerID:  '',
 	senderAddr:  '',
 	recverAddr:  '',
         postID0: '',
@@ -66,6 +70,7 @@ Page({
       this.setData({
         orderId: e.id,
       })
+      await orderDetail();
     },
     onShow() {
       this.orderDetail().then(res) {
@@ -100,57 +105,79 @@ Page({
       }
       this.setData({
         orderDetail: res.data,
-      })
-      if (!this.data.orderDetail.senderID.strim()) {
-          wx.showToast({ title: 'empty senderID:', icon: 'none' });
+      });
+      if (!this.data.orderDetail.salerID.strim()) {
+          wx.showToast({ title: 'empty salerID:', icon: 'none' });
       }
-      this.data.orderNextStep = this.data.statusMapType0[this.data.orderDetail.orderStatus+1]
+      canSee: false,
+      _isOwner = (userId == this.data.orderDetail.ownerID);
+      _isSaler = (userId == this.data.orderDetail.salerID);
+      _isBuyer = (userId == this.data.orderDetail.buyerID);
+      _canSee  = (_isOwner || _isSaler || _isBuyer);
+      this.setData({
+	      orderNextStep: this.data.statusMapType1[this.data.orderDetail.orderStatus+1],
+	      isOwner: _isOwner,
+	      isSaler: _isSaler,
+	      isBuyer: _isBuyer, 
+	      canSee : _canSee
+      });
     },
     updateButtonStatus() {
       userId = wx.getStorageSync('userID');
       opEnabled = false;
-      isSender = (userId == this.data.orderDetail.senderID);
-      isRecver = (userId == this.data.orderDetail.recverID);
       isCanceler = (userId == this.data.orderDetail.cancelerID);
       curOrderStatus = this.data.orderDetail.orderStatus;
-      if (curOrderStatus == 0) {
+      if (curOrderStatus == -1) {
         //recver firstly see, and then confirm
-        opEnabled = isRecver;
+        opEnabled = isBuyer;
+      } else if (curOrderStatus == 0) {
+        //owner agree
+        opEnabled = isOwner;
       } else if (curOrderStatus == 1) {
         //sender can send it to  recver
-        opEnabled = isSender;
+        opEnabled = isSaler;
         orderPostID0Needed = true,
       } else if (curOrderStatus >=2 && curOrderStatus < 8) {
         //recver got it, and then sell it, and pay to sender
-        opEnabled = isRecver;
+        opEnabled = isBuyer;
       } else if (curOrderStatus == 8) {
         //sender confirm got payed
-        opEnabled = isSender;
+        opEnabled = isSaler;
       } else if (curOrderStatus == 9) {
         //done
         opEnabled = false;
       } else if (curOrderStatus == 10) {
         //any time, cancel should be confirmed by eachother
-        opEnabled = !isCanceler;
+        opEnabled = !isCanceler && (isSaler || isBuyer);
       } else if (curOrderStatus == 10) {
-        opEnabled = isRecver;
+        opEnabled = isBuyer;
         orderPostID1Needed = true,
       } else if (curOrderStatus == 11) {
-        opEnabled = isSender;
+        opEnabled = isSaler;
+      } else {
+        opEnabled = false;
       }
       this.data.updatingDisabled = opEnabled;
     },
-    onPriceInput(e) { this.setData({ goodInfo.price: e.detail.value }); },
+    onPriceInput(e) {
+      if (isBuyer) {
+        this.setData({ goodInfo.price: e.detail.value });
+      }
+    },
     onSenderAddrInput(e)  { 
-      this.setData({ orderDetail.senderAddr: e.detail.value });
+      if (isSaler) {
+        this.setData({ orderDetail.senderAddr: e.detail.value });
+      }
     },
     onRecverAddrInput(e)  {
-      this.setData({ orderDetail.recverAddr: e.detail.value });
+      if (isBuyer) {
+        this.setData({ orderDetail.recverAddr: e.detail.value });
+      }
     },
     onPostIDInput(e)  {
-      if (orderPostID0Needed) {
+      if (orderPostID0Needed && isSaler) {
         this.setData({ orderDetail.postID0: e.detail.value });
-      } else if (orderPostID1Needed) {
+      } else if (orderPostID1Needed && isBuyer) {
         this.setData({ orderDetail.postID1: e.detail.value });
       }
     },
@@ -173,8 +200,10 @@ Page({
       updateOrderData();
     },
     nextStep()  {
-      this.data.orderDetail.orderStatus = this.data.orderDetail.orderStatus + 1;
-      updateOrderData();
+      if (canSee) {
+        this.data.orderDetail.orderStatus = this.data.orderDetail.orderStatus + 1;
+        updateOrderData();
+      }
     },
     previewImage(e) {
       const urls = this.data.imageList.map(i => i.url);
@@ -200,28 +229,6 @@ Page({
       const list = [...this.data.imageList];
       list.splice(e.currentTarget.dataset.index, 1);
       this.setData({ goodInfo.imageList: list });
-    },
-
-    addVideo() {
-      const remain = 3 - this.data.goodInfo.videoListLen;
-      if (remain <= 0) return wx.showToast({ title: 'MAX 3', icon: 'none' });
-      const res = await wx.chooseMedia({ count: remain, mediaType: ['video'], sourceType: ['album', 'camera'] });
-      wx.showLoading({ title: 'uploading...' });
-      try {
-        const urls = await this.uploadFiles(res.tempFiles.map(f => f.tempFilePath), 'video');
-        const newVideos = urls.map(url => ({ url, thumb: '' }));
-        this.setData({ videoList: [...this.data.goodInfo.videoList, ...newVideos] });
-        wx.hideLoading();
-      } catch (err) {
-        wx.hideLoading();
-        wx.showToast({ title: 'FAILED to upload', icon: 'none' });
-      }
-    },
-
-    deleteVideo(e) {
-      const list = [...this.data.videoList];
-      list.splice(e.currentTarget.dataset.index, 1);
-      this.setData({ goodInfo.videoList: list });
     },
 
     async uploadFiles(filePaths, type) {
@@ -256,38 +263,11 @@ Page({
 
       });
     },
-    async updateGoodData() {
-      try {
-        const res = await callCloudFunction('updateGoodsData',
-                {
-                  goodID: this.data.goodId,
-                  ownerID: wx.getStorageSync('userID'),
-                  info: this.data.goodInfo
-                });
-        if (res.code != 0) {
-          wx.showToast({ title: res.message || 'FAIL TO UPDATE', icon: 'none' });
-        }
-      } catch (err) {
-        wx.showToast({ title: 'INTERNET ERROR', icon: 'none' });
-        console.error(err);
-      }
-    },
-    submitGood() {
-      this.data.goodId = createGoodID();
-      this.data.goodInfo.goodID = this.data.goodId;
-      if (this.data.goodInfo.color.trim()) return wx.showToast({ title: 'COLOR NEEDED', icon: 'none' });
-      if (this.data.goodInfo.sizeX.trim()) return wx.showToast({ title: 'SHAPEX NEEDED', icon: 'none' });
-      if (this.data.goodInfo.sizeY.trim()) return wx.showToast({ title: 'SHAPEY NEEDED', icon: 'none' });
-      if (this.data.goodInfo.sizeZ.trim()) return wx.showToast({ title: 'SHAPEZ NEEDED', icon: 'none' });
-      const priceNum = parseFloat(this.data.goodInfo.price);
-      if (isNaN(priceNum)) return wx.showToast({ title: 'PRICE NEEDED', icon: 'none' });
-      updateGoodData();
-    },
     submitOrder() {
       if (!this.data.orderDetail.goodID.trim()) return wx.showToast({ title: 'EMPTY GOODS', icon: 'none' });
       if (!this.data.orderDetail.orderType.trim()) return wx.showToast({ title: 'ORDER TYPE NEEDED', icon: 'none' });
-      if (!this.data.orderDetail.senderAddr.trim()) return wx.showToast({ title: 'SENDERADDR NEEDED', icon: 'none' });
-      if (!this.data.orderDetail.recverAddr.trim()) return wx.showToast({ title: 'RECVERADDR NEEDED', icon: 'none' });
+      if (!this.data.orderDetail.salerAddr.trim()) return wx.showToast({ title: 'SENDERADDR NEEDED', icon: 'none' });
+      if (!this.data.orderDetail.buyerAddr.trim()) return wx.showToast({ title: 'RECVERADDR NEEDED', icon: 'none' });
 
       if (this.data.orderPostID0Needed) {
         if (!orderDetail.postID0.trim()) return wx.showToast({title: "EMPTY POSTID", icon: 'none'});
@@ -299,7 +279,6 @@ Page({
     submit() {
       this.setData({ submitting: true });
       wx.showLoading({ title: 'SAVING...' });
-      submitGood();
       submitOrder();
       const pages = getCurrentPages();
       const prevPage = pages[pages.length - 2];

@@ -31,18 +31,18 @@
       </view>
   </view>
 
-  <view  wx:if="{{orderDetail.orderStatus == -1}}" class="container">
+  <view class="container">
     <view class="section">
       <view class="section-title">PRICE OFFERED</view>
-      <input class="input" type="digit" placeholder="INPUT PRICE" value="{{form.price}}" bindinput="onPriceInput" />
+      <input class="input" type="digit" placeholder="INPUT PRICE" value="{{form.price}}" disabled="{{orderDetail.orderStatus == -1}}" bindinput="onPriceInput" />
     </view>
-    <view class="section" wx:if="{{orderDetail.orderType === 1}}">
+    <view class="section" wx:if="{{isSaler || isBuyer}}">
       <view class="section-title">ADDRESS RECVER</view>
       <input class="input" placeholder="INPUT ADDR" value="{{orderDetail.recverAddr}}" bindinput="onRecverAddrInput" maxlength="200" auto-height />
     </view>
   </view>
 
-  <view class="section">
+  <view class="section" wx:if="{{isSaler||isBuyer}}">
     <view class="section-title">PAYMENT</view>
     <view class="media-item" wx:if="{{orderDetail.orderStatus <= 1}}">
       <view class="add-btn" wx:if="{{!payment}}" bindtap="addImage">+</view>
