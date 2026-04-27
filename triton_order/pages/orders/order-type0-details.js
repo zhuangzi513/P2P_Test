@@ -10,6 +10,8 @@ Page({
       orderNextStep: "",
       orderPostID0Needed: false,
       orderPostID1Needed: false,
+      senderAddrNeeded: false,
+      recverAddrNeeded: false,
       isOwner: false,
       isSaler: false,
       isBuyer: false,
@@ -129,23 +131,25 @@ Page({
     updateButtonStatus() {
       userId = wx.getStorageSync('userID');
       opEnabled = false;
-      isSender = (userId == this.data.orderDetail.ownerID);
-      isRecver = (userId == this.data.orderDetail.salerID);
       isCanceler = (userId == this.data.orderDetail.cancelerID);
       curOrderStatus = this.data.orderDetail.orderStatus;
-      if (curOrderStatus == 0) {
+      if (curOrderStatus == -1) {
         //recver firstly see, and then confirm
-        opEnabled = isRecver;
+        opEnabled = isOwner;
+      } else if (curOrderStatus == 0) {
+        opEnabled = isSaler;
+        recverAddrNeeded = true;
       } else if (curOrderStatus == 1) {
         //sender can send it to  recver
-        opEnabled = isSender;
+        opEnabled = isOwner;
+        senderAddrNeeded = true;
         orderPostID0Needed = true,
       } else if (curOrderStatus >=2 && curOrderStatus < 8) {
         //recver got it, and then sell it, and pay to sender
-        opEnabled = isRecver;
+        opEnabled = isSaler;
       } else if (curOrderStatus == 8) {
         //sender confirm got payed
-        opEnabled = isSender;
+        opEnabled = isOwner;
       } else if (curOrderStatus == 9) {
         //done
         opEnabled = false;
@@ -153,10 +157,10 @@ Page({
         //any time, cancel should be confirmed by eachother
         opEnabled = !isCanceler;
       } else if (curOrderStatus == 10) {
-        opEnabled = isRecver;
+        opEnabled = isSaler;
         orderPostID1Needed = true,
       } else if (curOrderStatus == 11) {
-        opEnabled = isSender;
+        opEnabled = isOwner;
       }
       this.data.updatingDisabled = opEnabled;
     },
@@ -198,6 +202,10 @@ Page({
       updateOrderData();
     },
     nextStep()  {
+      if (isOwner && this.data.orderDetail.orderStatus == -1) {
+        submitGood();
+      }
+      checkInfo();
       this.data.orderDetail.orderStatus = this.data.orderDetail.orderStatus + 1;
       updateOrderData();
     },
@@ -310,31 +318,25 @@ Page({
       if (isNaN(priceNum)) return wx.showToast({ title: 'PRICE NEEDED', icon: 'none' });
       updateGoodData();
     },
-    submitOrder() {
+    checkOrder() {
       if (!this.data.orderDetail.goodID.trim()) return wx.showToast({ title: 'EMPTY GOODS', icon: 'none' });
       if (!this.data.orderDetail.ownerID.trim()) return wx.showToast({ title: 'EMPTY ownerID', icon: 'none' });
       if (!this.data.orderDetail.salerID.trim()) return wx.showToast({ title: 'EMPTY salerID', icon: 'none' });
       if (!this.data.orderDetail.orderType.trim()) return wx.showToast({ title: 'ORDER TYPE NEEDED', icon: 'none' });
-      if (!this.data.orderDetail.senderAddr.trim()) return wx.showToast({ title: 'SENDERADDR NEEDED', icon: 'none' });
-      if (!this.data.orderDetail.recverAddr.trim()) return wx.showToast({ title: 'RECVERADDR NEEDED', icon: 'none' });
+
+      if (senderAddrNeeded) {
+        if (!this.data.orderDetail.senderAddr.trim())
+	  return wx.showToast({ title: 'SENDERADDR NEEDED', icon: 'none' });
+      }
+      if (recverAddrNeeded) {
+        if (!this.data.orderDetail.recverAddr.trim())
+	  return wx.showToast({ title: 'RECVERADDR NEEDED', icon: 'none' });
+      }
 
       if (this.data.orderPostID0Needed) {
         if (!orderDetail.postID0.trim()) return wx.showToast({title: "EMPTY POSTID", icon: 'none'});
       } else if (this.data.orderPostID1Needed) {
         if (!orderDetail.postID1.trim()) return wx.showToast({title: "EMPTY POSTID", icon: 'none'});
       }
-      this.data.orderDetail.orderStatus = this.data.orderDetail.orderStatus + 1;
-      updateOrderData();
-    },
-    submit() {
-      this.setData({ submitting: true });
-      wx.showLoading({ title: 'SAVING...' });
-      submitGood();
-      submitOrder();
-      const pages = getCurrentPages();
-      const prevPage = pages[pages.length - 2];
-      if (prevPage && prevPage.onRefresh) prevPage.onRefresh();
-      setTimeout(() => wx.navigateBack(), 1500);
-      this.setData({ submitting: false });
     }
 })

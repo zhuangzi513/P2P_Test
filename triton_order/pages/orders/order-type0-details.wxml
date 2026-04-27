@@ -85,7 +85,7 @@
       </view>
       <view class="section" wx:if="{{isOwner || isSaler}}">
         <view class="section-title">ADDRESS RECVER</view>
-        <textarea class="textarea" placeholder="SENDER ADDR" disabled="{{!isSaler}}" value="{{orderDetail.senderAddr}}" bindinput="onSenderAddrInput" maxlength="200" auto-height />
+        <textarea class="textarea" placeholder="RECVER ADDR" disabled="{{!isSaler}}" value="{{orderDetail.recverAddr}}" bindinput="onRecverAddrInput" maxlength="200" auto-height />
       </view>
 
       <view class="section" wx:if="{{isOwner || isSaler}}">
@@ -97,10 +97,13 @@
         <view class="section-title">POST ID1</view>
         <textarea class="textarea" placeholder="POST ID 1"   disabled="{{!isSaler}}" value="{{orderDetail.postID1}}" bindinput="onPostIDInput" maxlength="200" auto-height />
       </view>
-  
-      <button class="submit-btn" type="primary" bindtap="submit" loading="{{submitting}}" disabled="{{submitting}}"></button>
     </scroll-view>
   </view>
+  <view class="button-group">
+    <button class="action-btn primary-btn" disabled="{{updatingDisabled}}"  bind:tap="nextStep">{{orderNextStep}}</button>
+    <button class="action-btn primary-btn" disabled="{{cancelIsDisabled}}"  bind:tap="cancelOrder">CANCEL</button>
+  </view>
+
 
 
   <view wx:if="{{ orderDetail.logs && orderDetail.logs.length > 0 }}" class="card-section">
