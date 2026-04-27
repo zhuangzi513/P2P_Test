@@ -26,11 +26,11 @@
 
   <view class="other-section">
     <view class="section-title">ORDERS</view>
-    <navigator wx:if="{{is_saler}}" bindtap="createInputOrder" class="menu-item">
+    <navigator wx:if="{{isSaler}}" bindtap="createInputOrder" class="menu-item">
       <view class="menu-label">CREATE INPUT ORDER</view>
       <text class="arrow">INPUT</text>
     </navigator>
-    <navigator wx:if="{{is_saler}}" bindtap="createOutputOrder" class="menu-item">
+    <navigator wx:if="{{isSaler}}" bindtap="createOutputOrder" class="menu-item">
       <view class="menu-label">CREATE OUTPUT ORDER</view>
       <text class="arrow">OUTPUT</text>
     </navigator>

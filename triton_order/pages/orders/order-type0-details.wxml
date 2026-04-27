@@ -1,93 +1,4 @@
 <view class="container">
-  <view class="status-card">
-    <view class="status-header">
-      <view class="status-info">
-        <view class="status-title">{{orderDetail.orderStatusStr}}</view>
-        <view class="order-number-text">ID:{{orderDetail.orderInfo.orderNumber}}</view>
-      </view>
-    </view>
-  </view>
-
-  <view  wx:if="{{orderDetail.orderStatus == -1}}" class="container">
-    <scroll-view scroll-y enhanced class="scroll-view">
-      <view class="section">
-        <view class="section-title">BASIC INFO</view>
-        <view class="form-item">
-          <view class="label">COLOR</view>
-          <input class="input" placeholder="CHOOSE COLOR" value="{{form.color}}" bindinput="onColorInput" />
-        </view>
-        <view class="form-item">
-          <view class="label">SHAPE-X</view>
-          <input class="input" placeholder="INPUT SHAPE" value="{{form.sizeX}}" bindinput="onSizeInput" />
-        </view>
-        <view class="form-item">
-          <view class="label">SHAPE-Y</view>
-          <input class="input" placeholder="INPUT SHAPE" value="{{form.sizeY}}" bindinput="onSizeInput" />
-        </view>
-        <view class="form-item">
-          <view class="label">SHAPE-Z</view>
-          <input class="input" placeholder="INPUT SHAPE" value="{{form.sizeZ}}" bindinput="onSizeInput" />
-        </view>
-        <view class="form-item">
-          <view class="label">PRICE</view>
-          <input class="input" type="digit" placeholder="INPUT PRICE" value="{{form.price}}" bindinput="onPriceInput" />
-        </view>
-        <view class="form-item">
-          <view class="label">DESCRIPTION</view>
-          <textarea class="textarea" placeholder="INPUT DESCRIPTION" value="{{form.description}}" bindinput="onDescInput" maxlength="200" auto-height />
-        </view>
-      </view>
-  
-      <view class="section">
-        <view class="section-title">PHOTOGRAPH</view>
-        <view class="media-list">
-          <block wx:for="{{imageList}}" wx:key="index">
-            <view class="media-item">
-              <image class="preview-image" src="{{item.url}}" mode="aspectFill" bindtap="previewImage" data-url="{{item.url}}" />
-              <view class="delete-btn" catchtap="deleteImage" data-index="{{index}}">-</view>
-            </view>
-          </block>
-          <view class="add-btn" wx:if="{{imageList.length < 9}}" bindtap="addImage">+</view>
-        </view>
-      </view>
-  
-      <view class="section">
-        <view class="section-title">VIDEO</view>
-        <view class="media-list">
-          <block wx:for="{{videoList}}" wx:key="index">
-            <view class="media-item video-item">
-              <video class="preview-video" src="{{item.url}}" poster="{{item.thumb || ''}}" controls="{{false}}" />
-              <view class="delete-btn" catchtap="deleteVideo" data-index="{{index}}">-</view>
-            </view>
-          </block>
-          <view class="add-btn" wx:if="{{orderDetail.videoListLen < 3}}" bindtap="addVideo">+</view>
-        </view>
-      </view>
-      <view class="section" wx:if="{{orderDetail.orderType === 0}}">
-        <view class="section-title">ADDRESS SENDER</view>
-        <textarea class="textarea" placeholder="SENDER ADDR" value="{{orderDetail.senderAddr}}" bindinput="onSenderAddrInput" maxlength="200" auto-height />
-      </view>
-
-      <view class="section" wx:if="{{orderDetail.orderType === 1}}">
-        <view class="section-title">ADDRESS RECVER</view>
-        <textarea class="textarea" placeholder="INPUT ADDR" value="{{orderDetail.recverAddr}}" bindinput="onRecverAddrInput" maxlength="200" auto-height />
-      </view>
-
-      <view class="section" wx:if="{{orderPostID0Needed}}">
-        <view class="section-title">POST ID</view>
-        <textarea class="textarea" placeholder="POST ID 0"    value="{{userDetail.postID0}}" bindinput="onPostIDInput" maxlength="200" auto-height />
-      </view>
-
-      <view class="section" wx:if="{{orderPostID1Needed}}">
-        <view class="section-title">POST ID</view>
-        <textarea class="textarea" placeholder="POST ID 1"    value="{{userDetail.postID1}}" bindinput="onPostIDInput" maxlength="200" auto-height />
-      </view>
-  
-      <button class="submit-btn" type="primary" bindtap="submit" loading="{{submitting}}" disabled="{{submitting}}"></button>
-    </scroll-view>
-  </view>
-
-
   <view wx:if="{{orderDetail.orderStatus>=0}}" class="card-section goods-section">
     <view class="card-title">
       <view class="title-line"></view>
@@ -110,21 +21,87 @@
             thumb="{{goodInfo.pic}}"
             thumb-link="{{ goodsDetailPage.url(goodInfo.goodsID) }}"
             centered
-            
           />
         </block>
       </view>
     </form>
-    <view class="section" wx:if="{{orderPostID0Needed}}">
-      <view class="section-title">POST ID</view>
-      <textarea class="textarea" placeholder="POST ID"    value="{{userDetail.postID}}" bindinput="onPostIDInput" maxlength="200" auto-height />
-    </view>
-    <view class="section" wx:if="{{orderPostID1Needed}}">
-      <view class="section-title">POST ID</view>
-      <textarea class="textarea" placeholder="POST ID"    value="{{userDetail.postID}}" bindinput="onPostIDInput" maxlength="200" auto-height />
-    </view>
-    <button class="action-btn primary-btn" disabled="{{updatingDisabled}}"  bind:tap="nextStep">{{orderNextStep}}</button>
   </view>
+
+  <view class="status-card">
+    <view class="status-header">
+      <view class="status-info">
+        <view class="status-title">{{orderDetail.orderStatusStr}}</view>
+        <view class="order-number-text">ID:{{orderDetail.orderInfo.orderNumber}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="container">
+    <scroll-view scroll-y enhanced class="scroll-view">
+      <view class="section">
+        <view class="section-title">BASIC INFO</view>
+        <view class="form-item">
+          <view class="label">COLOR</view>
+          <input class="input" placeholder="CHOOSECOLOR" disabled="{{!isOwner}}" value="{{goodInfo.color}}" bindinput="onColorInput" />
+        </view>
+        <view class="form-item">
+          <view class="label">SHAPE-X</view>
+          <input class="input" placeholder="INPUT SHAPE" disabled="{{!isOwner}}" value="{{goodInfo.sizeX}}" bindinput="onSizeInput" />
+        </view>
+        <view class="form-item">
+          <view class="label">SHAPE-Y</view>
+          <input class="input" placeholder="INPUT SHAPE" disabled="{{!isOwner}}" value="{{goodInfo.sizeY}}" bindinput="onSizeInput" />
+        </view>
+        <view class="form-item">
+          <view class="label">SHAPE-Z</view>
+          <input class="input" placeholder="INPUT SHAPE" disabled="{{!isOwner}}" value="{{goodInfo.sizeZ}}" bindinput="onSizeInput" />
+        </view>
+        <view class="form-item">
+          <view class="label">PRICE</view>
+          <input class="input" type="digit" placeholder="INPUT PRICE" disabled="{{!isOwner}}" value="{{goodInfo.price}}" bindinput="onPriceInput" />
+        </view>
+        <view class="form-item">
+          <view class="label">DESCRIPTION</view>
+          <textarea class="textarea" placeholder="INPUT DESCRIPTION"  disabled="{{!isOwner && !isSaler}}" value="{{goodInfo.description}}" bindinput="onDescInput" maxlength="200" auto-height />
+        </view>
+      </view>
+  
+      <view class="section">
+        <view class="section-title">PHOTOGRAPH</view>
+        <view class="media-list">
+          <block wx:for="{{goodInfo.imageList}}" wx:key="index">
+            <view class="media-item">
+              <image class="preview-image" src="{{item.url}}" mode="aspectFill" bindtap="previewImage" data-url="{{item.url}}" />
+              <view class="delete-btn" catchtap="deleteImage" data-index="{{index}}">-</view>
+            </view>
+          </block>
+          <view class="add-btn" wx:if="{{imageList.length < 9}}" bindtap="addImage">+</view>
+        </view>
+      </view>
+  
+      <view class="section" wx:if="{{isOwner || isSaler}}">
+        <view class="section-title">ADDRESS SENDER</view>
+        <textarea class="textarea" placeholder="SENDER ADDR" disabled="{{!isOwner}}" value="{{orderDetail.senderAddr}}" bindinput="onSenderAddrInput" maxlength="200" auto-height />
+      </view>
+      <view class="section" wx:if="{{isOwner || isSaler}}">
+        <view class="section-title">ADDRESS RECVER</view>
+        <textarea class="textarea" placeholder="SENDER ADDR" disabled="{{!isSaler}}" value="{{orderDetail.senderAddr}}" bindinput="onSenderAddrInput" maxlength="200" auto-height />
+      </view>
+
+      <view class="section" wx:if="{{isOwner || isSaler}}">
+        <view class="section-title">POST ID0</view>
+        <textarea class="textarea" placeholder="POST ID 0"   disabled="{{!isOwner}}" value="{{orderDetail.postID0}}" bindinput="onPostIDInput" maxlength="200" auto-height />
+      </view>
+
+      <view class="section" wx:if="{{isOwner || isSaler}}">
+        <view class="section-title">POST ID1</view>
+        <textarea class="textarea" placeholder="POST ID 1"   disabled="{{!isSaler}}" value="{{orderDetail.postID1}}" bindinput="onPostIDInput" maxlength="200" auto-height />
+      </view>
+  
+      <button class="submit-btn" type="primary" bindtap="submit" loading="{{submitting}}" disabled="{{submitting}}"></button>
+    </scroll-view>
+  </view>
+
 
   <view wx:if="{{ orderDetail.logs && orderDetail.logs.length > 0 }}" class="card-section">
     <view class="card-title">

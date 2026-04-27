@@ -56,6 +56,7 @@ Page({
 	orderType: '',
 	goodID:  '',
 	time:  '',
+	ownerID:  '',
 	salerID:  '',
 	buyerID:  '',
 	senderAddr:  '',
@@ -109,7 +110,6 @@ Page({
       if (!this.data.orderDetail.salerID.strim()) {
           wx.showToast({ title: 'empty salerID:', icon: 'none' });
       }
-      canSee: false,
       _isOwner = (userId == this.data.orderDetail.ownerID);
       _isSaler = (userId == this.data.orderDetail.salerID);
       _isBuyer = (userId == this.data.orderDetail.buyerID);

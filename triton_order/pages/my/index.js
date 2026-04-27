@@ -5,6 +5,8 @@ const { callCloudFunction } = require('../../utils/cloud.js');
 
 Page({
     data: {
+      userID: '',
+      isSaler:false,
       order_list_input : [],
       order_list_output: [],
       apiUserInfoMap: {}

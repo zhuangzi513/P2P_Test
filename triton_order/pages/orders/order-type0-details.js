@@ -10,6 +10,10 @@ Page({
       orderNextStep: "",
       orderPostID0Needed: false,
       orderPostID1Needed: false,
+      isOwner: false,
+      isSaler: false,
+      isBuyer: false,
+      canSee: false,
       enum ORDERSTATUS{
 	INIT,
         CONFRIM,
@@ -60,8 +64,9 @@ Page({
 	orderType: '',
 	goodID:  '',
 	time:  '',
-	senderID:  '',
-	recverID:  '',
+	ownerID:  '',
+	salerID:  '',
+	buyerID:  '',
 	senderAddr:  '',
 	recverAddr:  '',
         postID0: '',
@@ -109,14 +114,23 @@ Page({
       this.setData({
         orderDetail: res.data,
       })
-      this.data.orderDetail.senderID = wx:getStorageSync("userID");
-      this.data.orderNextStep = this.data.statusMapType0[this.data.orderDetail.orderStatus+1]
+      _isOwner = (userId == this.data.orderDetail.ownerID);
+      _isSaler = (userId == this.data.orderDetail.salerID);
+      _isBuyer = (userId == this.data.orderDetail.buyerID);
+      _canSee  = (_isOwner || _isSaler || _isBuyer);
+      this.setData({
+              orderNextStep: this.data.statusMapType0[this.data.orderDetail.orderStatus+1],
+              isOwner: _isOwner,
+              isSaler: _isSaler,
+              isBuyer: _isBuyer,
+              canSee : _canSee
+      });
     },
     updateButtonStatus() {
       userId = wx.getStorageSync('userID');
       opEnabled = false;
-      isSender = (userId == this.data.orderDetail.senderID);
-      isRecver = (userId == this.data.orderDetail.recverID);
+      isSender = (userId == this.data.orderDetail.ownerID);
+      isRecver = (userId == this.data.orderDetail.salerID);
       isCanceler = (userId == this.data.orderDetail.cancelerID);
       curOrderStatus = this.data.orderDetail.orderStatus;
       if (curOrderStatus == 0) {
@@ -287,7 +301,7 @@ Page({
       this.data.goodId = createGoodID();
       this.data.goodInfo.goodID = this.data.goodId;
       this.data.goodInfo.ownerID = wx:getStorageSync("userID");
-      this.data.goodInfo.bankID = this.data.orderDetail.recverID;
+      this.data.goodInfo.bankID = this.data.orderDetail.salerID;
       if (this.data.goodInfo.color.trim()) return wx.showToast({ title: 'COLOR NEEDED', icon: 'none' });
       if (this.data.goodInfo.sizeX.trim()) return wx.showToast({ title: 'SHAPEX NEEDED', icon: 'none' });
       if (this.data.goodInfo.sizeY.trim()) return wx.showToast({ title: 'SHAPEY NEEDED', icon: 'none' });
@@ -298,8 +312,8 @@ Page({
     },
     submitOrder() {
       if (!this.data.orderDetail.goodID.trim()) return wx.showToast({ title: 'EMPTY GOODS', icon: 'none' });
-      if (!this.data.orderDetail.senderID.trim()) return wx.showToast({ title: 'EMPTY senderID', icon: 'none' });
-      if (!this.data.orderDetail.recverID.trim()) return wx.showToast({ title: 'EMPTY recverID', icon: 'none' });
+      if (!this.data.orderDetail.ownerID.trim()) return wx.showToast({ title: 'EMPTY ownerID', icon: 'none' });
+      if (!this.data.orderDetail.salerID.trim()) return wx.showToast({ title: 'EMPTY salerID', icon: 'none' });
       if (!this.data.orderDetail.orderType.trim()) return wx.showToast({ title: 'ORDER TYPE NEEDED', icon: 'none' });
       if (!this.data.orderDetail.senderAddr.trim()) return wx.showToast({ title: 'SENDERADDR NEEDED', icon: 'none' });
       if (!this.data.orderDetail.recverAddr.trim()) return wx.showToast({ title: 'RECVERADDR NEEDED', icon: 'none' });
