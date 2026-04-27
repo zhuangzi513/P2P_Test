@@ -1,4 +1,3 @@
-/* 全局样式 */
 page {
   min-height: 100%;
   background: linear-gradient(to bottom, #f5f7fa 0%, #e8ecf1 100%);
@@ -10,7 +9,6 @@ page {
   padding-bottom: 40rpx;
 }
 
-/* 卡片通用样式 */
 .card-section {
   width: 100%;
   margin-bottom: 24rpx;
@@ -37,7 +35,6 @@ page {
   margin-right: 16rpx;
 }
 
-/* 订单状态卡片 */
 .status-card {
   width: 90%;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -87,7 +84,6 @@ page {
   letter-spacing: 0.5rpx;
 }
 
-/* 物流信息卡片 */
 .logistics-card {
   margin: 0 32rpx 24rpx;
   padding: 28rpx;
@@ -153,7 +149,6 @@ page {
   overflow: hidden;
 }
 
-/* 收货地址卡片 */
 .address-card {
   margin: 0 32rpx 32rpx;
   padding: 28rpx;
@@ -195,7 +190,6 @@ page {
   line-height: 40rpx;
 }
 
-/* 核销码卡片 */
 .hx-section {
   background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
 }
@@ -223,7 +217,6 @@ page {
   box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.1);
 }
 
-/* 商品信息卡片 */
 .goods-section {
   padding-bottom: 0;
 }
@@ -260,7 +253,6 @@ page {
   color: #ffffff;
 }
 
-/* 信息卡片通用样式 */
 .info-card {
   padding: 16rpx 0 24rpx;
   width: 100%;
@@ -300,7 +292,6 @@ page {
   line-height: 40rpx;
 }
 
-/* 其他信息特殊样式 */
 .ext-json-section {
   background: linear-gradient(135deg, #fff9f5 0%, #ffffff 100%);
   border-left: 4rpx solid #ff6b6b;
@@ -369,7 +360,6 @@ page {
   width: auto;
 }
 
-/* 优惠券卡片 */
 .coupon-card {
   padding: 24rpx 32rpx 32rpx;
 }
@@ -410,7 +400,6 @@ page {
   margin-bottom: 0;
 }
 
-/* 订单金额卡片 */
 .amount-section {
   background: #ffffff;
 }
@@ -471,7 +460,6 @@ page {
   letter-spacing: 1rpx;
 }
 
-/* 订单记录卡片 */
 .logs-card {
   padding: 24rpx 32rpx 32rpx;
 }
@@ -544,7 +532,6 @@ page {
   font-size: 22rpx;
 }
 
-/* 设备控制卡片 */
 .iot-card {
   padding: 16rpx 32rpx 32rpx;
 }
@@ -580,12 +567,10 @@ page {
   margin-right: 8rpx;
 }
 
-/* 底部安全区域 */
 .bottom-safe-area {
   height: 40rpx;
 }
 
-/* 适配暗色模式 */
 @media (prefers-color-scheme: dark) {
   page {
     background: linear-gradient(to bottom, #1a1a1a 0%, #2d2d2d 100%);
@@ -601,7 +586,6 @@ page {
   }
 }
 
-/* 动画效果 */
 .card-section {
   animation: fadeInUp 0.4s ease-out;
 }
@@ -617,7 +601,11 @@ page {
   }
 }
 
-/* 确保按钮样式正确 */
 button::after {
   border: none;
+}
+
+.button-group {
+  display: flex;
+  gap: 20rpx;
 }

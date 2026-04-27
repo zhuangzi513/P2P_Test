@@ -34,24 +34,39 @@
   <view class="container">
     <view class="section">
       <view class="section-title">PRICE OFFERED</view>
-      <input class="input" type="digit" placeholder="INPUT PRICE" value="{{form.price}}" disabled="{{orderDetail.orderStatus == -1}}" bindinput="onPriceInput" />
+      <input class="input" type="digit" placeholder="INPUT PRICE" value="{{form.price}}" disabled="{{isBuyer && (orderDetail.orderStatus > -1)}}" bindinput="onPriceInput" />
     </view>
-    <view class="section" wx:if="{{isSaler || isBuyer}}">
+    <view class="section" wx:if="{{isSaler}}">
+      <view class="section-title">ADDRESS SENDER</view>
+      <input class="input" placeholder="INPUT ADDR" value="{{orderDetail.senderAddr}}" disabled="{{!isSaler}}" bindinput="onSenderAddrInput" maxlength="200" auto-height />
+    </view>
+    <view class="section" wx:if="{{isBuyer}}">
       <view class="section-title">ADDRESS RECVER</view>
-      <input class="input" placeholder="INPUT ADDR" value="{{orderDetail.recverAddr}}" bindinput="onRecverAddrInput" maxlength="200" auto-height />
+      <input class="input" placeholder="INPUT ADDR" value="{{orderDetail.recverAddr}}" disabled="{{!isBuyer}}" bindinput="onRecverAddrInput" maxlength="200" auto-height />
+    </view>
+    <view class="section" wx:if="{{isSaler}}">
+      <view class="section-title">POST0 ID</view>
+      <input class="input" placeholder="POST0 ID" value="{{orderDetail.postID0}}" disabled="{{!isSaler}}" bindinput="onPostIDInput" maxlength="200" auto-height />
+    </view>
+    <view class="section" wx:if="{{isBuyer}}">
+      <view class="section-title">POST1 ID</view>
+      <input class="input" placeholder="POST1 ID" value="{{orderDetail.postID1}}" disabled="{{!isBuyer}}" bindinput="onPostIDInput" maxlength="200" auto-height />
     </view>
   </view>
 
   <view class="section" wx:if="{{isSaler||isBuyer}}">
     <view class="section-title">PAYMENT</view>
-    <view class="media-item" wx:if="{{orderDetail.orderStatus <= 1}}">
+    <view class="media-item" wx:if="{{isBuyer && (orderDetail.orderStatus <= 1)}}">
       <view class="add-btn" wx:if="{{!payment}}" bindtap="addImage">+</view>
     </view>
     <view class="media-item" wx:else">
-      <image class="preview-image" src="{{item.url}}" mode="aspectFill" bindtap="previewImage" data-url="{{item.url}}" />
+      <image class="preview-image" src="{{payment.url}}" mode="aspectFill" bindtap="previewImage" data-url="{{payment.url}}" />
     </view>
   </view>
-  <button class="action-btn primary-btn" disabled="{{updatingDisabled}}"  bind:tap="nextStep">{{orderNextStep}}</button>
+  <view class="button-group">
+    <button class="action-btn primary-btn" disabled="{{updatingDisabled}}"  bind:tap="nextStep">  {{orderNextStep}}</button>
+    <button class="action-btn primary-btn" disabled="{{cancelIsDisabled}}"  bind:tap="cancelOrder">CANCEL</button>
+  </view>
 
 
   <view wx:if="{{ orderDetail.logs && orderDetail.logs.length > 0 }}" class="card-section">

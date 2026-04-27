@@ -262,28 +262,5 @@ Page({
         })
 
       });
-    },
-    submitOrder() {
-      if (!this.data.orderDetail.goodID.trim()) return wx.showToast({ title: 'EMPTY GOODS', icon: 'none' });
-      if (!this.data.orderDetail.orderType.trim()) return wx.showToast({ title: 'ORDER TYPE NEEDED', icon: 'none' });
-      if (!this.data.orderDetail.salerAddr.trim()) return wx.showToast({ title: 'SENDERADDR NEEDED', icon: 'none' });
-      if (!this.data.orderDetail.buyerAddr.trim()) return wx.showToast({ title: 'RECVERADDR NEEDED', icon: 'none' });
-
-      if (this.data.orderPostID0Needed) {
-        if (!orderDetail.postID0.trim()) return wx.showToast({title: "EMPTY POSTID", icon: 'none'});
-      } else if (this.data.orderPostID1Needed) {
-        if (!orderDetail.postID1.trim()) return wx.showToast({title: "EMPTY POSTID", icon: 'none'});
-      }
-      updateOrderData();
-    },
-    submit() {
-      this.setData({ submitting: true });
-      wx.showLoading({ title: 'SAVING...' });
-      submitOrder();
-      const pages = getCurrentPages();
-      const prevPage = pages[pages.length - 2];
-      if (prevPage && prevPage.onRefresh) prevPage.onRefresh();
-      setTimeout(() => wx.navigateBack(), 1500);
-      this.setData({ submitting: false });
     }
 })
