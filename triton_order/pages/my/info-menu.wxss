@@ -1,13 +1,13 @@
-/* pages/my/info-menu.wxss */
 
-/* 页面容器 */
+
+
 .page-container {
   min-height: 100vh;
   background: linear-gradient(180deg, #f5f7fa 0%, #ffffff 100%);
   padding-bottom: 40rpx;
 }
 
-/* 顶部装饰背景 */
+
 .header-bg {
   position: absolute;
   top: 0;
@@ -19,14 +19,14 @@
   z-index: 0;
 }
 
-/* 主要内容区域 */
+
 .content-wrapper {
   position: relative;
   z-index: 1;
   padding: 40rpx 32rpx;
 }
 
-/* 卡片模块 */
+
 .section-card {
   background: #ffffff;
   border-radius: 24rpx;
@@ -40,7 +40,7 @@
   transform: scale(0.99);
 }
 
-/* 模块标题区域 */
+
 .section-header {
   padding: 36rpx 32rpx 24rpx;
   background: linear-gradient(135deg, rgba(102, 126, 234, 0.03) 0%, rgba(118, 75, 162, 0.03) 100%);
@@ -67,18 +67,18 @@
   letter-spacing: 1rpx;
 }
 
-/* 菜单列表 */
+
 .menu-list {
   padding: 0;
 }
 
-/* Navigator 包装器 */
+
 .menu-item-nav {
   display: block;
   text-decoration: none;
 }
 
-/* 菜单项 */
+
 .menu-item {
   display: flex;
   align-items: center;
@@ -103,12 +103,12 @@
   display: none;
 }
 
-/* Hover效果 */
+
 .menu-item-hover {
   background: linear-gradient(90deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.03) 100%);
 }
 
-/* 左侧内容 */
+
 .item-left {
   display: flex;
   align-items: center;
@@ -148,7 +148,7 @@
   font-weight: 400;
 }
 
-/* 右侧内容 */
+
 .item-right {
   display: flex;
   align-items: center;
@@ -170,7 +170,7 @@
   transform: translateY(-2rpx);
 }
 
-/* 立即绑定按钮 */
+
 .bind-btn {
   padding: 12rpx 32rpx;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -188,39 +188,3 @@
   box-shadow: 0 4rpx 12rpx rgba(102, 126, 234, 0.25);
 }
 
-/* 响应式优化 */
-@media (prefers-color-scheme: dark) {
-  .page-container {
-    background: linear-gradient(180deg, #1a1a1a 0%, #2d2d2d 100%);
-  }
-  
-  .section-card {
-    background: #2d2d2d;
-    box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.3);
-  }
-  
-  .section-header {
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.08) 100%);
-    border-bottom-color: rgba(102, 126, 234, 0.15);
-  }
-  
-  .title-text {
-    color: #e4e7ed;
-  }
-  
-  .item-title {
-    color: #e4e7ed;
-  }
-  
-  .item-subtitle {
-    color: #909399;
-  }
-  
-  .menu-item {
-    background: #2d2d2d;
-  }
-  
-  .menu-item-hover {
-    background: linear-gradient(90deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.08) 100%);
-  }
-}

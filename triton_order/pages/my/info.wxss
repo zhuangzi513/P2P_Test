@@ -7,7 +7,7 @@ page {
   padding-bottom: 40rpx;
 }
 
-/* ========== 头部区域 ========== */
+
 .header-section {
   position: relative;
   height: 400rpx;
@@ -103,7 +103,7 @@ page {
   font-weight: 500;
 }
 
-/* ========== 信息卡片 ========== */
+
 .info-card {
   margin: 100rpx 30rpx 30rpx;
   background: #ffffff;
@@ -137,7 +137,7 @@ page {
   letter-spacing: 1rpx;
 }
 
-/* ========== 表单项 ========== */
+
 .form-item {
   display: flex;
   align-items: center;
@@ -199,7 +199,7 @@ page {
   margin-top: -4rpx;
 }
 
-/* ========== 手机号区域 ========== */
+
 .mobile-wrapper {
   display: flex;
   align-items: center;
@@ -226,7 +226,7 @@ page {
   font-weight: 500;
 }
 
-/* ========== 分割线 ========== */
+
 .divider {
   height: 1rpx;
   background: linear-gradient(to right, 
@@ -236,7 +236,7 @@ page {
   margin: 0 -16rpx;
 }
 
-/* ========== 保存按钮 ========== */
+
 .save-section {
   padding: 60rpx 30rpx 40rpx;
 }
@@ -283,30 +283,3 @@ page {
   letter-spacing: 4rpx;
 }
 
-/* ========== 响应式优化 ========== */
-@media (prefers-color-scheme: dark) {
-  page {
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-  }
-  
-  .info-card {
-    background: #0f3460;
-  }
-  
-  .title-text {
-    color: #e8ecf1;
-  }
-  
-  .label-text {
-    color: #e8ecf1;
-  }
-  
-  .item-input {
-    color: #e8ecf1;
-  }
-  
-  .value-text,
-  .mobile-text {
-    color: #95a5a6;
-  }
-}

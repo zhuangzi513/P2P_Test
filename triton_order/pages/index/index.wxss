@@ -2,111 +2,6 @@ page {
   background-color: #E4FFED;
 }
 
-.jd-search-container {
-  background: linear-gradient(135deg, #E4393C 0%, #D81E06 100%);
-  padding: 20rpx 24rpx 24rpx;
-  position: relative;
-}
-
-.jd-search {
-  position: relative;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  box-sizing: border-box;
-}
-
-.jd-search-title {
-  font-weight: bold;
-  font-size: 36rpx;
-  color: #FFFFFF;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  margin-right: 16rpx;
-  letter-spacing: 2rpx;
-}
-
-.jd-search-box {
-  display: flex;
-  align-items: center;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(10rpx);
-  height: 72rpx;
-  border-radius: 36rpx;
-  padding: 0 28rpx;
-  margin: 0 24rpx 16rpx;
-  box-shadow: 0 6rpx 24rpx rgba(0, 0, 0, 0.12);
-  transition: all 0.3s ease;
-}
-
-.jd-search-icon {
-  width: 32rpx;
-  height: 32rpx;
-  margin-right: 16rpx;
-  flex-shrink: 0;
-  opacity: 0.5;
-}
-
-.jd-search-box input {
-  flex: 1;
-  height: 72rpx;
-  line-height: 72rpx;
-  font-size: 28rpx;
-  color: #333;
-  background: transparent;
-}
-
-.jd-search-placeholder {
-  font-size: 28rpx;
-  color: #999;
-}
-
-/* ========== 门店选择 ========== */
-.jd-shop-selector {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20rpx 24rpx;
-  background: #FFFFFF;
-  margin: 16rpx 24rpx;
-  border-radius: 12rpx;
-  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.06);
-}
-
-.jd-shop-info {
-  display: flex;
-  align-items: center;
-  flex: 1;
-}
-
-.jd-shop-info image {
-  width: 36rpx;
-  height: 36rpx;
-  margin-right: 12rpx;
-}
-
-.jd-shop-name {
-  font-size: 28rpx;
-  color: #333;
-  font-weight: 500;
-}
-
-.jd-shop-change {
-  display: flex;
-  align-items: center;
-  font-size: 26rpx;
-  color: #E4393C;
-}
-
-.jd-shop-change text {
-  margin-right: 8rpx;
-}
-
-.jd-shop-change image {
-  width: 24rpx;
-  height: 24rpx;
-}
 
 .jd-banner-container {
   width: 100%;
@@ -135,46 +30,6 @@ page {
   box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.1);
 }
 
-/* 购买动态 */
-.jd-buy-dynamic {
-  position: absolute;
-  bottom: 32rpx;
-  left: 48rpx;
-  right: 48rpx;
-  z-index: 10;
-}
-
-.jd-dynamic-swiper {
-  width: 100%;
-  height: 60rpx;
-}
-
-.jd-dynamic-item {
-  display: flex;
-  align-items: center;
-  background: linear-gradient(90deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.4) 100%);
-  backdrop-filter: blur(10rpx);
-  border-radius: 30rpx;
-  padding: 8rpx 20rpx;
-  font-size: 24rpx;
-  color: #FFFFFF;
-}
-
-.jd-dynamic-item image {
-  width: 36rpx;
-  height: 36rpx;
-  border-radius: 50%;
-  margin-right: 12rpx;
-  border: 2rpx solid #FFFFFF;
-  flex-shrink: 0;
-}
-
-.jd-dynamic-item text {
-  flex: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
 
 .jd-category-container {
   background: #FFFFFF;
@@ -227,40 +82,15 @@ page {
   text-shadow: 4rpx 4rpx 6rpx rgba(0,255,0,0.3);
 }
 
-/* ========== 公告通知 ========== */
-.jd-notice-container {
-  margin: 0 24rpx 20rpx;
-  border-radius: 12rpx;
-  overflow: hidden;
-  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.08);
-}
 
-.jd-notice-swiper {
-  height: 72rpx;
-}
 
-.jd-notice-icon {
-  width: 120rpx;
-  height: 32rpx;
-  margin-right: 16rpx;
-}
-
-/* ========== 主容器 ========== */
 .jd-main-container {
   min-height: 100vh;
   padding-bottom: 40rpx;
 }
 
-/* 直播广告横幅 */
-.jd-live-banner {
-  display: block;
-  width: 702rpx;
-  margin: 0 auto 28rpx;
-  border-radius: 16rpx;
-  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.1);
-}
 
-/* ========== 区块标题 ========== */
+
 .jd-section-header {
   display: flex;
   justify-content: space-between;
@@ -271,12 +101,6 @@ page {
 .jd-section-title {
   display: flex;
   align-items: center;
-}
-
-.jd-section-icon {
-  width: 40rpx;
-  height: 40rpx;
-  margin-right: 12rpx;
 }
 
 .jd-section-name {
@@ -304,78 +128,6 @@ page {
   align-items: center;
 }
 
-/* ========== 秒杀商品 ========== */
-.jd-seckill-container {
-  padding: 0 24rpx 20rpx;
-  display: flex;
-  flex-direction: column;
-  gap: 24rpx;
-}
-
-.jd-seckill-item {
-  background: linear-gradient(135deg, #FFF5F5 0%, #FFFFFF 100%);
-  border-radius: 16rpx;
-  overflow: hidden;
-  box-shadow: 0 4rpx 20rpx rgba(228, 57, 60, 0.12);
-  position: relative;
-}
-
-.jd-seckill-img-wrap {
-  width: 100%;
-  height: 702rpx;
-  position: relative;
-  overflow: hidden;
-}
-
-.jd-seckill-img-wrap image {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-.jd-seckill-info {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.95) 30%, rgba(255, 255, 255, 1) 60%);
-  padding: 80rpx 24rpx 24rpx;
-}
-
-.jd-seckill-title {
-  font-size: 32rpx;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 16rpx;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.jd-seckill-countdown {
-  background: linear-gradient(135deg, #FFF0F0 0%, #FFE5E5 100%);
-  border-radius: 8rpx;
-  padding: 12rpx 20rpx;
-  margin-bottom: 20rpx;
-  display: inline-block;
-}
-
-.jd-seckill-countdown .van-count-down {
-  color: #E4393C !important;
-  font-size: 26rpx !important;
-  font-weight: bold !important;
-}
-
-.jd-seckill-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.jd-seckill-price {
-  display: flex;
-  align-items: baseline;
-}
 
 .jd-price-symbol {
   font-size: 32rpx;
@@ -389,39 +141,6 @@ page {
   color: #E4393C;
   font-weight: bold;
   line-height: 1;
-}
-
-.jd-price-del {
-  font-size: 26rpx;
-  color: #999;
-  text-decoration: line-through;
-  margin-left: 16rpx;
-}
-
-.jd-seckill-btn-wrap {
-  flex-shrink: 0;
-}
-
-.jd-seckill-btn {
-  min-width: 160rpx;
-  height: 64rpx;
-  line-height: 64rpx;
-  text-align: center;
-  border-radius: 32rpx;
-  font-size: 28rpx;
-  font-weight: bold;
-  padding: 0 32rpx;
-}
-
-.jd-btn-active {
-  background: linear-gradient(135deg, #FF6B6B 0%, #E4393C 100%);
-  color: #FFFFFF;
-  box-shadow: 0 4rpx 16rpx rgba(228, 57, 60, 0.4);
-}
-
-.jd-btn-disabled {
-  background: #F5F5F5;
-  color: #999;
 }
 
 .jd-goods-grid {
@@ -506,29 +225,7 @@ page {
   color: #086008;
 }
 
-.jd-goods-original-price {
-  font-size: 22rpx;
-  color: #999;
-  text-decoration: line-through;
-  margin-left: 8rpx;
-}
 
-
-@keyframes float-bounce {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-8rpx);
-  }
-}
-
-.jd-end-divider {
-  margin-top: 40rpx !important;
-  margin-bottom: 40rpx !important;
-  color: #999 !important;
-  font-size: 24rpx !important;
-}
 
 ::-webkit-scrollbar {
   width: 0;
@@ -536,35 +233,3 @@ page {
   color: transparent;
 }
 
-.space {
-  height: 24rpx;
-}
-
-.container {
-  background-color: #BAFFBA;
-}
-
-.van-card__price-integer {
-  font-size: 36rpx !important;
-  color: #E4393C !important;
-  font-weight: bold !important;
-}
-
-.van-progress__portion {
-  background: #E4393C !important;
-}
-
-.van-count-down {
-  color: #E4393C !important;
-  font-size: 26rpx !important;
-}
-
-@media (max-width: 375px) {
-  .jd-section-name {
-    font-size: 32rpx;
-  }
-  
-  .jd-goods-name {
-    font-size: 26rpx;
-  }
-}

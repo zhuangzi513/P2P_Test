@@ -1,11 +1,11 @@
-/* 页面容器 */
+
 .setting-container {
   min-height: 100vh;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   padding: 0 0 60rpx 0;
 }
 
-/* 头部区域 */
+
 .header-section {
   position: relative;
   padding: 80rpx 40rpx 60rpx;
@@ -24,14 +24,6 @@
   animation: float 6s ease-in-out infinite;
 }
 
-@keyframes float {
-  0%, 100% {
-    transform: translate(0, 0) scale(1);
-  }
-  50% {
-    transform: translate(-20rpx, 20rpx) scale(1.05);
-  }
-}
 
 .header-title {
   display: block;
@@ -51,7 +43,7 @@
   font-weight: 300;
 }
 
-/* 分组卡片 */
+
 .section-card {
   margin: 0 30rpx 32rpx;
   background: #ffffff;
@@ -65,7 +57,7 @@
   transform: scale(0.98);
 }
 
-/* 分组标题 */
+
 .section-header {
   display: flex;
   align-items: center;
@@ -97,12 +89,12 @@
   letter-spacing: 1rpx;
 }
 
-/* 卡片内容 */
+
 .card-content {
   padding: 0 32rpx;
 }
 
-/* 设置项 */
+
 .setting-item {
   display: flex;
   align-items: center;
@@ -144,7 +136,7 @@
   flex: 1;
 }
 
-/* 图标样式 */
+
 .item-icon {
   width: 80rpx;
   height: 80rpx;
@@ -174,7 +166,7 @@
   z-index: 1;
 }
 
-/* 不同图标的颜色 */
+
 .icon-about {
   background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
 }
@@ -199,7 +191,7 @@
   background: linear-gradient(135deg, #fff9c4 0%, #fff59d 100%);
 }
 
-/* 文字信息 */
+
 .item-info {
   display: flex;
   flex-direction: column;
@@ -219,7 +211,7 @@
   font-weight: 300;
 }
 
-/* 箭头 */
+
 .item-arrow {
   font-size: 48rpx;
   color: #d0d0d0;
@@ -232,7 +224,7 @@
   transform: translateX(6rpx);
 }
 
-/* 版本卡片 */
+
 .version-card {
   margin: 48rpx 30rpx 32rpx;
   background: linear-gradient(135deg, #ffffff 0%, #f8f9fb 100%);
@@ -285,7 +277,7 @@
   box-shadow: 0 4rpx 12rpx rgba(102, 126, 234, 0.3);
 }
 
-/* 底部装饰 */
+
 .footer-decoration {
   padding: 60rpx 40rpx 40rpx;
   text-align: center;
@@ -298,12 +290,8 @@
   font-weight: 300;
 }
 
-/* 保留原有的btn类以防万一 */
-.btn {
-  padding: 32rpx;
-}
 
-/* Navigator组件重置 */
+
 navigator {
   display: block;
   text-decoration: none;

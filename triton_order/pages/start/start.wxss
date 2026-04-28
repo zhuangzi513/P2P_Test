@@ -1,6 +1,6 @@
-/* 京东风格 - 启动页样式 */
 
-/* 页面容器 */
+
+
 page {
   width: 100vw;
   height: 100vh;
@@ -8,7 +8,7 @@ page {
   background: #000;
 }
 
-/* 启动页主容器 */
+
 .start-container {
   width: 100vw;
   height: 100vh;
@@ -16,7 +16,7 @@ page {
   overflow: hidden;
 }
 
-/* 轮播图容器 */
+
 .swiper_box {
   width: 100vw;
   height: 100vh;
@@ -27,21 +27,21 @@ swiper-item {
   height: 100vh;
 }
 
-/* 轮播项包装器 */
+
 .swiper-item-wrapper {
   width: 100%;
   height: 100%;
   position: relative;
 }
 
-/* 轮播图片 */
+
 .banner-image {
   width: 100vw;
   height: 100vh;
   display: block;
 }
 
-/* 图片渐变遮罩 - 京东风格 */
+
 .image-mask {
   position: absolute;
   left: 0;
@@ -53,7 +53,7 @@ swiper-item {
   pointer-events: none;
 }
 
-/* 左右切换按钮样式 - 优雅半透明风格 */
+
 .swiper-icon {
   position: absolute;
   top: 50%;
@@ -92,7 +92,7 @@ swiper-item {
   filter: brightness(0) invert(1);
 }
 
-/* 指示器容器 */
+
 .dots-wrapper {
   position: absolute;
   bottom: 260rpx;
@@ -113,7 +113,7 @@ swiper-item {
   border-radius: 40rpx;
 }
 
-/* 指示器小点 */
+
 .dot {
   width: 16rpx;
   height: 16rpx;
@@ -122,7 +122,7 @@ swiper-item {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* 指示器激活状态 - 京东红色 */
+
 .dot-active {
   width: 48rpx;
   height: 16rpx;
@@ -131,7 +131,7 @@ swiper-item {
   box-shadow: 0 4rpx 12rpx rgba(233, 59, 61, 0.4);
 }
 
-/* 底部按钮区域 */
+
 .jump-btn-box {
   position: absolute;
   left: 0;
@@ -144,7 +144,7 @@ swiper-item {
   gap: 24rpx;
 }
 
-/* 进入按钮 - 京东风格 */
+
 .jump-btn {
   position: relative;
   padding: 28rpx 120rpx;
@@ -162,7 +162,7 @@ swiper-item {
               0 2rpx 8rpx rgba(0, 0, 0, 0.2);
 }
 
-/* 按钮文字 */
+
 .btn-text {
   position: relative;
   color: #FFFFFF;
@@ -173,7 +173,7 @@ swiper-item {
   text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.2);
 }
 
-/* 按钮光泽效果 */
+
 .btn-shine {
   position: absolute;
   top: -50%;
@@ -188,19 +188,8 @@ swiper-item {
   animation: shine 3s infinite;
 }
 
-@keyframes shine {
-  0% {
-    left: -100%;
-  }
-  20% {
-    left: 100%;
-  }
-  100% {
-    left: 100%;
-  }
-}
 
-/* 提示文字 */
+
 .skip-hint {
   color: rgba(255, 255, 255, 0.75);
   font-size: 24rpx;
@@ -209,16 +198,8 @@ swiper-item {
   animation: breath 2s ease-in-out infinite;
 }
 
-@keyframes breath {
-  0%, 100% {
-    opacity: 0.75;
-  }
-  50% {
-    opacity: 1;
-  }
-}
 
-/* 全屏加载效果样式 */
+
 .loading-container {
   width: 100vw;
   height: 100vh;
@@ -230,7 +211,7 @@ swiper-item {
   position: relative;
 }
 
-/* 加载动画容器 */
+
 .loading-spinner-wrapper {
   width: 120rpx;
   height: 120rpx;
@@ -240,7 +221,7 @@ swiper-item {
   margin-bottom: 60rpx;
 }
 
-/* 旋转加载图标 */
+
 .loading-spinner {
   width: 80rpx;
   height: 80rpx;
@@ -250,7 +231,7 @@ swiper-item {
   animation: loading-spin 1.5s linear infinite;
 }
 
-/* 加载文字 */
+
 .loading-text {
   color: rgba(255, 255, 255, 0.8);
   font-size: 28rpx;
@@ -260,22 +241,5 @@ swiper-item {
   animation: loading-text-fade 2s ease-in-out infinite;
 }
 
-/* 加载图标旋转动画 */
-@keyframes loading-spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
 
-/* 加载文字淡化动画 */
-@keyframes loading-text-fade {
-  0%, 100% {
-    opacity: 0.6;
-  }
-  50% {
-    opacity: 1;
-  }
-}
+

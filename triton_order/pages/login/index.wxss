@@ -15,16 +15,3 @@ page {
   box-sizing: border-box;
   margin: 32rpx 125rpx 0 125rpx;
 }
-.van-button--default {
-  background: #000 !important;
-  color: #fff !important;
-  padding: 16rpx !important;
-  border-radius: 64rpx;
-}
-.xieyi {
-  padding: 0 32rpx;
-  font-size: 24rpx;
-  color: #000;
-  display: flex;
-  align-items: center;
-}
