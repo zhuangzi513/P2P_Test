@@ -14,7 +14,7 @@ module.exports = {
     </view>
   </view>
   <view class="jd-goods-grid">
-    <view class="jd-goods-card" wx:for="{{goods}}" wx:key="id" bindtap="toModifyTap" data-id="{{item.id}}" data-supplytype="{{item.supplyType}}" data-yyid="{{item.yyId}}">
+    <view class="jd-goods-card" wx:for="{{goods}}" wx:key="id" bindtap="toModifyTap" data-id="{{item.id}}">
       <view class="jd-goods-img-wrap">
         <image src="{{item.pic}}" mode="aspectFill" lazy-load="true" />
       </view>

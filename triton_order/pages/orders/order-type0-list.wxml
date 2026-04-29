@@ -1,0 +1,17 @@
+<view class="container">
+  <van-empty wx:if="{{ !orderList }}" description="EMPTY" />
+  
+  <view class="order-list" hidden="{{orderList ? false : true}}">
+    <view class="order-card" wx:for="{{orderList}}" wx:key="index">
+      <view class="order-header" bind:tap="goOrderDetail" data-item="{{ item }}">
+        <view class="order-header-left">
+          <view class="order-number">ID : {{item.orderID}}</view>
+          <view class="order-number">PRICE : {{item.price}}</view>
+        </view>
+        <view class="order-status">{{item.statusStr}}</view>
+      </view>
+    </view>
+  </view>
+  
+  <view class="safeAreaOldMarginBttom safeAreaNewMarginBttom"></view>
+</view>

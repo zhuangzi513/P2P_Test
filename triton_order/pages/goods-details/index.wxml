@@ -23,6 +23,12 @@
     </view>
 
     <view class="goods-info-card">
+      <view class="table">
+        <view class="table-row"  wx:for="{{goodsBasicInfo}}" wx:key="index">
+          <view class="table-cell label">{{item.fieldName}}</view>
+          <view class="table-cell value">{{item.fieldValue}}</view>
+        </view>
+      </view>
       <view class="goods-des-info">
         <view class="label-title"> 
           <view class="left">AAAAAAAAAAAAAAAAAAAA</view>
@@ -84,54 +90,3 @@
     <van-goods-action-button text="{{goodsDetail.basicInfo.goodsStatus}}" type="warning" bind:click="tobuy" />
   </van-goods-action>
 </view>
-
-<view class="goods-bottom-container">
-  <view class="goods-profile">
-    <view class="p"><text>¥</text> {{goodsDetail.basicIf.priceHigh}}</view>
-  </view>
-  <view class="goods-info-fx">
-    <view class='item left'>
-      <van-icon name="share-o" size="24px" />
-      <view class="icon-title">SHARE</view>
-      <button open-type='share'></button>
-    </view>
-
-    <view class='item' bindtap="likeIt">
-      <view class="p"><text>Liked by</text>{{goodsDetail.basicInfo.admireCount}}</view>
-      <view class="icon-title">CCCCC</view>
-    </view>
-  </view>
-</view>
-
-<view class="dialog-mask" wx:if="{{showDialog}}">
-  <view class="dialog-container">
-    <view class="dialog-title">tobuy title</view>
-    
-    <view class="form-item">
-      <text class="label">phone</text>
-      <input class="input" type="number" placeholder="phone" bindinput="onPhoneInput" value="{{formData.phone}}" />
-    </view>
-    
-    <view class="form-item">
-      <text class="label">price</text>
-      <input class="input" type="number" placeholder="price" bindinput="onPriceInput" value="{{formData.price}}" />
-    </view>
-
-    <view class="form-item">
-      <text class="label">email</text>
-      <input class="input" placeholder="email/wx/qq" bindinput="onEmailExInput" value="{{formData.email_ex}}" />
-    </view>
-
-    <view class="form-item">
-      <text class="label">comment</text>
-      <textarea class="textarea" placeholder="other comment" bindinput="onRemarkInput" value="{{formData.remark}}" />
-    </view>
-    
-    <view class="dialog-buttons">
-      <button class="btn-cancel" bindtap="cancelDialog">Cancel</button>
-      <button class="btn-submit" bindtap="submitDialog">Commit</button>
-    </view>
-  </view>
-</view>
-
-<login show="{{ nickPopShow }}" avatarUrl="{{ popavatarUrl }}" name="{{ popnick }}" />

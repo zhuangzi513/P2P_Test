@@ -20,19 +20,6 @@ Page({
     })
   },
   onLoad: function(e) {
-    wx.showShareMenu({
-      withShareTicket: true,
-    })
-    const that = this
-    AUTH.checkHasLogined().then(isLogined => {
-      if (isLogined) {
-        TOOLS.showTabBarBadge()
-      } else {
-        getApp().loginOK = () => {
-          TOOLS.showTabBarBadge()
-        }
-      }
-    })
     callCloudFunction('goodsStatics', {userID:getStorageSync('userID')}).then(res=> {
       if (res.code === 0){
         that.setData({
@@ -51,14 +38,9 @@ Page({
     if (!userName) {
       return
     }
-    this.categories()
-    wx.setNavigationBarTitle({
-      title: userName
-    })
     this.setData({
-      userName:wx.getStorageSync('userName') ? wx.getStorageSync('userName'):'',
-      show_buy_dynamic: wx.getStorageSync('show_buy_dynamic'),
-      hidden_goods_index: wx.getStorageSync('hidden_goods_index'),
+      userName:wx.getStorageSync('userName') ,
+      userID:wx.getStorageSync('userID')
     })
   },
   onShow: function(e){
@@ -68,23 +50,10 @@ Page({
       windowHeight: APP.globalData.windowHeight,
       menuButtonObject: APP.globalData.menuButtonObject 
     })
-    const refreshIndex = wx.getStorageSync('refreshIndex')
-    if (refreshIndex) {
-      this.onPullDownRefresh()
-      wx.removeStorageSync('refreshIndex')
-    }
   },
   async getMyGoodsList(myUserId, append) {
-    if (categoryId == 0) {
-      categoryId = "";
-    }
-    wx.showLoading({
-      title: ''
-    })
-    // https://www.yuque.com/apifm/nu0f75/wg5t98
     const res = await callCloudFunction('goodsStatics', { userID: myUserId, pageSize: this.data.pageSize })
-    wx.hideLoading()
-    if (res.code == 404 || res.code == 700) {
+    if (res.code != 0) {
       let newData = {
         loadingMoreHidden: false
       }
@@ -98,16 +67,11 @@ Page({
     if (append) {
       goods = this.data.goods
     }
-    for (var i = 0; i < res.data.result.length; i++) {
-      const item = res.data.result[i]
-      const hidden_goods_index = wx.getStorageSync('hidden_goods_index')
-      if (hidden_goods_index.indexOf(item.id) != -1) {
-        continue
-      }
+    for (var i = 0; i < res.goods.length; i++) {
+      const item = res.goods[i]
       goods.push(item);
     }
     this.setData({
-      loadingMoreHidden: true,
       goods: goods,
     });
   },

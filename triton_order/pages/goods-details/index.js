@@ -12,31 +12,7 @@ Page({
     goodsDetail: {},
     selectSizePrice: 0,
     selectSizeOPrice: 0,
-    goodsStatus: 0, //0: origin, 1: price offered, 2: locked, during deel, 3: saled, close
-  },
-  bindscroll(e) {
-    if (this.data.tabclicked) {
-      return
-    }
-    this.getTopHeightFunction()
-    var tabsHeight = this.data.tabsHeight
-    if (this.data.tabs[0].topHeight-tabsHeight<=0 && 0 < this.data.tabs[1].topHeight-tabsHeight) {
-      this.setData({
-        active: this.data.tabs[0].tabs_name
-      })
-    } else if (this.data.tabs.length == 2) {
-      this.setData({
-        active: this.data.tabs[1].tabs_name
-      })
-    } else if (this.data.tabs[1].topHeight-tabsHeight<=0 && 0 < this.data.tabs[2].topHeight-tabsHeight) {
-      this.setData({
-        active: this.data.tabs[1].tabs_name
-      })
-    } else if (this.data.tabs[2].topHeight-tabsHeight<=0) {
-      this.setData({
-        active: this.data.tabs[2].tabs_name
-      })
-    }
+    goodsStatus: 0
   },
   onLoad(e) {
     if (e && e.inviter_id) {
@@ -50,74 +26,9 @@ Page({
         wx.setStorageSync('referrer', scene.split(',')[1])
       }
     }
-    this.data.goodsID = e.id
-    getApp().configLoadOK = () => {
-      this.readConfigVal()
-    }
-    this.setData({
-      userID : wx.getStorageSync('userID'),
-      customerServiceType: CONFIG.customerServiceType
-    })
-    this.readConfigVal()
-    this.getGoodsDetail(this.data.goodsID)
-    getApp().initNickAvatarUrlPOP(this)
-  },
-  readConfigVal() {
-    const hide_reputation = wx.getStorageSync('hide_reputation')
-    let tabs = [{
-      tabs_name: 'Introduction',
-      view_id: 'swiper-container',
-      topHeight: 0
-    }, {
-      tabs_name: 'Description',
-      view_id: 'goods-des-info',
-      topHeight: 0,
-    }]
-    this.setData({
-      hide_reputation,
-      tabs
-    })
+    this.getGoodsDetail(e.id)
   },
   onShow() {
-    this.setData({
-      createTabs: true
-    })
-
-    var query = wx.createSelectorQuery();
-    query.select('#tabs').boundingClientRect((rect) => {
-      var tabsHeight = rect.height
-      this.setData({
-        tabsHeight:tabsHeight
-      })
-    }).exec()
-
-    AUTH.checkHasLogined().then(isLogined => {
-      if (isLogined) {
-        this.goodsFavCheck()
-      }
-    })
-  },
-  getTopHeightFunction() {
-    var that = this
-    var tabs = that.data.tabs
-    tabs.forEach((element, index) => {
-      var viewId = "#" + element.view_id
-      that.getTopHeight(viewId, index)
-    });
-  },
-  getTopHeight(viewId, index) {
-    var query = wx.createSelectorQuery();
-    query.select(viewId).boundingClientRect((rect) => {
-      if (!rect) {
-        return
-      }
-      let top = rect.top
-      var tabs = this.data.tabs
-      tabs[index].topHeight = top
-      this.setData({
-        tabs: tabs
-      })
-    }).exec()
   },
   async goodsFavCheck() {
     const res = await callCloudFunction('goodsFavCheck', { userID: wx.getStorageSync('userID'), goodsID: this.data.goodsID})
@@ -145,38 +56,23 @@ Page({
         }
   },
   async getGoodsDetail(goodsID) {
-    const userID = wx.getStorageSync('userID')
-    const that = this;
-    const goodsDetailRes = await callCloudFunction('goodsDetail', {userID : userID,  goodsID: goodsID});
-    if (goodsDetailRes.code == 0) {
-      if (!goodsDetailRes.data.pics || goodsDetailRes.data.pics.length == 0) {
-        goodsDetailRes.data.pics = [{
-          pic: goodsDetailRes.data.basicInfo.pic
-        }]
-      }
-      const _data = {
-        goodsDetail: goodsDetailRes.data,
-        selectSizePrice: goodsDetailRes.data.basicInfo.minPrice,
-        selectSizeOPrice: goodsDetailRes.data.basicInfo.originalPrice,
-        goodsStatus: goodsDetailRes.data.basicInfo.goodsStaus
-      }
-      that.data.goodsDetail = goodsDetailRes.data;
-      if (goodsDetailRes.data.basicInfo.videoId) {
-        that.getVideoSrc(goodsDetailRes.data.basicInfo.videoId);
-      }
-      
-      that.setData(_data)
+    const res = await callCloudFunction('getDoodsInfo', {userID : userID,  goodsID: goodsID});
+    if (res.code == 0) {
+      this.setData({
+        userID: wx.getStorageSync('userID'),
+        goodsID: goodsID,
+        goodsDetail:res.goodsInfo});
+    } else {
+      wx.showToast({
+        title: 'FAILED get goodsInfo',
+        icon: 'none',
+      })
     }
-  },
-  stepChange(event) {
-    this.setData({
-      buyNumber: event.detail
-    })
   },
   onShareAppMessage() {
     let _data = {
       title: this.data.goodsDetail.basicInfo.name,
-      path: '/pages/goods-details/index?id=' + this.data.goodsDetail.basicInfo.id + '&inviter_id=' + wx.getStorageSync('userID'),
+      path: '/pages/goods-details/index?id=' + this.data.goodsDetail.basicInfo.id + '&inviter_id=' + this.data.userID,
       success: function (res) {
 	wx.showToast({
           title: 'successfully shared',
@@ -193,40 +89,17 @@ Page({
     return _data
   },
   onShareTimeline() {
-    let title = this.data.goodsDetail.basicInfo.name
-    let query = 'id=' + this.data.goodsDetail.basicInfo.id + '&inviter_id=' + wx.getStorageSync('userID')
+    let title = this.data.goodsDetail.name
+    let query = 'id=' + this.data.goodsDetail.goodsID + '&inviter_id=' + wx.getStorageSync('userID')
     return {
       title,
       query,
-      imageUrl: this.data.goodsDetail.basicInfo.pic
+      imageUrl: this.data.goodsDetail.imageList[0]
     }
-  },
-  getVideoSrc: function (videoId) {
-    var that = this;
-    callCloudFunction('videoDetail', {videoID:videoId}).then(res=> {
-      if (res.code == 0) {
-        that.setData({
-          videoMp4Src: res.data.fdMp4
-        });
-      }
-    })
-
-  },
-  closePop() {
-    this.setData({
-      posterShow: false
-    })
   },
   async likeIt() {
   },
 
-  previewImage(e) {
-    const url = e.currentTarget.dataset.url
-    wx.previewImage({
-      current: url,
-      urls: [url]
-    })
-  },
   previewImage2(e) {
     const url = e.currentTarget.dataset.url
     const urls = []
@@ -238,34 +111,29 @@ Page({
       urls
     })
   },
-  onTabsChange(e) {
-    var index = e.detail.index
-    this.setData({
-      toView: this.data.tabs[index].view_id,
-      tabclicked: true
-    })
-    setTimeout(() => {
-      this.setData({
-        tabclicked: false
-      })
-    }, 1000);
-  },
   backToHome() {
     wx.switchTab({
       url: '/pages/index/index',
     })
   },
   tobuy: function () {
-    if (this.data.goodsStatus > 2) {
+    if (this.data.goodsDetail.goodsStatus > 2) {
 	wx.showToast({
           title: 'already been locked',
           icon: 'none',
         })
 	return
     }
-    wx.navigateTo({
-      url: "/pages/order/order-details?id=" + this.data.goodsID 
-    })
+    const ownerID = this.data.goodDetail.ownerID;
+    const buyerID = this.data.userID;
+    const goodsID = this.data.goodsID;
+    const bankerID = this.data.goodDetail.bankerID;
+    const res = await callCloudFunction('newOrder', {ownerId: ownerID, bankerId:bankerID, buyerId:buyerID, goodsId:goodsID});
+    if (res.code == 0) {
+      wx.navigateTo({
+        url: "/pages/order/order-details?id=" + res.orderID
+      })
+    }
   }
 })
 

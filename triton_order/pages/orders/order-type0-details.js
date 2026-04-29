@@ -46,20 +46,22 @@ Page({
               'Backed',
               'Closed'
       ],
-      goodInfo: {
+      goodsInfo: {
         goodID: '',
         ownerID: '',
         bankID: '',
-        color: '',
-	sizeX: '',
-	sizeY: '',
-	sizeZ: '',
-	price: '',
-	description: '',
-	imageListLen,
-	videoListLen,
-        imageList: [],
-        videoList: []
+        details: {
+          color: '',
+	  sizeX: '',
+	  sizeY: '',
+	  sizeZ: '',
+	  price: '',
+	  description: '',
+	  imageListLen,
+	  videoListLen,
+          imageList: [],
+          videoList: []
+        }
       },
       orderDetail: {
 	orderID: '',
@@ -164,12 +166,12 @@ Page({
       }
       this.data.updatingDisabled = opEnabled;
     },
-    onColorInput(e) { this.setData({ goodInfo.color: e.detail.value }); },
-    onSizeInputX(e) { this.setData({ goodInfo.sizeX: e.detail.value }); },
-    onSizeInputY(e) { this.setData({ goodInfo.sizeY: e.detail.value }); },
-    onSizeInputZ(e) { this.setData({ goodInfo.sizeZ: e.detail.value }); },
-    onPriceInput(e) { this.setData({ goodInfo.price: e.detail.value }); },
-    onDescInput(e)  { this.setData({ goodInfo.description: e.detail.value }); },
+    onColorInput(e) { this.setData({ goodsInfo.color: e.detail.value }); },
+    onSizeInputX(e) { this.setData({ goodsInfo.sizeX: e.detail.value }); },
+    onSizeInputY(e) { this.setData({ goodsInfo.sizeY: e.detail.value }); },
+    onSizeInputZ(e) { this.setData({ goodsInfo.sizeZ: e.detail.value }); },
+    onPriceInput(e) { this.setData({ goodsInfo.price: e.detail.value }); },
+    onDescInput(e)  { this.setData({ goodsInfo.description: e.detail.value }); },
     onSenderAddrInput(e)  { 
       this.setData({ orderDetail.senderAddr: e.detail.value });
     },
@@ -215,13 +217,13 @@ Page({
     },
 
     addImage() {
-      const remain = 9 - this.data.goodInfo.imageListLen;
+      const remain = 9 - this.data.goodsInfo.imageListLen;
       if (remain <= 0) return wx.showToast({ title: 'MAX 9', icon: 'none' });
       const res = await wx.chooseMedia({ count: remain, mediaType: ['image'], sizeType: ['compressed'] });
       wx.showLoading({ title: 'uploading...' });
       try {
         const urls = await this.uploadFiles(res.tempFiles.map(f => f.tempFilePath), 'image');
-        this.setData({ imageList: [...this.data.goodInfo.imageList, ...urls.map(url => ({ url }))] });
+        this.setData({ imageList: [...this.data.goodsInfo.imageList, ...urls.map(url => ({ url }))] });
         wx.hideLoading();
       } catch (err) {
         wx.hideLoading();
@@ -232,18 +234,18 @@ Page({
     deleteImage(e) {
       const list = [...this.data.imageList];
       list.splice(e.currentTarget.dataset.index, 1);
-      this.setData({ goodInfo.imageList: list });
+      this.setData({ goodsInfo.imageList: list });
     },
 
     addVideo() {
-      const remain = 3 - this.data.goodInfo.videoListLen;
+      const remain = 3 - this.data.goodsInfo.videoListLen;
       if (remain <= 0) return wx.showToast({ title: 'MAX 3', icon: 'none' });
       const res = await wx.chooseMedia({ count: remain, mediaType: ['video'], sourceType: ['album', 'camera'] });
       wx.showLoading({ title: 'uploading...' });
       try {
         const urls = await this.uploadFiles(res.tempFiles.map(f => f.tempFilePath), 'video');
         const newVideos = urls.map(url => ({ url, thumb: '' }));
-        this.setData({ videoList: [...this.data.goodInfo.videoList, ...newVideos] });
+        this.setData({ videoList: [...this.data.goodsInfo.videoList, ...newVideos] });
         wx.hideLoading();
       } catch (err) {
         wx.hideLoading();
@@ -254,7 +256,7 @@ Page({
     deleteVideo(e) {
       const list = [...this.data.videoList];
       list.splice(e.currentTarget.dataset.index, 1);
-      this.setData({ goodInfo.videoList: list });
+      this.setData({ goodsInfo.videoList: list });
     },
 
     async uploadFiles(filePaths, type) {
@@ -289,13 +291,13 @@ Page({
 
       });
     },
-    async updateGoodData() {
+    async newGoods() {
       try {
-        const res = await callCloudFunction('updateGoodsData',
+        const res = await callCloudFunction('newGoods',
                 {
-                  goodID: this.data.goodId,
                   ownerID: wx.getStorageSync('userID'),
-                  info: this.data.goodInfo
+                  bankerID: this.data.goodsInfo.bankID,
+                  goodsInfo: this.data.goodsInfo.details
                 });
         if (res.code != 0) {
           wx.showToast({ title: res.message || 'FAIL TO UPDATE', icon: 'none' });
@@ -306,17 +308,15 @@ Page({
       }
     },
     submitGood() {
-      this.data.goodId = createGoodID();
-      this.data.goodInfo.goodID = this.data.goodId;
-      this.data.goodInfo.ownerID = wx:getStorageSync("userID");
-      this.data.goodInfo.bankID = this.data.orderDetail.salerID;
-      if (this.data.goodInfo.color.trim()) return wx.showToast({ title: 'COLOR NEEDED', icon: 'none' });
-      if (this.data.goodInfo.sizeX.trim()) return wx.showToast({ title: 'SHAPEX NEEDED', icon: 'none' });
-      if (this.data.goodInfo.sizeY.trim()) return wx.showToast({ title: 'SHAPEY NEEDED', icon: 'none' });
-      if (this.data.goodInfo.sizeZ.trim()) return wx.showToast({ title: 'SHAPEZ NEEDED', icon: 'none' });
-      const priceNum = parseFloat(this.data.goodInfo.price);
+      this.data.goodsInfo.ownerID = wx:getStorageSync("userID");
+      this.data.goodsInfo.bankID = this.data.orderDetail.salerID;
+      if (this.data.goodsInfo.details.color.trim()) return wx.showToast({ title: 'COLOR NEEDED', icon: 'none' });
+      if (this.data.goodsInfo.details.sizeX.trim()) return wx.showToast({ title: 'SHAPEX NEEDED', icon: 'none' });
+      if (this.data.goodsInfo.details.sizeY.trim()) return wx.showToast({ title: 'SHAPEY NEEDED', icon: 'none' });
+      if (this.data.goodsInfo.details.sizeZ.trim()) return wx.showToast({ title: 'SHAPEZ NEEDED', icon: 'none' });
+      const priceNum = parseFloat(this.data.goodsInfo.details.price);
       if (isNaN(priceNum)) return wx.showToast({ title: 'PRICE NEEDED', icon: 'none' });
-      updateGoodData();
+      newGoods();
     },
     checkOrder() {
       if (!this.data.orderDetail.goodID.trim()) return wx.showToast({ title: 'EMPTY GOODS', icon: 'none' });
