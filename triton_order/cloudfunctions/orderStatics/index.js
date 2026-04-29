@@ -5,18 +5,32 @@ const db = cloud.database();
 const _ = db.command;
 
 exports.main = async (event, context) => {
-  const { userID, orderType = 0, orderStatus = -1, pageNo = 1, pageSize = 20 } = event
+  const { userID, orderType = 0, isBanker = false, orderStatus = -1, pageNo = 1, pageSize = 20 } = event
   const ordersCollection = db.collection('orders_info');
   
+  const skip = (pageNo - 1) * pageSize;
+  var query;
   try {
-    const query = await ordersCollection.where({user_id: userID, order_type: orderType, order_status: orderStatus});
+    if (!isBanker) {
+        if (orderType == 0) {
+          query = await ordersCollection.where({owner_id: userID, order_type: 0, order_status: orderStatus});
+	} else if (orderType == 1) {
+          query = await ordersCollection.where({buyer_id: userID, order_type: 1, order_status: orderStatus});
+	}
+    } else {
+        if (orderType == 0) {
+          query = await ordersCollection.where({saler_id: userID, order_type: 0, order_status: orderStatus});
+	} else if (orderType == 1) {
+          query = await ordersCollection.where({saler_id: userID, order_type: 1, order_status: orderStatus});
+	}
+    }
+
     const total = query.count().total;
-    const skip = (pageNo - 1) * pageSize;
-    const ordersReturn = await query 
-                               .skip(skip)
-                               .limit(pageSize)
-                               .orderBy('create_time')
-                               .get();
+    ordersReturn = await query 
+                         .skip(skip)
+                         .limit(pageSize)
+                         .orderBy('create_time')
+                         .get();
     return {
       code: 0,
       orders: ordersReturn.data,

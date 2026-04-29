@@ -9,15 +9,11 @@
     
     <view wx:else class="user-info-container">
       <view class="user-main">
-        <button class="avatar-btn" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
-          <image class="avatar" src="{{ apiUserInfoMap.base.avatarUrl ? apiUserInfoMap.base.avatarUrl : '/images/default.png' }}" mode="aspectFill"></image>
-          <view class="avatar-border"></view>
-        </button>
         <view class="user-detail">
           <view class="nickname-row">
-            <text class="nickname" bindtap="editNick">{{ apiUserInfoMap.base.nick ? apiUserInfoMap.base.nick : 'to reset nickname' }}</text>
+            <text class="nickname">{{ apiUserInfoMap.base.nick ? apiUserInfoMap.base.nick : 'to reset nickname' }}</text>
           </view>
-          <view class="user-id" bind:tap="copyUid">ID: {{ apiUserInfoMap.base.id }}</view>
+          <view class="user-id">ID: {{ apiUserInfoMap.base.id }}</view>
         </view>
       </view>
     </view>
@@ -26,11 +22,11 @@
 
   <view class="other-section">
     <view class="section-title">ORDERS</view>
-    <navigator wx:if="{{isSaler}}" bindtap="createInputOrder" class="menu-item">
+    <navigator wx:if="{{isShop}}" bindtap="createInputOrder" class="menu-item">
       <view class="menu-label">CREATE INPUT ORDER</view>
       <text class="arrow">INPUT</text>
     </navigator>
-    <navigator wx:if="{{isSaler}}" bindtap="createOutputOrder" class="menu-item">
+    <navigator wx:if="{{isShop}}" bindtap="createOutputOrder" class="menu-item">
       <view class="menu-label">CREATE OUTPUT ORDER</view>
       <text class="arrow">OUTPUT</text>
     </navigator>
@@ -42,16 +38,9 @@
       <view class="menu-label">OUTPUT ORDERS</view>
       <text class="arrow">OUTPUT ORDERS</text>
     </navigator>
-  </view>
-</view>
-
-<view class="modal-content" catchtap="">
-  <view class="modal-header">修改昵称</view>
-  <view class="modal-body">
-    <input class="nick-input" model:value="{{ nick }}" type="nickname" placeholder="请输入昵称" placeholder-class="input-placeholder" />
-  </view>
-  <view class="modal-footer">
-    <view class="modal-btn cancel-btn" catchtap="hideNickModal">取消</view>
-    <view class="modal-btn confirm-btn" catchtap="_editNick">确定</view>
+    <navigator url="/pages/my/address" class="menu-item">
+      <view class="menu-label">MY ADDR</view>
+      <text class="arrow">MY ADDR</text>
+    </navigator>
   </view>
 </view>

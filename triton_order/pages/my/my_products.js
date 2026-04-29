@@ -33,15 +33,14 @@ Page({
         }
       }
     })
-    callCloudFunction('my_goodsv2', {userID:getStorageSync('userID')}).then(res=> {
+    callCloudFunction('goodsStatics', {userID:getStorageSync('userID')}).then(res=> {
       if (res.code === 0){
         that.setData({
-          my_products: res.data.result
+          my_products: res.data
         })
       }   
     })
    
-    that.getNotice()
     this.readConfigVal()
     getApp().configLoadOK = () => {
       this.readConfigVal()
@@ -57,7 +56,7 @@ Page({
       title: userName
     })
     this.setData({
-      userName:wx.getStorageSync('userName')?wx.getStorageSync('userName'):'',
+      userName:wx.getStorageSync('userName') ? wx.getStorageSync('userName'):'',
       show_buy_dynamic: wx.getStorageSync('show_buy_dynamic'),
       hidden_goods_index: wx.getStorageSync('hidden_goods_index'),
     })
@@ -83,7 +82,7 @@ Page({
       title: ''
     })
     // https://www.yuque.com/apifm/nu0f75/wg5t98
-    const res = await callCloudFunction('my_goodsv2', { userID: myUserId, page: this.data.curPage, pageSize: this.data.pageSize })
+    const res = await callCloudFunction('goodsStatics', { userID: myUserId, pageSize: this.data.pageSize })
     wx.hideLoading()
     if (res.code == 404 || res.code == 700) {
       let newData = {

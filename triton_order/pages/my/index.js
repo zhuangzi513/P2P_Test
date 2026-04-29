@@ -6,16 +6,13 @@ const { callCloudFunction } = require('../../utils/cloud.js');
 Page({
     data: {
       userID: '',
-      isSaler:false,
+      isShop:false,
       order_list_input : [],
       order_list_output: [],
-      apiUserInfoMap: {}
+      userInfoMap: {}
   },
   onLoad() {
     this.readConfigVal()
-    getApp().configLoadOK = () => {
-      this.readConfigVal()
-    }
   },
   onShow() {
     this.getUserApiInfo();
@@ -25,24 +22,28 @@ Page({
   readConfigVal() {
     this.setData({
       userID: wx.getStorageSync('userID'),
+      isShop: wx.getStorageSync('isShop')
     })
   },
-  async getUserApiInfo() {
-    const res = await callCloudFunction('userDetail', { userID: wx.getStorageSync('userID')});
+  async getUserDetail() {
+    const res = await callCloudFunction('getUserInfo', { userID: wx.getStorageSync('userID')});
     if (res.code == 0) {
-      this.setData({apiUserInfoMap:res.data});
+      this.setData({userInfoMap:res.data});
     }
   },
-  handleOrderCount: function (count) {
-    return count > 99 ? '99+' : count;
+  async updateUserDetail() {
+    const res = await callCloudFunction('updateUserInfo', { userID: wx.getStorageSync('userID'), userDetail: this.data.userInfoMap});
+    if (res.code != 0) {
+      console.log("updateUserDetail FAILED");
+    }
   },
-  orderStatistics: function () {
+  async orderStatistics: function () {
     callCloudFunction('orderStatistics', { userID: wx.getStorageSync('userID')}).then(res=> {
       if (res.code == 0) {
         const {
           orderListInput,
           orderListOutput
-        } = res.data || {}
+        } = res.data || {};
         this.setData({
           order_list_input: orderListInput,
           order_list_output: orderListOutput
@@ -50,72 +51,9 @@ Page({
       }
     })
   },
-  editNick() {
-    this.setData({
-      nickShow: true
-    })
-  },
-  async _editNick() {
-    if (!this.data.nick) {
-      wx.showToast({
-        title: '请填写昵称',
-        icon: 'none'
-      })
-      return
-    }
-    const postData = {
-      token: wx.getStorageSync('usrID'),
-      nick: this.data.nick,
-    }
-    const res = await callCloudFunction('modifyUserInfoV2', postData);
-    if (res.code != 0) {
-      wx.showToast({
-        title: res.msg,
-        icon: 'none'
-      })
-      return
-    }
-    wx.showToast({
-      title: '设置成功',
-    })
-    this.hideNickModal()
-    this.getUserApiInfo()
-  },
-  async onChooseAvatar(e) {
-    console.log(e);
-    const avatarUrl = e.detail.avatarUrl
-    let res = await callCloudFunction('uploadFileV2', {userID: wx.getStorageSync('userID'), URL: avatarUrl});
-    if (res.code != 0) {
-      wx.showToast({
-        title: res.msg,
-        icon: 'none'
-      })
-      return
-    }
-    // https://www.yuque.com/apifm/nu0f75/ykr2zr
-    res = await callCloudFunction('modifyUserInfoV2', {userID: wx.getStorageSync('userID'), avatarUrl: res.data.url});
-    if (res.code != 0) {
-      wx.showToast({
-        title: res.msg,
-        icon: 'none'
-      })
-      return
-    }
-    this.getUserApiInfo()
-  },
   login() {
     wx.navigateTo({
       url: '/pages/login/index',
-    })
-  },
-  hideNickModal() {
-    this.setData({
-      nickShow: false
-    })
-  },
-  toggleCards() {
-    this.setData({
-      cardsExpanded: !this.data.cardsExpanded
     })
   },
   createInputOrder() {

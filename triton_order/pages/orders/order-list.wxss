@@ -21,6 +21,30 @@
   box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.06);
 }
 
+.order-card-canceled {
+  background: #0000ff;
+  border-radius: 12rpx;
+  margin-top: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.06);
+}
+
+.order-card-done {
+  background: #ff0000;
+  border-radius: 12rpx;
+  margin-top: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.06);
+}
+
+.order-card-inprocessing {
+  background: #ffff00;
+  border-radius: 12rpx;
+  margin-top: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.06);
+}
+
 
 .order-header {
   display: flex;
