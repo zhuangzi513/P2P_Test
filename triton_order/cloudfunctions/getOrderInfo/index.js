@@ -5,15 +5,14 @@ const db = cloud.database();
 const _ = db.command;
 
 exports.main = async (event, context) => {
-  const { userID } = event
-  const usersCollection = db.collection('users_info');
-  let userRecord = await usersCollection.doc(userID).get();
+  const { orderID } = event
+  const ordersCollection = db.collection('orders_info');
   
   try {
-    let userRecord = await usersCollection.doc(userID).get();
+    let orderRecord = await ordersCollection.doc(orderID).get();
     return {
       code: 0,
-      userInfo: userRecord.data
+      orderInfo: orderRecord.data
     };
   } catch (err) {
     return {

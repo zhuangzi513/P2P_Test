@@ -44,5 +44,5 @@ exports.main = async (event, context) => {
     userId = userRecord.data[0].user_id;
   }
   
-  return { user_id: userId };
+  return { userID : userId };
 };

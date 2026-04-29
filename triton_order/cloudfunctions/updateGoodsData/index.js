@@ -36,21 +36,21 @@ exports.main = async (event, context) => {
     if (updateResult.stats.updated === 1) {
       return {
         code: 0,
-        message: '更新成功',
+        message: 'UPDATED',
         data: { _id: id, ...info }
       };
     } else {
       return {
         code: -2,
-        message: '未找到对应商品或数据无变化',
+        message: 'FALIED UPDATE: NO SPECIFIED_GOOD/GOODINFO_NOT_CHANGED',
         stats: updateResult.stats
       };
     }
   } catch (err) {
-    console.error('更新商品失败', err);
+    console.error('FAILED UPDATE', err);
     return {
       code: -3,
-      message: '数据库操作失败',
+      message: 'DB OP FAILED',
       error: err.message
     };
   }
