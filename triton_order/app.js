@@ -1,16 +1,13 @@
 const CONFIG = require('config.js')
 const AUTH = require('utils/auth')
-const { callCloudFunction } = require('../../utils/cloud.js')
+const CLOUDFUNC = require('utils/cloud.js')
 
 App({
   onLaunch: function() {
     if (!wx.cloud) {
       console.error('请使用 2.2.3 或以上基础库以使用云能力');
     } else {
-      wx.cloud.init({
-        env: 'your-env-id',  // 替换为你的云环境ID
-        traceUser: true
-      });
+      wx.cloud.init({ env: 'ramotest-d6gbke3913ce78dfa', traceUser: true});
     }
     this.fetchUserId();
 
@@ -75,7 +72,7 @@ App({
     })
   },
 
-  fetchUserId() {
+  async fetchUserId() {
     if (this.globalData.userID) {
       return Promise.resolve(this.globalData.userID);
     }
@@ -86,18 +83,15 @@ App({
       return Promise.resolve(cachedUserId);
     }
 
-    return wx.cloud.callFunction({
-      name: 'getUserId',
-      data: {}
-    }).then(res => {
-      const { userID} = res.result;
-      this.globalData.userID = userID;
-      wx.setStorageSync('userID', userID);
-      return userID;
-    }).catch(err => {
-      console.error('获取用户ID失败', err);
-      return null;
-    });
+    const res = await CLOUDFUNC.callCloudFunction(
+      'getUserId',
+      {}
+    )
+    const userID = res.data.userID;
+    this.globalData.userID = userID;
+    wx.setStorageSync('userID', userID);
+    console.log('userID:', userID);
+    return userID;
   },
 
   onShow (e) {
@@ -109,9 +103,9 @@ App({
   },
 
   async getUserDetailInfo() {
-    const res = await callCloudFunction('userDetail', {userID: wx.getStorageSync('userID')});
+    const res = await CLOUDFUNC.callCloudFunction('getUserInfo', {userID: wx.getStorageSync('userID')});
     if (res.code == 0) {
-        this.globalData.userDetailInfo = res.data;
+        this.globalData.userDetailInfo = res.data.userInfo;
     }
   },
 

@@ -1,7 +1,7 @@
 const AUTH = require('../../utils/auth')
 const TOOLS = require('../../utils/tools.js')
 const CONFIG = require('../../config.js')
-const { callCloudFunction } = require('../../utils/cloud.js');
+const CLOUDFUNC = require('../../utils/cloud.js');
 
 Page({
     data: {

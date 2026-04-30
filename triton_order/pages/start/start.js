@@ -1,5 +1,5 @@
 const CONFIG = require('../../config.js')
-const { callCloudFunction } = require('../../utils/cloud.js');
+const CLOUDFUC = require('../../utils/cloud.js');
 
 Page({
   data: {

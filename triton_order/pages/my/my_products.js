@@ -1,6 +1,6 @@
 const TOOLS = require('../../utils/tools.js')
 const AUTH = require('../../utils/auth')
-const { callCloudFunction } = require('../../utils/cloud.js');
+const CLOUDFUNC = require('../../utils/cloud.js');
 
 const APP = getApp()
 

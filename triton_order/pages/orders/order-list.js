@@ -1,4 +1,4 @@
-const { callCloudFunction } = require('../../utils/cloud.js');
+const CLOUDFUNC = require('../../utils/cloud.js');
 
 Page({
   data: {

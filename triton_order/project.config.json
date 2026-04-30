@@ -1,5 +1,6 @@
 {
   "description": "项目配置文件，详见文档：https://developers.weixin.qq.com/miniprogram/dev/devtools/projectconfig.html",
+  "cloudfunctionRoot": "cloudfunctions/",
   "setting": {
     "urlCheck": true,
     "es6": true,
@@ -58,6 +59,7 @@
     "include": []
   },
   "appid": "wxffe63b8bf92fea11",
-  "projectname": "%E5%A4%A9%E4%BD%BF%E7%AB%A5%E8%A3%85",
-  "libVersion": "3.15.1"
+  "projectname": "moneymoney",
+  "libVersion": "3.15.1",
+  "cloudfunctionTemplateRoot": "cloudfunctionTemplate/"
 }

@@ -1,24 +1,28 @@
 const cloud = require('wx-server-sdk');
-cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV });
+cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV});
 
 const db = cloud.database();
 const _ = db.command;
 
 exports.main = async (event, context) => {
-  const { userID } = event
+  console.log('event', event);
+  const userID = event.userID;
   const usersCollection = db.collection('users_info');
-  let userRecord = await usersCollection.doc(userID).get();
   
   try {
-    let userRecord = await usersCollection.doc(userID).get();
-    return {
-      code: 0,
-      userInfo: userRecord.data
-    };
+    let userRecord = await usersCollection.where({user_id: userID}).get();
+      return {
+        code: 0,
+        data: {
+          userInfo: userRecord.data
+        }
+      };
   } catch (err) {
     return {
       code: -1,
-      message: err.message
+      data: {
+        message: err.message + 'users_info query failed for userID:' + userID
+      }
     }
   }
 };

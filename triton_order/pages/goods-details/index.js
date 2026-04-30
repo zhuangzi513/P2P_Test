@@ -1,7 +1,8 @@
 const TOOLS = require('../../utils/tools.js')
 const AUTH = require('../../utils/auth')
 const CONFIG = require('../../config.js')
-const { callCloudFunction } = require('../../utils/cloud.js');
+const CLOUDFUNC = require('../../utils/cloud.js');
+
 import Poster from 'wxa-plugin-canvas/poster/poster'
 
 Page({
@@ -128,12 +129,13 @@ Page({
     const buyerID = this.data.userID;
     const goodsID = this.data.goodsID;
     const bankerID = this.data.goodDetail.bankerID;
-    const res = await callCloudFunction('newOrder', {ownerId: ownerID, bankerId:bankerID, buyerId:buyerID, goodsId:goodsID});
-    if (res.code == 0) {
-      wx.navigateTo({
-        url: "/pages/order/order-details?id=" + res.orderID
-      })
-    }
+    callCloudFunction('newOrder', {ownerId: ownerID, bankerId:bankerID, buyerId:buyerID, goodsId:goodsID}).then(res => {
+      if (res.code == 0) {
+        wx.navigateTo({
+          url: "/pages/order/order-details?id=" + res.orderID
+        })
+      }
+    });
   }
 })
 
