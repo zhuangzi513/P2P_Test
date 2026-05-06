@@ -1,6 +1,6 @@
 <view class="page-container">
   <view class="header-section">
-    <view wx:if="{{ !apiUserInfoMap }}" class="login-container">
+    <view wx:if="{{ !userInfoMap }}" class="login-container">
       <view class="login-tips">WELCOME</view>
       <view class="login-btn" bindtap="login">
         <text>LOGIN</text>
@@ -11,9 +11,9 @@
       <view class="user-main">
         <view class="user-detail">
           <view class="nickname-row">
-            <text class="nickname">{{ apiUserInfoMap.base.nick ? apiUserInfoMap.base.nick : 'to reset nickname' }}</text>
+            <text class="nickname">{{ userInfoMap.base.nick ? userInfoMap.base.nick : 'to reset nickname' }}</text>
           </view>
-          <view class="user-id">ID: {{ apiUserInfoMap.base.id }}</view>
+          <view class="user-id">ID: {{ userInfoMap.base.id }}</view>
         </view>
       </view>
     </view>
@@ -22,11 +22,11 @@
 
   <view class="other-section">
     <view class="section-title">ORDERS</view>
-    <navigator wx:if="{{isShop}}" bindtap="createInputOrder" class="menu-item">
+    <navigator wx:if="{{isBanker}}" bindtap="createInputOrder" class="menu-item">
       <view class="menu-label">CREATE INPUT ORDER</view>
       <text class="arrow">INPUT</text>
     </navigator>
-    <navigator wx:if="{{isShop}}" bindtap="createOutputOrder" class="menu-item">
+    <navigator wx:if="{{isBanker}}" bindtap="createOutputOrder" class="menu-item">
       <view class="menu-label">CREATE OUTPUT ORDER</view>
       <text class="arrow">OUTPUT</text>
     </navigator>

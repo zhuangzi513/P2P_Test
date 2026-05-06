@@ -85,7 +85,7 @@ Page({
       wx.showLoading({
         title: '',
       })
-      const res = await callCloudFunction('orderDetail', {orderID:this.data.orderId})
+      const res = await CLOUDFUNC.callCloudFunction('orderDetail', {orderID:this.data.orderId})
       wx.hideLoading()
       if (res.code != 0) {
         wx.showModal({
@@ -183,7 +183,7 @@ Page({
     },
     async updateOrderData() {
       try {
-        const res = await callCloudFunction('updateOrderData',
+        const res = await CLOUDFUNC.callCloudFunction('updateOrderData',
                 orderID: this.data.orderDetail.orderID,
           	orderDetail: this.data.orderDetail
                 });
@@ -253,7 +253,7 @@ Page({
 
     uploadFile(filePath, type) {
       return new Promise((resolve, reject) => {
-        callCloudFunction('uploadFile', {path:filePath}).then(res => {
+        CLOUDFUNC.callCloudFunction('uploadFile', {path:filePath}).then(res => {
           if (res.code === 0 && res.data && res.data.url) {
             resolve(res.data.url);
           } else {

@@ -1,22 +1,18 @@
 [
-  { "goodsId": "G1001", "name": "智能手机", "price": 2999.00, "category": "数码", "length": 15.2, "width": 7.6, "height": 0.8, "likedCount": 128, "favCount": 56 },
-  { "goodsId": "G1002", "name": "运动鞋", "price": 399.00, "category": "服饰", "length": 28.0, "width": 10.5, "height": 11.0, "likedCount": 89, "favCount": 34 },
-  { "goodsId": "G1003", "name": "蓝牙耳机", "price": 199.00, "category": "数码", "length": 6.5, "width": 4.2, "height": 2.5, "likedCount": 245, "favCount": 112 },
-  { "goodsId": "G1004", "name": "智能手表", "price": 1299.00, "category": "数码", "length": 4.0, "width": 3.5, "height": 1.0, "likedCount": 367, "favCount": 203 },
-  { "goodsId": "G1005", "name": "笔记本电脑", "price": 5999.00, "category": "数码", "length": 32.0, "width": 22.0, "height": 1.8, "likedCount": 432, "favCount": 187 },
-  { "goodsId": "G1006", "name": "T恤", "price": 89.00, "category": "服饰", "length": 25.0, "width": 20.0, "height": 2.0, "likedCount": 56, "favCount": 23 },
-  { "goodsId": "G1007", "name": "咖啡机", "price": 799.00, "category": "家电", "length": 35.0, "width": 28.0, "height": 32.0, "likedCount": 78, "favCount": 31 },
-  { "goodsId": "G1008", "name": "机械键盘", "price": 499.00, "category": "数码", "length": 36.0, "width": 13.0, "height": 4.0, "likedCount": 213, "favCount": 98 },
-  { "goodsId": "G1009", "name": "羽绒服", "price": 1299.00, "category": "服饰", "length": 55.0, "width": 40.0, "height": 10.0, "likedCount": 145, "favCount": 67 },
-  { "goodsId": "G1010", "name": "电饭煲", "price": 299.00, "category": "家电", "length": 30.0, "width": 28.0, "height": 25.0, "likedCount": 312, "favCount": 154 },
-  { "goodsId": "G1011", "name": "平板电脑", "price": 2499.00, "category": "数码", "length": 24.0, "width": 16.0, "height": 0.7, "likedCount": 267, "favCount": 122 },
-  { "goodsId": "G1012", "name": "牛仔裤", "price": 199.00, "category": "服饰", "length": 35.0, "width": 30.0, "height": 5.0, "likedCount": 98, "favCount": 41 },
-  { "goodsId": "G1013", "name": "吸尘器", "price": 899.00, "category": "家电", "length": 65.0, "width": 30.0, "height": 25.0, "likedCount": 176, "favCount": 83 },
-  { "goodsId": "G1014", "name": "游戏机", "price": 3999.00, "category": "数码", "length": 29.0, "width": 10.0, "height": 23.0, "likedCount": 521, "favCount": 288 },
-  { "goodsId": "G1015", "name": "运动裤", "price": 159.00, "category": "服饰", "length": 38.0, "width": 28.0, "height": 4.0, "likedCount": 67, "favCount": 29 },
-  { "goodsId": "G1016", "name": "烤箱", "price": 599.00, "category": "家电", "length": 50.0, "width": 40.0, "height": 30.0, "likedCount": 134, "favCount": 55 },
-  { "goodsId": "G1017", "name": "无线鼠标", "price": 69.00, "category": "数码", "length": 11.0, "width": 6.0, "height": 3.5, "likedCount": 289, "favCount": 146 },
-  { "goodsId": "G1018", "name": "毛衣", "price": 249.00, "category": "服饰", "length": 40.0, "width": 32.0, "height": 6.0, "likedCount": 88, "favCount": 37 },
-  { "goodsId": "G1019", "name": "洗衣机", "price": 1999.00, "category": "家电", "length": 60.0, "width": 55.0, "height": 85.0, "likedCount": 203, "favCount": 94 },
-  { "goodsId": "G1020", "name": "显示器", "price": 1599.00, "category": "数码", "length": 61.0, "width": 36.0, "height": 5.0, "likedCount": 157, "favCount": 71 }
+      "goodID": "",
+      "bankID": "",
+      "info":
+      {
+        "name": "",
+        "color": "",
+        "sizeX": "",
+        "sizeY": "",
+        "sizeZ": "",
+        "price": "",
+        "description": "",
+        "imageListLen":[],
+        "videoListLen":[],
+        "imageList": [],
+        "videoList": []
+      }
 ]

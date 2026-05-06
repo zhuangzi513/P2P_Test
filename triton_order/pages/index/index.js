@@ -119,7 +119,7 @@ Page({
     this.initBanners()
     this.cmsCategories()
     // https://www.yuque.com/apifm/nu0f75/wg5t98
-    callCloudFunction('goodsV2', { recommendStatus: 1}).then(res => {
+    CLOUDFUNC.callCloudFunction('goodsV2', { recommendStatus: 1}).then(res => {
       if (res.code === 0){
         that.setData({
           goodsRecommend: res.data.result
@@ -151,7 +151,7 @@ Page({
   },
   async initBanners(){
     const _data = {}
-    const res1 = await callCloudFunction('banners', { type: 'index' });
+    const res1 = await CLOUDFUNC.callCloudFunction('banners', { type: 'index' });
     if (res1.code == 700) {
       wx.showModal({
         title: 'NOTE',
@@ -179,7 +179,7 @@ Page({
     }
   },
   async goodsDynamicV2(){
-    const res = await callCloudFunction('goodsDynamicV2', { type: 0 });
+    const res = await CLOUDFUNC.callCloudFunction('goodsDynamicV2', { type: 0 });
     if (res.code == 0) {
       this.setData({
         goodsDynamicV2: res.data.result
@@ -187,7 +187,7 @@ Page({
     }
   },
   async categories(){
-    const res = await callCloudFunction('goodsCategory', {});
+    const res = await CLOUDFUNC.callCloudFunction('goodsCategory', {});
     let categories = [];
     if (res.code == 0) {
       const _categories = res.data.filter(ele => {
@@ -208,7 +208,7 @@ Page({
     wx.showLoading({
       title: ''
     })
-    const res = await callCloudFunction('goodsV2', { categoryId: categoryId, page: this.data.curPage, pageSize: this.data.pageSize });
+    const res = await CLOUDFUNC.callCloudFunction('goodsV2', { categoryId: categoryId, page: this.data.curPage, pageSize: this.data.pageSize });
     wx.hideLoading()
     if (res.code == 404 || res.code == 700) {
       let newData = {
@@ -252,7 +252,7 @@ Page({
   },
   getNotice: function() {
     var that = this;
-    callCloudFunction('noticeList', {userID: wx.getStorageSync("userID"), pageSize: 5}).then(function (res) {
+    CLOUDFUNC.callCloudFunction('noticeList', {userID: wx.getStorageSync("userID"), pageSize: 5}).then(function (res) {
       if (res.code == 0) {
         that.setData({
           noticeList: res.data
@@ -285,7 +285,7 @@ Page({
     })
   },
   async cmsCategories() {
-    const res = await callCloudFunction('cmsCategories', {})
+    const res = await CLOUDFUNC.callCloudFunction('cmsCategories', {})
     if (res.code == 0) {
       const cmsCategories = res.data.filter(ele => {
         return ele.type == 'index'

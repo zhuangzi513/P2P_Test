@@ -1,57 +1,21 @@
-const WXAPI = require('apifm-wxapi')
 const AUTH = require('../../utils/auth')
 Page({
   data: {
     checked: false
-
   },
   onLoad(options) {
   },
   onShow() {
-
   },
-  showModal2() {
-    wx.showModal({
-      title: '温馨提示',
-      content: '已经阅读并同意《用户协议》、《隐私协议》',
-      cancelText: '不同意',
-      confirmText: '同意',
-      success: res => {
-        if (res.confirm) {
-          this.setData({
-            checked: true
-          })
-        }
-      }
-    })
-  },
-  showModal(action) {
-    wx.showModal({
-      title: '温馨提示',
-      content: '已经阅读并同意《用户协议》、《隐私协议》',
-      cancelText: '不同意',
-      confirmText: '同意',
-      success: res => {
-        if (res.confirm) {
-          this.setData({
-            checked: true
-          })
-          if (action == 'loginOne') {
-            this.loginOne()
-          }
-        }
-      }
-    })
-  },
-  async loginOne() {
+  async loginAsBanker() {
     if (!this.data.checked) {
-      this.showModal('loginOne')
+      this.showModal('loginAsCustomer')
       return
     }
-    const res = await AUTH.login20241025()
+    const res = await AUTH.loginAsBanker()
     if (res.code == 10000) {
       wx.showModal({
-        content: '您还未注册，请使用《手机号安全登陆》方式登陆',
+        content: 'CONTENTS BANKER',
         showCancel: false
       })
       return
@@ -63,66 +27,24 @@ Page({
       url: '/pages/index/index',
     })
   },
-  async getPhoneNumber(e) {
-    if (e.detail.errMsg.indexOf('privacy permission is not authorized') != -1) {
-      wx.showModal({
-        content: '请阅读并同意隐私条款以后才能继续本操作',
-        confirmText: '阅读协议',
-        cancelText: '取消',
-        success (res) {
-          if (res.confirm) {
-            wx.requirePrivacyAuthorize() // 弹出用户隐私授权框
-          }
-        }
-      })
+  async loginAsCustomer() {
+    if (!this.data.checked) {
+      this.showModal('loginAsCustomer')
       return
     }
-    if (!e.detail.errMsg) {
+    const res = await AUTH.loginAsCustomer()
+    if (res.code == 10000) {
       wx.showModal({
-        content: 'getPhoneNumber异常',
+        content: 'CONTENTS CUSTOMRER',
         showCancel: false
       })
       return
     }
-    if (e.detail.errMsg == "getPhoneNumber:fail user deny") {
-      return
-    }
-    if (!e.detail.errMsg || e.detail.errMsg != "getPhoneNumber:ok") {
-      wx.showModal({
-        content: e.detail.errMsg,
-        showCancel: false
-      })
-      return;
-    }
-    this._getPhoneNumber(e)
-  },
-  async _getPhoneNumber(e) {
-    let referrer = '' // 推荐人
-    let referrer_storge = wx.getStorageSync('referrer');
-    if (referrer_storge) {
-      referrer = referrer_storge;
-    }
-    wx.showLoading({
-      title: '',
-    })
-    const code = await AUTH.wxaCode()
-    const res = await WXAPI.loginWxaMobileV3({
-      code,
-      codeMobile: e.detail.code,
-      autoReg: true,
-      referrer
-    })
-    wx.hideLoading()
     if (res.code != 0) {
-      // 登录错误
       return
     }
-    wx.setStorageSync('token', res.data.token)
-    wx.setStorageSync('uid', res.data.uid)
-    wx.setStorageSync('openid', res.data.openid)
-    wx.setStorageSync('mobile', res.data.mobile)
     wx.reLaunch({
       url: '/pages/index/index',
     })
-  },
+  }
 })

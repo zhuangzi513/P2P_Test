@@ -39,7 +39,7 @@ Page({
         })
       }
     } else {
-      const res = await callCloudFunction('banners', { type: 'app' });
+      const res = await CLOUDFUNC.callCloudFunction('banners', { type: 'app' });
       if (res.code == 700) {
         if (shopMod==1) {
           this.goSelectPage()
@@ -116,7 +116,7 @@ Page({
       })
       return
     }
-    const res = await callCloudFunction('goSelectPage', {});
+    const res = await CLOUDFUNC.callCloudFunction('goSelectPage', {});
     if (res.code != 0) {
       wx.showToast({
         title: 'NOT IMPLEMENT YET, goSelectPage',

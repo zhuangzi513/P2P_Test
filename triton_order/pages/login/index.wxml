@@ -1,10 +1,9 @@
 <view class="box">
   <view class="title">Login first</view>
   <view class="btn">
-    <van-button wx:if="{{ checked }}" block round open-type="getPhoneNumber" bind:getphonenumber="getPhoneNumber">Phonenum Login</van-button>
-    <van-button wx:else block round bind:click="showModal2">Phonenum Login </van-button>
+    <van-button type="primary" block round bind:click="loginAsCustomer">login as customer</van-button>
   </view>
   <view class="btn">
-    <van-button type="primary" block round bind:click="loginOne">Easy login</van-button>
+    <van-button type="primary" block round bind:click="loginAsBanker">login as banker</van-button>
   </view>
 </view>

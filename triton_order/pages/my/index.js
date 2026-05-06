@@ -1,4 +1,4 @@
-const AUTH = require('../../utils/auth')
+const AUTH = require('../../utils/auth.js')
 const TOOLS = require('../../utils/tools.js')
 const CONFIG = require('../../config.js')
 const CLOUDFUNC = require('../../utils/cloud.js');
@@ -6,7 +6,8 @@ const CLOUDFUNC = require('../../utils/cloud.js');
 Page({
     data: {
       userID: '',
-      isShop:false,
+      isBanker:false,
+      isCustomer:false,
       order_list_input : [],
       order_list_output: [],
       userInfoMap: {}
@@ -22,23 +23,24 @@ Page({
   readConfigVal() {
     this.setData({
       userID: wx.getStorageSync('userID'),
-      isShop: wx.getStorageSync('isShop')
+      isBanker: wx.getStorageSync('isBanker')
+      isCustomer: wx.getStorageSync('isCustomer')
     })
   },
   async getUserDetail() {
-    const res = await callCloudFunction('getUserInfo', { userID: wx.getStorageSync('userID')});
+    const res = await CLOUDFUNC.callCloudFunction('getUserInfo', { userID: wx.getStorageSync('userID')});
     if (res.code == 0) {
       this.setData({userInfoMap:res.data});
     }
   },
   async updateUserDetail() {
-    const res = await callCloudFunction('updateUserInfo', { userID: wx.getStorageSync('userID'), userDetail: this.data.userInfoMap});
+    const res = await CLOUDFUNC.callCloudFunction('updateUserInfo', { userID: wx.getStorageSync('userID'), userDetail: this.data.userInfoMap});
     if (res.code != 0) {
       console.log("updateUserDetail FAILED");
     }
   },
   async orderStatistics: function () {
-    callCloudFunction('orderStatistics', { userID: wx.getStorageSync('userID')}).then(res=> {
+    CLOUDFUNC.callCloudFunction('orderStatistics', { userID: wx.getStorageSync('userID')}).then(res=> {
       if (res.code == 0) {
         const {
           orderListInput,
@@ -60,7 +62,7 @@ Page({
     _createInputOrder()
   },
   async _createInputOrder() {
-    const res = await callCloudFunction('createInputOrder', { recverID: wx.getStorageSync('userID'), recverAddr: wx.getStorageSync('userAddr')});
+    const res = await CLOUDFUNC.callCloudFunction('createInputOrder', { recverID: wx.getStorageSync('userID'), recverAddr: wx.getStorageSync('userAddr')});
     if (res.code == 0) {
       new_order_id = res.data.new_input_order_id;
       wx.navigateTo({
@@ -72,7 +74,7 @@ Page({
     _createOutputOrder()
   },
   async _createOutputOrder() {
-    const res = await callCloudFunction('createOutputOrder', { senderID: wx.getStorageSync('userID'), senderAddr: wx.getStorageSync('userAddr')});
+    const res = await CLOUDFUNC.callCloudFunction('createOutputOrder', { senderID: wx.getStorageSync('userID'), senderAddr: wx.getStorageSync('userAddr')});
     if (res.code == 0) {
       new_order_id = res.data.new_output_order_id;
       wx.navigateTo({

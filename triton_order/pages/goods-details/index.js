@@ -32,7 +32,7 @@ Page({
   onShow() {
   },
   async goodsFavCheck() {
-    const res = await callCloudFunction('goodsFavCheck', { userID: wx.getStorageSync('userID'), goodsID: this.data.goodsID})
+    const res = await CLOUDFUNC.callCloudFunction('goodsFavCheck', { userID: wx.getStorageSync('userID'), goodsID: this.data.goodsID})
     if (res.code == 0) {
       this.setData({
         faved: true
@@ -45,19 +45,19 @@ Page({
   },
   async addFav() {
         if (this.data.faved) {
-          const res = await callCloudFunction('goodsFavDelete', {userID: wx.getStorageSync('userID'), goodID: this.data.goodsID});
+          const res = await CLOUDFUNC.callCloudFunction('goodsFavDelete', {userID: wx.getStorageSync('userID'), goodID: this.data.goodsID});
           if (res.code == 0) {
             this.goodsFavCheck()
           }
         } else {
-          const res = await callCloudFunction('goodsFavPut', {userID: wx.getStorageSync('userID'), goodID: this.data.goodsID});
+          const res = await CLOUDFUNC.callCloudFunction('goodsFavPut', {userID: wx.getStorageSync('userID'), goodID: this.data.goodsID});
           if (res.code == 0) {
             this.goodsFavCheck()
           }
         }
   },
   async getGoodsDetail(goodsID) {
-    const res = await callCloudFunction('getDoodsInfo', {userID : userID,  goodsID: goodsID});
+    const res = await CLOUDFUNC.callCloudFunction('getDoodsInfo', {userID : userID,  goodsID: goodsID});
     if (res.code == 0) {
       this.setData({
         userID: wx.getStorageSync('userID'),
@@ -129,7 +129,7 @@ Page({
     const buyerID = this.data.userID;
     const goodsID = this.data.goodsID;
     const bankerID = this.data.goodDetail.bankerID;
-    callCloudFunction('newOrder', {ownerId: ownerID, bankerId:bankerID, buyerId:buyerID, goodsId:goodsID}).then(res => {
+    CLOUDFUNC.callCloudFunction('newOrder', {ownerId: ownerID, bankerId:bankerID, buyerId:buyerID, goodsId:goodsID}).then(res => {
       if (res.code == 0) {
         wx.navigateTo({
           url: "/pages/order/order-details?id=" + res.orderID

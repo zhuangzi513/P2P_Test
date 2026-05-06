@@ -24,7 +24,7 @@ Page({
   async fetchDetail() {
     wx.showLoading({ title: 'loading...' });
     try {
-      const res = await callCloudFunction('queryGoods', {id : this.data.goodId });
+      const res = await CLOUDFUNC.callCloudFunction('queryGoods', {id : this.data.goodId });
       if (res.code === 0 && res.data && res.data.length > 0) {
         const p = res.data[0];
         this.setData({
@@ -130,7 +130,7 @@ Page({
 
   uploadFile(filePath, type) {
     return new Promise((resolve, reject) => {
-      callCloudFunction('uploadFile', {path:filePath}).then(res => {
+      CLOUDFUNC.callCloudFunction('uploadFile', {path:filePath}).then(res => {
         if (res.code === 0 && res.data && res.data.url) {
           resolve(res.data.url);
         } else {
@@ -154,7 +154,7 @@ Page({
     wx.showLoading({ title: 'SAVING...' });
 
     try {
-      const res = await callCloudFunction('updateGoodsData',
+      const res = await CLOUDFUNC.callCloudFunction('updateGoodsData',
 	      { 
 		goodID: goodId,
 		ownerID: userID,

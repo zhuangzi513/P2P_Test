@@ -18,7 +18,7 @@ Page({
       content: '',
       success: function(res) {
         if (res.confirm) {
-          callCloudFunction('updateOrderInfo', { orderID:orderId, orderStatus:9}).then(result => {
+          CLOUDFUNC.callCloudFunction('updateOrderInfo', { orderID:orderId, orderStatus:9}).then(result => {
             if (result.code == 0) {
               that.orderList()
               that.getOrderStatistics()
@@ -45,7 +45,7 @@ Page({
 
   },
   getOrderStatistics() {
-    callCloudFunction('orderStatistics', {userID:wx.getStorageSync('userID'), orderType:orderType, isBanker:isBanker, pageNo:this.data.page}).then(res=> {
+    CLOUDFUNC.callCloudFunction('orderStatistics', {userID:wx.getStorageSync('userID'), orderType:orderType, isBanker:isBanker, pageNo:this.data.page}).then(res=> {
       if (res.code == 0) {
         this.setData({
           orderList:res.orders, 
@@ -80,7 +80,7 @@ Page({
       pageNo: this.data.page,
       pageSize: 20
     };
-    const res = await callCloudFunction('orderStatistics', postData);
+    const res = await CLOUDFUNC.callCloudFunction('orderStatistics', postData);
     wx.hideLoading()
     if (res.code == 0) {
       if (this.data.page == 1) {
