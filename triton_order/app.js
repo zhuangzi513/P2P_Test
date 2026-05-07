@@ -1,5 +1,5 @@
 const CONFIG = require('config.js')
-const AUTH = require('utils/auth')
+const AUTH = require('utils/auth.js')
 const CLOUDFUNC = require('utils/cloud.js')
 
 App({
@@ -10,7 +10,6 @@ App({
       wx.cloud.init({ env: 'ramotest-d6gbke3913ce78dfa', traceUser: true});
     }
     this.fetchUserId();
-
 
     const that = this;
     const updateManager = wx.getUpdateManager()

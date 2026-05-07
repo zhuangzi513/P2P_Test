@@ -9,7 +9,7 @@ exports.main = async (event, context) => {
   const goodsCollection = db.collection('goods_info');
   
   try {
-    let goodsRecord = await goodsCollection.doc(goodsID).get();
+    let goodsRecord = await goodsCollection.where({goods_id: goodsID}).get();
     return {
       code: 0,
       goodsInfo: goodsRecord.data

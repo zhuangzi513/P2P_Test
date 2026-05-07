@@ -16,7 +16,7 @@ Page({
     this.readConfigVal()
   },
   onShow() {
-    this.getUserApiInfo();
+    this.getUserDetail();
     this.orderStatistics();
     TOOLS.showTabBarBadge();
   },
@@ -27,17 +27,28 @@ Page({
       isCustomer: wx.getStorageSync('isCustomer')
     })
   },
-  async getUserDetail() {
-    const res = await CLOUDFUNC.callCloudFunction('getUserInfo', { userID: wx.getStorageSync('userID')});
-    if (res.code == 0) {
-      this.setData({userInfoMap:res.data});
+  getUserDetail() {
+    let result;
+    AUTH.checkHasLogined().then(res => { result = res; });
+    if (!result) {
+      wx.navigateTo({
+        url: '/pages/login/index',
+      })
+      return;
     }
+    CLOUDFUNC.callCloudFunction('getUserInfo', { userID: wx.getStorageSync('userID')}).then(res => {
+      if (res.code == 0) {
+        this.setData({userInfoMap:res.data});
+      }
+    });
   },
-  async updateUserDetail() {
-    const res = await CLOUDFUNC.callCloudFunction('updateUserInfo', { userID: wx.getStorageSync('userID'), userDetail: this.data.userInfoMap});
-    if (res.code != 0) {
-      console.log("updateUserDetail FAILED");
-    }
+  updateUserDetail() {
+    CLOUDFUNC.callCloudFunction('updateUserInfo', { userID: wx.getStorageSync('userID'), userDetail: this.data.userInfoMap})
+	     .then(res = > {
+               if (res.code != 0) {
+                 console.log("updateUserDetail FAILED");
+               }
+	     });
   },
   async orderStatistics: function () {
     CLOUDFUNC.callCloudFunction('orderStatistics', { userID: wx.getStorageSync('userID')}).then(res=> {
