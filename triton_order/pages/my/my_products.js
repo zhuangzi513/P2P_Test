@@ -20,7 +20,7 @@ Page({
     })
   },
   onLoad: function(e) {
-    callCloudFunction('goodsStatics', {userID:getStorageSync('userID')}).then(res=> {
+    CLOUDFUNC.callCloudFunction('goodsStatics', {userID:getStorageSync('userID')}).then(res=> {
       if (res.code === 0){
         that.setData({
           my_products: res.data
@@ -52,7 +52,7 @@ Page({
     })
   },
   async getMyGoodsList(myUserId, append) {
-    const res = await callCloudFunction('goodsStatics', { userID: myUserId, pageSize: this.data.pageSize })
+    const res = await CLOUDFUNC.callCloudFunction('goodsStatics', { userID: myUserId, pageSize: this.data.pageSize })
     if (res.code != 0) {
       let newData = {
         loadingMoreHidden: false
