@@ -8,10 +8,6 @@ Page({
   onShow() {
   },
   async loginAsBanker() {
-    if (!this.data.checked) {
-      this.showModal('loginAsCustomer')
-      return
-    }
     const res = await AUTH.loginAsBanker()
     if (res.code == 10000) {
       wx.showModal({
@@ -28,10 +24,6 @@ Page({
     })
   },
   async loginAsCustomer() {
-    if (!this.data.checked) {
-      this.showModal('loginAsCustomer')
-      return
-    }
     const res = await AUTH.loginAsCustomer()
     if (res.code == 10000) {
       wx.showModal({

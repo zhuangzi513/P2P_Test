@@ -3,6 +3,8 @@
 async function callCloudFunction(name, data) {
   try {
     const res = await wx.cloud.callFunction({ name, data });
+    console.log('name:', name)
+    console.log('res:', res)
     if (res.result && res.result.code === 0) {
       return res.result.data;
     } else {

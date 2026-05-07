@@ -4,12 +4,17 @@ const CLOUDFUNC = require('utils/cloud.js')
 
 App({
   onLaunch: function() {
+    wx.onUnhandledRejection((res) => {
+      console.error('未处理的 Promise 错误:', res);
+      console.error('原因:', res.reason);
+      console.error('堆栈:', res.reason?.stack);
+    });
+
     if (!wx.cloud) {
       console.error('请使用 2.2.3 或以上基础库以使用云能力');
     } else {
       wx.cloud.init({ env: 'ramotest-d6gbke3913ce78dfa', traceUser: true});
     }
-    this.fetchUserId();
 
     const that = this;
     const updateManager = wx.getUpdateManager()
@@ -73,24 +78,20 @@ App({
 
   async fetchUserId() {
     if (this.globalData.userID) {
-      return Promise.resolve(this.globalData.userID);
+      return this.globalData.userID;
     }
 
     const cachedUserId = wx.getStorageSync('userID');
     if (cachedUserId) {
       this.globalData.userID = cachedUserId;
-      return Promise.resolve(cachedUserId);
+      return cachedUserId;
     }
 
-    const res = await CLOUDFUNC.callCloudFunction(
-      'getUserId',
-      {}
-    )
-    const userID = res.data.userID;
+    const res = await CLOUDFUNC.callCloudFunction('getUserId', {})
+    const  userID = res.userID;
     this.globalData.userID = userID;
     wx.setStorageSync('userID', userID);
-    console.log('userID:', userID);
-    return userID;
+    console.log('userID save in storage', userID)
   },
 
   onShow (e) {
@@ -98,11 +99,15 @@ App({
       wx.setStorageSync('referrer', e.query.inviter_id)
     }
 
-    this.getUserDetailInfo()
+    this.fetchUserId()
+        .then(()=>this.getUserDetailInfo())
+	.catch(err => console.error(err));
   },
 
   async getUserDetailInfo() {
+    console.log('getUserInfo with userID:', wx.getStorageSync('userID'));
     const res = await CLOUDFUNC.callCloudFunction('getUserInfo', {userID: wx.getStorageSync('userID')});
+    console.log('getUserInfo:', res);
     if (res.code == 0) {
         this.globalData.userDetailInfo = res.data.userInfo;
     }

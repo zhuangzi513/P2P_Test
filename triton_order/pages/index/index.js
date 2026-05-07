@@ -119,13 +119,13 @@ Page({
     this.initBanners()
     this.cmsCategories()
     // https://www.yuque.com/apifm/nu0f75/wg5t98
-    CLOUDFUNC.callCloudFunction('goodsV2', { recommendStatus: 1}).then(res => {
-      if (res.code === 0){
-        that.setData({
-          goodsRecommend: res.data.result
-        })
-      }  
-    });
+    //CLOUDFUNC.callCloudFunction('goodsV2', { recommendStatus: 1}).then(res => {
+    //  if (res.code === 0){
+    //    that.setData({
+    //      goodsRecommend: res.data.result
+    //    })
+    //  }  
+    //});
     
 
     that.getNotice()
@@ -151,16 +151,16 @@ Page({
   },
   async initBanners(){
     const _data = {}
-    const res1 = await CLOUDFUNC.callCloudFunction('banners', { type: 'index' });
-    if (res1.code == 700) {
-      wx.showModal({
-        title: 'NOTE',
-        content: 'PLS add pic backend',
-        showCancel: false
-      })
-    } else {
-      _data.banners = res1.data
-    }
+    //const res1 = await CLOUDFUNC.callCloudFunction('banners', { type: 'index' });
+    //if (res1.code == 700) {
+    //  wx.showModal({
+    //    title: 'NOTE',
+    //    content: 'PLS add pic backend',
+    //    showCancel: false
+    //  })
+    //} else {
+    //  _data.banners = res1.data
+    //}
     this.setData(_data)
   },
   onShow: function(e){
@@ -179,63 +179,63 @@ Page({
     }
   },
   async goodsDynamicV2(){
-    const res = await CLOUDFUNC.callCloudFunction('goodsDynamicV2', { type: 0 });
-    if (res.code == 0) {
-      this.setData({
-        goodsDynamicV2: res.data.result
-      })
-    }
+    //const res = await CLOUDFUNC.callCloudFunction('goodsDynamicV2', { type: 0 });
+    //if (res.code == 0) {
+    //  this.setData({
+    //    goodsDynamicV2: res.data.result
+    //  })
+    //}
   },
   async categories(){
-    const res = await CLOUDFUNC.callCloudFunction('goodsCategory', {});
-    let categories = [];
-    if (res.code == 0) {
-      const _categories = res.data.filter(ele => {
-        return ele.level == 1
-      })
-      categories = categories.concat(_categories)
-    }
-    this.setData({
-      categories: categories,
-      curPage: 1
-    });
-    this.getGoodsList(0);
+    //const res = await CLOUDFUNC.callCloudFunction('goodsCategory', {});
+    //let categories = [];
+    //if (res.code == 0) {
+    //  const _categories = res.data.filter(ele => {
+    //    return ele.level == 1
+    //  })
+    //  categories = categories.concat(_categories)
+    //}
+    //this.setData({
+    //  categories: categories,
+    //  curPage: 1
+    //});
+    //this.getGoodsList(0);
   },
   async getGoodsList(categoryId, append) {
     if (categoryId == 0) {
       categoryId = "";
     }
-    wx.showLoading({
-      title: ''
-    })
-    const res = await CLOUDFUNC.callCloudFunction('goodsV2', { categoryId: categoryId, page: this.data.curPage, pageSize: this.data.pageSize });
-    wx.hideLoading()
-    if (res.code == 404 || res.code == 700) {
-      let newData = {
-        loadingMoreHidden: false
-      }
-      if (!append) {
-        newData.goods = []
-      }
-      this.setData(newData);
-      return
-    }
-    let goods = [];
-    if (append) {
-      goods = this.data.goods
-    }
-    for (var i = 0; i < res.data.result.length; i++) {
-      const item = res.data.result[i]
-      const hidden_goods_index = wx.getStorageSync('hidden_goods_index')
-      if (hidden_goods_index.indexOf(item.id) != -1) {
-        continue
-      }
-      goods.push(item);
-    }
-    this.setData({
-      loadingMoreHidden: true,
-      goods: goods,
-    });
+    //wx.showLoading({
+    //  title: ''
+    //})
+    //const res = await CLOUDFUNC.callCloudFunction('goodsV2', { categoryId: categoryId, page: this.data.curPage, pageSize: this.data.pageSize });
+    //wx.hideLoading()
+    //if (res.code == 404 || res.code == 700) {
+    //  let newData = {
+    //    loadingMoreHidden: false
+    //  }
+    //  if (!append) {
+    //    newData.goods = []
+    //  }
+    //  this.setData(newData);
+    //  return
+    //}
+    //let goods = [];
+    //if (append) {
+    //  goods = this.data.goods
+    //}
+    //for (var i = 0; i < res.data.result.length; i++) {
+    //  const item = res.data.result[i]
+    //  const hidden_goods_index = wx.getStorageSync('hidden_goods_index')
+    //  if (hidden_goods_index.indexOf(item.id) != -1) {
+    //    continue
+    //  }
+    //  goods.push(item);
+    //}
+    //this.setData({
+    //  loadingMoreHidden: true,
+    //  goods: goods,
+    //});
   },
   onShareAppMessage: function() {
     return {
@@ -252,13 +252,13 @@ Page({
   },
   getNotice: function() {
     var that = this;
-    CLOUDFUNC.callCloudFunction('noticeList', {userID: wx.getStorageSync("userID"), pageSize: 5}).then(function (res) {
-      if (res.code == 0) {
-        that.setData({
-          noticeList: res.data
-        });
-      }
-    });
+    //CLOUDFUNC.callCloudFunction('noticeList', {userID: wx.getStorageSync("userID"), pageSize: 5}).then(function (res) {
+    //  if (res.code == 0) {
+    //    that.setData({
+    //      noticeList: res.data
+    //    });
+    //  }
+    //});
   },
   onReachBottom: function() {
     this.setData({
@@ -285,14 +285,14 @@ Page({
     })
   },
   async cmsCategories() {
-    const res = await CLOUDFUNC.callCloudFunction('cmsCategories', {})
-    if (res.code == 0) {
-      const cmsCategories = res.data.filter(ele => {
-        return ele.type == 'index'
-      })
-      this.setData({
-        cmsCategories
-      })
-    }
+    //const res = await CLOUDFUNC.callCloudFunction('cmsCategories', {})
+    //if (res.code == 0) {
+    //  const cmsCategories = res.data.filter(ele => {
+    //    return ele.type == 'index'
+    //  })
+    //  this.setData({
+    //    cmsCategories
+    //  })
+    //}
   },
 })

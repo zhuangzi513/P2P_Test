@@ -6,6 +6,7 @@ const CLOUDFUNC = require('../../utils/cloud.js');
 Page({
     data: {
       userID: '',
+      hasLogined: false,
       isBanker:false,
       isCustomer:false,
       order_list_input : [],
@@ -16,42 +17,45 @@ Page({
     this.readConfigVal()
   },
   onShow() {
-    this.getUserDetail();
-    this.orderStatistics();
-    TOOLS.showTabBarBadge();
+    AUTH.checkHasLogined()
+        .then(res => {
+           this.setData({hasLogined : res});
+           if (this.data.hasLogined) {
+             this.getUserDetail();
+             this.orderStatistics();
+           }
+	 });
   },
   readConfigVal() {
     this.setData({
       userID: wx.getStorageSync('userID'),
-      isBanker: wx.getStorageSync('isBanker')
+      isBanker: wx.getStorageSync('isBanker'),
       isCustomer: wx.getStorageSync('isCustomer')
     })
   },
   getUserDetail() {
     let result;
-    AUTH.checkHasLogined().then(res => { result = res; });
-    if (!result) {
-      wx.navigateTo({
-        url: '/pages/login/index',
-      })
-      return;
-    }
     CLOUDFUNC.callCloudFunction('getUserInfo', { userID: wx.getStorageSync('userID')}).then(res => {
-      if (res.code == 0) {
-        this.setData({userInfoMap:res.data});
-      }
+      console.log('res', res)
+      this.setData({userInfoMap:res.userInfo});
     });
   },
   updateUserDetail() {
     CLOUDFUNC.callCloudFunction('updateUserInfo', { userID: wx.getStorageSync('userID'), userDetail: this.data.userInfoMap})
-	     .then(res = > {
+	     .then(res => {
                if (res.code != 0) {
                  console.log("updateUserDetail FAILED");
                }
 	     });
   },
-  async orderStatistics: function () {
-    CLOUDFUNC.callCloudFunction('orderStatistics', { userID: wx.getStorageSync('userID')}).then(res=> {
+  async orderStatistics() {
+    CLOUDFUNC.callCloudFunction('orderStatics',
+                                {
+				  userID: wx.getStorageSync('userID'),
+                                  orderType: 0,
+				  isBanker: false,
+				  pageNo:1
+				}).then(res=> {
       if (res.code == 0) {
         const {
           orderListInput,
@@ -65,6 +69,7 @@ Page({
     })
   },
   login() {
+    console.log('go to login')
     wx.navigateTo({
       url: '/pages/login/index',
     })

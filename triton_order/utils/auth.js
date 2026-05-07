@@ -1,5 +1,5 @@
 const CONFIG = require('../config.js')
-const CLOUDFUC = require('../cloud.js');
+const CLOUDFUC = require('./cloud.js');
 
 async function checkHasLogined() {
   const token = wx.getStorageSync('token')
@@ -34,7 +34,7 @@ async function wxaCode(){
 async function login(page) {
   const _this = this
   const wxa_code = await wxaCode()
-  CLOUDFUC.callCloudFunction('login_wx', {'code': wxa_code}).then(function (res) {        
+  CLOUDFUC.callCloudFunction('login_wx', {code: wxa_code}).then(function (res) {        
     if (res.code == 10000) {
       return;
     }
@@ -59,12 +59,12 @@ async function authorize() {
     wx.login({
       success: function (res) {
         const code = res.code
-        let referrer = ''
+        let _referrer = ''
         let referrer_storge = wx.getStorageSync('referrer');
         if (referrer_storge) {
-          referrer = referrer_storge;
+          _referrer = referrer_storge;
         }
-        CLOUDFUC.callCloudFunction('authorize', {'code':code, 'referrer':referrer}).then(function (res) {
+        CLOUDFUC.callCloudFunction('authorize', {code:code, referrer:_referrer}).then(function (res) {
           if (res.code == 0) {
             wx.setStorageSync('token', res.data.token)
             wx.setStorageSync('userID', res.data.uid)
@@ -89,7 +89,7 @@ async function loginAsBanker_() {
   wx.setStorageSync('isBanker', true)
   wx.setStorageSync('isCustomer', false)
   const wxa_code = await wxaCode()
-  const res = await CLOUDFUC.callCloudFunction('login_wx', {'code':wxa_code});
+  const res = await CLOUDFUC.callCloudFunction('login', {isBanker: true});
   if (res.code == 10000) {
     return res;
   }
@@ -109,7 +109,7 @@ async function loginAsCustomer_() {
   wx.setStorageSync('isBanker', false)
   wx.setStorageSync('isCustomer', true)
   const wxa_code = await wxaCode()
-  const res = await CLOUDFUC.callCloudFunction('login_wx', {'code':wxa_code});
+  const res = await CLOUDFUC.callCloudFunction('login', {isBanker: false});
   if (res.code == 10000) {
     return res;
   }
@@ -182,6 +182,5 @@ module.exports = {
   loginAsCustomer: loginAsCustomer_,
   loginOut: loginOut,
   checkAndAuthorize: checkAndAuthorize,
-  authorize: authorize,
-  bindSeller: bindSeller
+  authorize: authorize
 }

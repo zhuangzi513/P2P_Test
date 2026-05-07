@@ -7,10 +7,14 @@ const _ = db.command;
 exports.main = async (event, context) => {
   console.log('event', event);
   const userID = event.userID;
+
+  console.log('userID', userID);
+
   const usersCollection = db.collection('users_info');
   
   try {
     let userRecord = await usersCollection.where({user_id: userID}).get();
+    console.log('userRecord:', userRecord)
       return {
         code: 0,
         data: {
@@ -21,7 +25,8 @@ exports.main = async (event, context) => {
     return {
       code: -1,
       data: {
-        message: err.message + 'users_info query failed for userID:' + userID
+        message: err.message + 'users_info query failed for userID:' + userID,
+        userInfo:{}
       }
     }
   }

@@ -1,6 +1,6 @@
 <view class="page-container">
   <view class="header-section">
-    <view wx:if="{{ !userInfoMap }}" class="login-container">
+    <view wx:if="{{ !hasLogined }}" class="login-container">
       <view class="login-tips">WELCOME</view>
       <view class="login-btn" bindtap="login">
         <text>LOGIN</text>
@@ -11,9 +11,9 @@
       <view class="user-main">
         <view class="user-detail">
           <view class="nickname-row">
-            <text class="nickname">{{ userInfoMap.base.nick ? userInfoMap.base.nick : 'to reset nickname' }}</text>
+            <text class="nickname">{{ userInfoMap.nick ? userInfoMap.nick : 'to reset nickname' }}</text>
           </view>
-          <view class="user-id">ID: {{ userInfoMap.base.id }}</view>
+          <view class="user-id">ID: {{ userInfoMap.userID }}</view>
         </view>
       </view>
     </view>

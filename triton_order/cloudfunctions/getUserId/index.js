@@ -33,17 +33,26 @@ exports.main = async (event, context) => {
   var userId;
   
   if (userRecord.data.length === 0) {
+    console.log("userRecord.data.length==0")
     userId = await generateNewUserId();
     await usersCollection.add({
-      open_id: openid,
-      user_id: userId,
       data: {
-        created_at: new Date()
+        open_id: openid,
+        user_id: userId,
+        is_banker: false,
+        data: {
+          nick: "007",
+          level: 0,
+          socre: 100,
+          created_at: new Date()
+        }
       }
     });
   } else {
-    userId = userRecord.user_id;
+    console.log("userRecord.data", userRecord.data[0])
+    userId = userRecord.data[0].user_id;
   }
   
-  return { code:0, data: { userID : userId }};
+  console.log('userId', userId);
+  return { code: 0, data: { userID : userId }};
 };

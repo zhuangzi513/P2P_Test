@@ -2,6 +2,7 @@
   "cloud": true,
   "pages": [
     "pages/index/index",
+    "pages/login/index",
     "pages/start/start",
     "pages/goods/list",
     "pages/goods/fav",

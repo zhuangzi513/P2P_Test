@@ -1,9 +1,9 @@
 <view class="box">
   <view class="title">Login first</view>
-  <view class="btn">
-    <van-button type="primary" block round bind:click="loginAsCustomer">login as customer</van-button>
+  <view class="login-btn" bindtap="loginAsCustomer">
+    <text>LOGIN AS CUSTOMER</text>
   </view>
-  <view class="btn">
-    <van-button type="primary" block round bind:click="loginAsBanker">login as banker</van-button>
+  <view class="login-btn" bindtap="loginAsBanker">
+    <text>LOGIN AS BANKER</text>
   </view>
 </view>
