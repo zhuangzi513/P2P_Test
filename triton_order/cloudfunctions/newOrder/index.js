@@ -24,32 +24,53 @@ async function generateNewOrderId() {
 }
 
 exports.main = async (event, context) => {
-  const ownerID = event.ownerId;
-  const bankerID= event.bankerId;
-  const buyerID = event.buyerId;
-  const goodsID = event.goodsId;
+  const orderType = event.orderType;
+  let bankerId = -1;
+  let ownerId = -1;
+  let bankerId = -1;
+  let buyerId = -1;
+  let goodsId = -1;
 
-  if (!ownerID || !bankerID || !buyerID || !goodsID) {
-    return {
-      success: false,
-      message: 'LACK OF IDs'
+  if (orderType == 0) {
+    bankerId = event.bankerID;
+    if (bankerId == undefined) {
+      return {
+        code: -1,
+        message: 'LACK OF IDs'
+      }
+    }
+  } else if (orderType == 1) {
+    ownerId = event.ownerID;
+    bankerId = event.bankerID;
+    buyerId = event.buyerID;
+    goodsId = event.buyerID;
+    if (buyerId == undefined || ownerId == undefined
+	|| buyerId == undefined || goodsId == undefined) {
+      return {
+        code: -1,
+        message: 'LACK OF IDs'
+      }
     }
   }
 
-  const newOrderID = await generateNewOrderId();
+  const newOrderId = await generateNewOrderId();
   const ordersCollection = db.collection('orders_info');
   try {
     await ordersCollection.add({
-      order_id: newOrderID,
-      owner_id: ownID,
-      banker_id: bankerID,
-      buyer_id: buyerID,
-      goods_id: goodsID,
-      order_status:-1
+      data : {
+        order_id: newOrderId,
+        owner_id: ownerId,
+        banker_id: bankerId,
+        buyer_id: buyerId,
+        goods_id: goodsId,
+        order_status:-1
+        order_details : {
+	}
+      }
     });
     return {
       code: 0,
-      orderID: newOrderID
+      orderId: newOrderId
     }
   } catch (err) {
     return {

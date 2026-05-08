@@ -78,23 +78,11 @@ Page({
     _createInputOrder()
   },
   async _createInputOrder() {
-    const res = await CLOUDFUNC.callCloudFunction('createInputOrder', { recverID: wx.getStorageSync('userID'), recverAddr: wx.getStorageSync('userAddr')});
+    const res = await CLOUDFUNC.callCloudFunction('newOrder', { bankerID: wx.getStorageSync('userID'), orderType:0, recverAddr: wx.getStorageSync('userAddr')});
     if (res.code == 0) {
-      new_order_id = res.data.new_input_order_id;
+      inputOrderID = res.orderId;
       wx.navigateTo({
-        url: '/pages/orders/order-details/?id=' + new_order_id 
-      })
-    }
-  },
-  createOutputOrder() {
-    _createOutputOrder()
-  },
-  async _createOutputOrder() {
-    const res = await CLOUDFUNC.callCloudFunction('createOutputOrder', { senderID: wx.getStorageSync('userID'), senderAddr: wx.getStorageSync('userAddr')});
-    if (res.code == 0) {
-      new_order_id = res.data.new_output_order_id;
-      wx.navigateTo({
-        url: '/pages/orders/order-details/?id=' + new_order_id 
+        url: '/pages/orders/order-type0-details/?id=' + inputOrderID 
       })
     }
   }
