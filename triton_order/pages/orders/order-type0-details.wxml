@@ -62,7 +62,7 @@
         </view>
         <view class="form-item">
           <view class="label">DESCRIPTION</view>
-          <textarea class="textarea" placeholder="INPUT DESCRIPTION"  disabled="{{!isOwner && !isSaler}}" value="{{goodInfo.description}}" bindinput="onDescInput" maxlength="200" auto-height />
+          <textarea class="textarea" placeholder="INPUT DESCRIPTION"  disabled="{{!isOwner || !isSaler}}" value="{{goodInfo.description}}" bindinput="onDescInput" maxlength="200" auto-height />
         </view>
       </view>
   

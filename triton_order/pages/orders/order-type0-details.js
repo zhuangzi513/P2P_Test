@@ -13,7 +13,7 @@ Page({
       senderAddrNeeded: false,
       recverAddrNeeded: false,
       isOwner: false,
-      isSaler: false,
+      isBanker: false,
       isBuyer: false,
       canSee: false,
       enum ORDERSTATUS{
@@ -96,7 +96,7 @@ Page({
       wx.showLoading({
         title: '',
       })
-      const res = await CLOUDFUNC.callCloudFunction('orderDetail', {orderID:this.data.orderId})
+      const res = await CLOUDFUNC.callCloudFunction('getOrderInfo', {orderID:this.data.orderId})
       wx.hideLoading()
       if (res.code != 0) {
         wx.showModal({
@@ -115,18 +115,15 @@ Page({
           }
         })
       }
-      this.setData({
-        orderDetail: res.data,
-      })
-      _isOwner = (userId == this.data.orderDetail.ownerID);
-      _isSaler = (userId == this.data.orderDetail.salerID);
-      _isBuyer = (userId == this.data.orderDetail.buyerID);
-      _canSee  = (_isOwner || _isSaler || _isBuyer);
+      this.setData({ orderDetail: res.data })
+
+      _isOwner  = (userID == this.data.orderDetail.ownerId) || (this.data.orderDetail.orderStatus == -1);
+      _isBanker = (userID == this.data.orderDetail.bankerId);
+      _canSee   = (_isOwner || _isBanker);
       this.setData({
               orderNextStep: this.data.statusMapType0[this.data.orderDetail.orderStatus+1],
               isOwner: _isOwner,
-              isSaler: _isSaler,
-              isBuyer: _isBuyer,
+              isBanker: _isBanker,
               canSee : _canSee
       });
     },
@@ -139,7 +136,7 @@ Page({
         //recver firstly see, and then confirm
         opEnabled = isOwner;
       } else if (curOrderStatus == 0) {
-        opEnabled = isSaler;
+        opEnabled = isBanker;
         recverAddrNeeded = true;
       } else if (curOrderStatus == 1) {
         //sender can send it to  recver
@@ -148,7 +145,7 @@ Page({
         orderPostID0Needed = true,
       } else if (curOrderStatus >=2 && curOrderStatus < 8) {
         //recver got it, and then sell it, and pay to sender
-        opEnabled = isSaler;
+        opEnabled = isBanker;
       } else if (curOrderStatus == 8) {
         //sender confirm got payed
         opEnabled = isOwner;
@@ -159,7 +156,7 @@ Page({
         //any time, cancel should be confirmed by eachother
         opEnabled = !isCanceler;
       } else if (curOrderStatus == 10) {
-        opEnabled = isSaler;
+        opEnabled = isBanker;
         orderPostID1Needed = true,
       } else if (curOrderStatus == 11) {
         opEnabled = isOwner;
@@ -187,7 +184,7 @@ Page({
     },
     async updateOrderData() {
       try {
-        const res = await CLOUDFUNC.callCloudFunction('updateOrderData',
+        const res = await CLOUDFUNC.callCloudFunction('updateOrderInfo',
                 orderID: this.data.orderDetail.orderID,
           	orderDetail: this.data.orderDetail
                 });
