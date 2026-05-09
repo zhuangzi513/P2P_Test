@@ -63,6 +63,7 @@ exports.main = async (event, context) => {
         banker_id: bankerId,
         buyer_id: buyerId,
         goods_id: goodsId,
+        order_type:orderType,
         order_status:-1,
         order_details : {
           time_created: new Date()

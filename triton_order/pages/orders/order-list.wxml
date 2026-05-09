@@ -3,9 +3,9 @@
   
   <view class="order-list" hidden="{{orderList ? false : true}}">
     <view class="order-card" wx:for="{{orderList}}" wx:key="index">
-      <view class="order-header" bind:tap="goOrderDetail" data-item="{{ item }}">
+      <view class="order-header"  bindtap="goOrderDetail" data-item="{{ item }}" data-index="{{index}}">
         <view class="order-header-left">
-          <view class="order-number">ID : {{item.orderID}}</view>
+          <view class="order-number">ID : {{item.order_id}}</view>
           <view class="order-number">PRICE : {{item.price}}</view>
         </view>
         <view class="order-status">{{item.statusStr}}</view>

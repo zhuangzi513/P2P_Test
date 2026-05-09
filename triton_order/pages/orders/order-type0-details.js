@@ -121,7 +121,7 @@ Page({
       try {
         const res = await CLOUDFUNC.callCloudFunction('updateOrderInfo',
                 {
-		orderID: this.data.orderDetail.orderID,
+		orderID: this.data.orderDetail.order_id,
           	orderDetail: this.data.orderDetail
                 });
         if (res.code != 0) {

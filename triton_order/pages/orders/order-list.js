@@ -8,7 +8,7 @@ Page({
     isBanker: false,
     total: -1,
     badges: [0, 0, 0, 0, 0],
-    orderList
+    orderList:[]
   },
   cancelOrderTap: function(e) {
     const that = this;
@@ -36,16 +36,21 @@ Page({
           userID: wx.getStorageSync('userID'), 
           isBanker: wx.getStorageSync('isBanker')
         });
-      }      
-    }
-    
+    }      
     this.getOrderStatistics();
   },
+    
   onReady: function() {
 
   },
   getOrderStatistics() {
-    CLOUDFUNC.callCloudFunction('orderStatistics', {userID:wx.getStorageSync('userID'), orderType:orderType, isBanker:isBanker, pageNo:this.data.page}).then(res=> {
+    CLOUDFUNC.callCloudFunction('orderStatics',
+                                {
+				  userID:wx.getStorageSync('userID'),
+				  orderType:this.data.orderType,
+				  isBanker:this.data.isBanker,
+				  pageNo:this.data.page
+				}).then(res=> {
       if (res.code == 0) {
         this.setData({
           orderList:res.orders, 
@@ -80,7 +85,7 @@ Page({
       pageNo: this.data.page,
       pageSize: 20
     };
-    const res = await CLOUDFUNC.callCloudFunction('orderStatistics', postData);
+    const res = await CLOUDFUNC.callCloudFunction('orderStatics', postData);
     wx.hideLoading()
     if (res.code == 0) {
       if (this.data.page == 1) {
@@ -107,13 +112,15 @@ Page({
   },
   goOrderDetail(e) {
     const item = e.currentTarget.dataset.item
-    if (item.orderType == 0) {
+    console.log('item:', item)
+    console.log('e:', e)
+    if (item.order_type == 0) {
       wx.navigateTo({
-        url: '/pages/orders/order-type0-details?id=' + item.orderID
+        url: '/pages/orders/order-type0-details?id=' + item.order_id,
       })
-    } else if (item.orderType == 1) {
+    } else if (item.order_type == 1) {
       wx.navigateTo({
-        url: '/pages/orders/order-type1-details?id=' + item.orderID
+        url: '/pages/orders/order-type1-details?id=' + item.order_id,
       })
     }
   }

@@ -95,5 +95,16 @@ Page({
 	  }, 2000);
         }
       });
+  },
+  switchToInputOrders() {
+    wx.navigateTo({
+      url: '/pages/orders/order-list?type=0',
+    });
+  },
+  switchToOutputOrders() {
+    wx.navigateTo({
+      url: '/pages/orders/order-list?type=1',
+    });
   }
+
  })

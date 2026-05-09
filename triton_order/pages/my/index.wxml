@@ -26,14 +26,14 @@
       <view class="menu-label">CREATE INPUT ORDER</view>
       <text class="arrow">INPUT</text>
     </view>
-    <navigator url="/pages/orders/input-order-list" class="menu-item">
+    <view bindtap="switchToInputOrders" class="menu-item">
       <view class="menu-label">INPUT ORDERS</view>
       <text class="arrow">INPUT ORDERS</text>
-    </navigator>
-    <navigator url="/pages/orders/output-order-list" class="menu-item">
+    </view>
+    <view bindtap="switchToOutputOrders" class="menu-item">
       <view class="menu-label">OUTPUT ORDERS</view>
       <text class="arrow">OUTPUT ORDERS</text>
-    </navigator>
+    </view>
     <navigator url="/pages/my/address" class="menu-item">
       <view class="menu-label">MY ADDR</view>
       <text class="arrow">MY ADDR</text>
