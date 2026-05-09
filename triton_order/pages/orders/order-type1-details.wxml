@@ -57,9 +57,9 @@
   <view class="section" wx:if="{{isSaler||isBuyer}}">
     <view class="section-title">PAYMENT</view>
     <view class="media-item" wx:if="{{isBuyer && (orderDetail.orderStatus <= 1)}}">
-      <view class="add-btn" wx:if="{{!payment}}" bindtap="addImage">+</view>
+      <view class="add-btn" disabled="{{payment}}" bindtap="addImage">+</view>
     </view>
-    <view class="media-item" wx:else">
+    <view class="media-item" wx:else>
       <image class="preview-image" src="{{payment.url}}" mode="aspectFill" bindtap="previewImage" data-url="{{payment.url}}" />
     </view>
   </view>

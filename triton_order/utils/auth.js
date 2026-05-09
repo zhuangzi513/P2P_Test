@@ -6,7 +6,7 @@ async function checkHasLogined() {
   if (!token) {
     return false
   }
-  const checkTokenRes = await CLOUDFUC.callCloudFunction('checkToken', {'token':token});
+  const checkTokenRes = await CLOUDFUC.callCloudFunction('checkToken', {token:token});
   if (checkTokenRes.code != 0) {
     wx.removeStorageSync('token')
     return false
@@ -100,8 +100,8 @@ async function loginAsBanker_() {
     })
     return res;
   }
-  wx.setStorageSync('token', res.data.token)
-  wx.setStorageSync('uid', res.data.uid)
+  wx.setStorageSync('token', res.token)
+  wx.setStorageSync('userID', res.userID)
   return res
 }
 
@@ -120,14 +120,14 @@ async function loginAsCustomer_() {
     })
     return res;
   }
-  wx.setStorageSync('token', res.data.token)
-  wx.setStorageSync('uid', res.data.uid)
+  wx.setStorageSync('token', res.token)
+  wx.setStorageSync('userID', res.userID)
   return res
 }
 
 function loginOut(){
   wx.removeStorageSync('token')
-  wx.removeStorageSync('uid')
+  wx.removeStorageSync('userID')
   wx.removeStorageSync('openid')
   wx.removeStorageSync('mobile')
   wx.removeStorageSync('isBanker')

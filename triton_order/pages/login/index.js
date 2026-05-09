@@ -25,6 +25,7 @@ Page({
   },
   async loginAsCustomer() {
     const res = await AUTH.loginAsCustomer()
+    console.log('res', res)
     if (res.code == 10000) {
       wx.showModal({
         content: 'CONTENTS CUSTOMRER',
@@ -35,6 +36,7 @@ Page({
     if (res.code != 0) {
       return
     }
+
     wx.reLaunch({
       url: '/pages/index/index',
     })

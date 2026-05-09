@@ -41,13 +41,13 @@ exports.main = async (event, context) => {
     let userRecord
     if (!isBanker) {
       userRecord = await userCollection.where({open_id : openId, is_banker:false}).get()
-    else {
+    } else {
       userRecord = await userCollection.where({open_id : openId, is_banker:true}).get()
     }
 
     if (userRecord.data.length === 0) {
       userId = await generateNewUserId();
-      await usersCollection.add({
+      await userCollection.add({
         data: {
           open_id: openId,
           user_id: userId,
@@ -60,6 +60,9 @@ exports.main = async (event, context) => {
           }
         }
       });
+    } else {
+      console.log('userRecord', userRecord)
+      userId = userRecord.data[0].user_id;
     }
 
     const token = jwt.sign(
@@ -72,6 +75,7 @@ exports.main = async (event, context) => {
       code: 0,
       message: 'success',
       data: {
+        code: 0,
         token: token,
         userID: userId
       }

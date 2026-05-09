@@ -6,7 +6,11 @@ const _ = db.command;
 
 exports.main = async (event, context) => {
   console.log("event:", event)
-  const { userID, orderType, isBanker, pageNo } = event
+  const userID = event.userID;
+  const orderType = event.orderType;
+  const isBanker = event.isBanker;
+  const pageNo = event.pageNo;
+  const pageSize = 20;
   const ordersCollection = db.collection('orders_info');
   
   const skip = (pageNo - 1) * pageSize;
@@ -19,14 +23,15 @@ exports.main = async (event, context) => {
           query = await ordersCollection.where({buyer_id: userID});
 	}
     } else {
-        query = await ordersCollection.where({saler_id: userID});
+        query = await ordersCollection.where({banker_id: userID});
     }
+    const result = query.get();
+    console.log('orderStatics:', result);
 
     const total = query.count().total;
     ordersReturn = await query 
                          .skip(skip)
                          .limit(pageSize)
-                         .orderBy('create_time')
                          .get();
     return {
       code: 0,

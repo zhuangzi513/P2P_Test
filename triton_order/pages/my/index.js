@@ -34,8 +34,10 @@ Page({
     })
   },
   getUserDetail() {
-    let result;
-    CLOUDFUNC.callCloudFunction('getUserInfo', { userID: wx.getStorageSync('userID')}).then(res => {
+    let userID = wx.getStorageSync('userID');
+    console.log('userID', userID)
+
+    CLOUDFUNC.callCloudFunction('getUserInfo', { userID: userID }).then(res => {
       console.log('res', res)
       this.setData({userInfoMap:res.userInfo});
     });
@@ -48,12 +50,12 @@ Page({
                }
 	     });
   },
-  async orderStatistics() {
+  orderStatistics() {
     CLOUDFUNC.callCloudFunction('orderStatics',
                                 {
 				  userID: wx.getStorageSync('userID'),
                                   orderType: 0,
-				  isBanker: false,
+				  isBanker: this.data.isBanker,
 				  pageNo:1
 				}).then(res=> {
       if (res.code == 0) {
@@ -75,15 +77,21 @@ Page({
     })
   },
   createInputOrder() {
-    _createInputOrder()
+    this._createInputOrder();
   },
-  async _createInputOrder() {
-    const res = await CLOUDFUNC.callCloudFunction('newOrder', { bankerID: wx.getStorageSync('userID'), orderType:0, recverAddr: wx.getStorageSync('userAddr')});
-    if (res.code == 0) {
-      inputOrderID = res.orderId;
-      wx.navigateTo({
-        url: '/pages/orders/order-type0-details/?id=' + inputOrderID 
-      })
-    }
+  _createInputOrder() {
+    CLOUDFUNC.callCloudFunction('newOrder',
+      {
+        bankerID: wx.getStorageSync('userID'),
+        orderType:0,
+        recverAddr: wx.getStorageSync('userAddr')
+      }).then(res => {
+        if (res.code == 0) {
+	  console.log('orderId', res.orderId)
+          wx.navigateTo({
+            url: '/pages/orders/order-type0-details?id=' + res.orderId,
+          });
+        }
+      });
   }
-})
+ })

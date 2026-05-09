@@ -4,16 +4,15 @@
     "pages/index/index",
     "pages/login/index",
     "pages/start/start",
-    "pages/goods/list",
-    "pages/goods/fav",
-    "pages/goods/his",
     "pages/goods-details/index",
     "pages/my/index",
-    "pages/my/info",
-    "pages/my/info-menu",
+    "pages/my/edit_products",
     "pages/my/my_products",
+    "pages/my/select_addr",
     "pages/orders/index",
-    "pages/orders/order-details"
+    "pages/orders/order-type0-details",
+    "pages/orders/order-type1-details",
+    "pages/orders/order-list"
   ],
   "requiredPrivateInfos": [
     "getLocation",

@@ -22,14 +22,10 @@
 
   <view class="other-section">
     <view class="section-title">ORDERS</view>
-    <navigator wx:if="{{isBanker}}" bindtap="createInputOrder" class="menu-item">
+    <view wx:if="{{isBanker}}" bindtap="createInputOrder" class="menu-item">
       <view class="menu-label">CREATE INPUT ORDER</view>
       <text class="arrow">INPUT</text>
-    </navigator>
-    <navigator wx:if="{{isBanker}}" bindtap="createOutputOrder" class="menu-item">
-      <view class="menu-label">CREATE OUTPUT ORDER</view>
-      <text class="arrow">OUTPUT</text>
-    </navigator>
+    </view>
     <navigator url="/pages/orders/input-order-list" class="menu-item">
       <view class="menu-label">INPUT ORDERS</view>
       <text class="arrow">INPUT ORDERS</text>
