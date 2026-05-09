@@ -71,7 +71,7 @@ Page({
     const id = e.currentTarget.dataset.id
     const index = e.currentTarget.dataset.index
     wx.showModal({
-      content: 'çSURE ?'
+      content: 'çSURE ?',
       success: async (res) => {
         if (res.confirm) {
           wx.showLoading({

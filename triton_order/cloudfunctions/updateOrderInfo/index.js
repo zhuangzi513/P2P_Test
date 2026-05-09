@@ -19,7 +19,7 @@ exports.main = async (event, context) => {
     const updateData = {}
     updateData[field] = value
 
-    await db.collection('orders_info').doc(orderID).update({
+    await db.collection('orders_info').where({order_id:orderID}).update({
       data: updateData
     })
 

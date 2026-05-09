@@ -1,9 +1,11 @@
 const CLOUDFUC = require('../../utils/cloud.js');
+const ORDER_STATUS= require('../../utils/order_status.js');
 
 Page({
     data:{
       orderId:0,
       goodId:0,
+      userID:0,
       submitting: false,
       loading: true,
       updatingDisabled: true,
@@ -14,67 +16,19 @@ Page({
       isSaler: false,
       isBuyer: false,
       canSee: false,
-      enum ORDERSTATUS{
-	AGREED,
-        CONFIRM,
-        PAYED,
-        SENDTORECVER,
-        RECVED0,
-        DONE,
-        CANCELLED,
-        BACKING,
-        BACKED,
-        CLOSE
-      },
-      const statusMapType1 = [
-	'AGREED',
-        'CONFIRM',
-        'PAYED',
-        'SENDTORECVER',
-        'RECVED0',
-        'DONE',
-        'CANCELLED',
-        'BACKING',
-        'BACKED',
-        'CLOSED'
-      ],
       goodInfo: {
-        goodID: '',
-        color: '',
-	sizeX: '',
-	sizeY: '',
-	sizeZ: '',
-	price: '',
-	description: '',
-	imageListLen,
-	videoListLen,
-        imageList: [],
-        videoList: []
       },
       orderDetail: {
-	orderID: '',
-	orderType: '',
-	goodID:  '',
-	time:  '',
-	ownerID:  '',
-	salerID:  '',
-	buyerID:  '',
-	senderAddr:  '',
-	recverAddr:  '',
-        postID0: '',
-        postID1: '',
-	orderStatus:  '',
-	orderStatusStr:  ''
       }
     },
     onLoad:function(e){
       this.setData({
         orderId: e.id,
+        userID: wx.getStorageSync('userID'),
       })
-      await orderDetail();
     },
     onShow() {
-      this.orderDetail().then(res) {
+      this.orderDetail().then(res => {
            this.updateButtonStatus()
       });
     },
@@ -85,7 +39,7 @@ Page({
       wx.showLoading({
         title: '',
       })
-      const res = await CLOUDFUNC.callCloudFunction('orderDetail', {orderID:this.data.orderId})
+      const res = await CLOUDFUNC.callCloudFunction('getOrderInfo', {orderID:this.data.orderId})
       wx.hideLoading()
       if (res.code != 0) {
         wx.showModal({
@@ -94,28 +48,18 @@ Page({
         })
         return
       }
-      if (res.data.orderLogisticsShippers) {
-        res.data.orderLogisticsShippers.forEach(ele => {
-          if (ele.traces) {
-            ele.tracesArray = JSON.parse (ele.traces)
-            if (ele.tracesArray && ele.tracesArray.length > 0) {
-              ele.tracesLast = ele.tracesArray[ele.tracesArray.length - 1].AcceptStation + '\n' + ele.tracesArray[ele.tracesArray.length - 1].AcceptTime
-            }
-          }
-        })
-      }
       this.setData({
-        orderDetail: res.data,
+        orderDetail: res.orderInfo,
       });
-      if (!this.data.orderDetail.salerID.strim()) {
-          wx.showToast({ title: 'empty salerID:', icon: 'none' });
+      if (!this.data.orderDetail.bankerID.strim()) {
+          wx.showToast({ title: 'empty bankerID:', icon: 'none' });
       }
-      _isOwner = (userId == this.data.orderDetail.ownerID);
-      _isSaler = (userId == this.data.orderDetail.salerID);
-      _isBuyer = (userId == this.data.orderDetail.buyerID);
-      _canSee  = (_isOwner || _isSaler || _isBuyer);
+      let _isOwner = (userID == this.data.orderDetail.owner_id);
+      let _isSaler = (userID == this.data.orderDetail.banker_id);
+      let _isBuyer = (userID == this.data.orderDetail.buyer_id);
+      let _canSee  = (_isOwner || _isSaler || _isBuyer);
       this.setData({
-	      orderNextStep: this.data.statusMapType1[this.data.orderDetail.orderStatus+1],
+	      orderNextStep: ORDER_STATUS.statusMap1[this.data.orderDetail.order_status+1],
 	      isOwner: _isOwner,
 	      isSaler: _isSaler,
 	      isBuyer: _isBuyer, 
@@ -123,70 +67,68 @@ Page({
       });
     },
     updateButtonStatus() {
-      userId = wx.getStorageSync('userID');
-      opEnabled = false;
-      isCanceler = (userId == this.data.orderDetail.cancelerID);
-      curOrderStatus = this.data.orderDetail.orderStatus;
+      let userId = this.data.userID; 
+      let opEnabled = false;
+      let isCanceler = (userId == this.data.orderDetail.canceler_id);
+      curOrderStatus = this.data.orderDetail.order_status;
       if (curOrderStatus == -1) {
         //recver firstly see, and then confirm
-        opEnabled = isBuyer;
+        opEnabled = this.data.isBuyer;
       } else if (curOrderStatus == 0) {
         //owner agree
-        opEnabled = isOwner;
+        opEnabled = this.data.isOwner;
       } else if (curOrderStatus == 1) {
         //sender can send it to  recver
-        opEnabled = isSaler;
-        orderPostID0Needed = true,
+        opEnabled = this.data.isSaler;
+        orderPostID0Needed = true;
       } else if (curOrderStatus >=2 && curOrderStatus < 8) {
         //recver got it, and then sell it, and pay to sender
-        opEnabled = isBuyer;
+        opEnabled = this.data.isBuyer;
       } else if (curOrderStatus == 8) {
         //sender confirm got payed
-        opEnabled = isSaler;
+        opEnabled = this.data.isSaler;
       } else if (curOrderStatus == 9) {
         //done
         opEnabled = false;
       } else if (curOrderStatus == 10) {
         //any time, cancel should be confirmed by eachother
-        opEnabled = !isCanceler && (isSaler || isBuyer);
+        opEnabled = !this.data.isCanceler && (this.data.isSaler || this.data.isBuyer);
       } else if (curOrderStatus == 10) {
-        opEnabled = isBuyer;
-        orderPostID1Needed = true,
+        opEnabled = this.data.isBuyer;
+        orderPostID1Needed = true;
       } else if (curOrderStatus == 11) {
-        opEnabled = isSaler;
+        opEnabled = this.data.isSaler;
       } else {
         opEnabled = false;
       }
       this.data.updatingDisabled = opEnabled;
     },
     onPriceInput(e) {
-      if (isBuyer) {
-        this.setData({ goodInfo.price: e.detail.value });
+      if (this.data.isBuyer) {
+        this.setData({ 'goodInfo.price': e.detail.value });
       }
     },
     onSenderAddrInput(e)  { 
-      if (isSaler) {
-        this.setData({ orderDetail.senderAddr: e.detail.value });
+      if (this.data.isSaler) {
+        this.setData({ 'orderDetail.senderAddr': e.detail.value });
       }
     },
     onRecverAddrInput(e)  {
-      if (isBuyer) {
-        this.setData({ orderDetail.recverAddr: e.detail.value });
+      if (this.data.isBuyer) {
+        this.setData({ 'orderDetail.recverAddr': e.detail.value });
       }
     },
     onPostIDInput(e)  {
-      if (orderPostID0Needed && isSaler) {
-        this.setData({ orderDetail.postID0: e.detail.value });
-      } else if (orderPostID1Needed && isBuyer) {
-        this.setData({ orderDetail.postID1: e.detail.value });
+      if (this.data.orderPostID0Needed && this.data.isSaler) {
+        this.setData({ 'orderDetail.postID0': e.detail.value });
+      } else if (this.data.orderPostID1Needed && this.data.isBuyer) {
+        this.setData({ 'orderDetail.postID1': e.detail.value });
       }
     },
     async updateOrderData() {
       try {
-        const res = await CLOUDFUNC.callCloudFunction('updateOrderData',
-                orderID: this.data.orderDetail.orderID,
-          	orderDetail: this.data.orderDetail
-                });
+        const res = await CLOUDFUNC.callCloudFunction('updateOrderInfo',
+                {orderID: this.data.orderDetail.order_id, orderDetail: this.data.orderDetail});
         if (res.code != 0) {
           wx.showToast({ title: res.message || 'FAIL TO UPDATE', icon: 'none' });
         }
@@ -196,12 +138,12 @@ Page({
       }
     },
     cancelOrder()  {
-      this.data.orderDetail.orderStatus = ORDERSTATUS.CANCELLED; 
+      this.data.orderDetail.order_status = ORDER_STATUS.ORDERSTATUS_ENUM1.CANCELLED; 
       updateOrderData();
     },
     nextStep()  {
       if (canSee) {
-        this.data.orderDetail.orderStatus = this.data.orderDetail.orderStatus + 1;
+        this.data.orderDetail.order_status = this.data.orderDetail.order_status + 1;
         updateOrderData();
       }
     },
@@ -210,7 +152,7 @@ Page({
       wx.previewImage({ current: e.currentTarget.dataset.url, urls });
     },
 
-    addImage() {
+    async addImage() {
       const remain = 9 - this.data.goodInfo.imageListLen;
       if (remain <= 0) return wx.showToast({ title: 'MAX 9', icon: 'none' });
       const res = await wx.chooseMedia({ count: remain, mediaType: ['image'], sizeType: ['compressed'] });
@@ -226,9 +168,9 @@ Page({
     },
 
     deleteImage(e) {
-      const list = [...this.data.imageList];
-      list.splice(e.currentTarget.dataset.index, 1);
-      this.setData({ goodInfo.imageList: list });
+      //const list = [...this.data.imageList];
+      //list.splice(e.currentTarget.dataset.index, 1);
+      //this.setData({ goodInfo.imageList: list });
     },
 
     async uploadFiles(filePaths, type) {
