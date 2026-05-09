@@ -6,7 +6,6 @@ async function callCloudFunction(name, data) {
     console.log('name:', name)
     console.log('res:', res)
     if (res.result && res.result.code === 0) {
-
       return res.result.data;
     } else {
       throw res.result || { message: '未知错误' };

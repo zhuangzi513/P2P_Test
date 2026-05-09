@@ -56,7 +56,7 @@ exports.main = async (event, context) => {
   console.log('newOrderId', newOrderId)
   const ordersCollection = db.collection('orders_info');
   try {
-    await ordersCollection.add({
+    const addResult = await ordersCollection.add({
       data : {
         order_id: newOrderId,
         owner_id: ownerId,
@@ -69,6 +69,7 @@ exports.main = async (event, context) => {
 	}
       }
     });
+    console.log("newOrder: ", new Date())
     return {
       code: 0,
       data : {

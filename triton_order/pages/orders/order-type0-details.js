@@ -1,8 +1,9 @@
 const CLOUDFUNC = require('../../utils/cloud.js');
+const ORDER_STATUS= require('../../utils/order_status.js');
 
 Page({
     data:{
-      orderId:0,
+      orderID:0,
       goodId:0,
       submitting: false,
       loading: true,
@@ -16,176 +17,111 @@ Page({
       isBanker: false,
       isBuyer: false,
       canSee: false,
-      enum ORDERSTATUS{
-	INIT,
-        CONFRIM,
-        SEND0,
-        RECVED0,
-        ONSALE,
-        HITTED,
-        SELLED,
-        PAYED,
-        DONE,
-        CANCELLED,
-        SEND1,
-        RECVED1,
-        CLOSE
-      },
-      const statusMapType0 = [
-	      'Initialization',
-              'Confirm',
-              'SendToSaler',
-              'ConfirmRecived',
-              'Exhibition',
-              'Hitted',
-              'Selled',
-              'Payed',
-              'Done',
-              'Canceled',
-              'Backing',
-              'Backed',
-              'Closed'
-      ],
       goodsInfo: {
-        goodID: '',
-        ownerID: '',
-        bankID: '',
-        details: {
-          color: '',
-	  sizeX: '',
-	  sizeY: '',
-	  sizeZ: '',
-	  price: '',
-	  description: '',
-	  imageListLen,
-	  videoListLen,
-          imageList: [],
-          videoList: []
-        }
       },
       orderDetail: {
-	orderID: '',
-	orderType: '',
-	goodID:  '',
-	time:  '',
-	ownerID:  '',
-	salerID:  '',
-	buyerID:  '',
-	senderAddr:  '',
-	recverAddr:  '',
-        postID0: '',
-        postID1: '',
-	orderStatus:  '',
-	orderStatusStr:  ''
       }
     },
     onLoad:function(e){
       this.setData({
-        orderId: e.id,
+        orderID: e.id - 1,
+	userID: wx.getStorageSync('userID'),
       })
     },
     onShow() {
-      this.orderDetail().then(res) {
+      this.orderDetail().then(res => {
            this.updateButtonStatus()
       });
     },
     async orderDetail() {
-      if (!this.data.orderId) {
+      if (!this.data.orderID) {
         return
       }
-      wx.showLoading({
-        title: '',
-      })
-      const res = await CLOUDFUNC.callCloudFunction('getOrderInfo', {orderID:this.data.orderId})
-      wx.hideLoading()
-      if (res.code != 0) {
-        wx.showModal({
-          content: res.msg,
-          showCancel: false
-        })
-        return
-      }
-      if (res.data.orderLogisticsShippers) {
-        res.data.orderLogisticsShippers.forEach(ele => {
-          if (ele.traces) {
-            ele.tracesArray = JSON.parse (ele.traces)
-            if (ele.tracesArray && ele.tracesArray.length > 0) {
-              ele.tracesLast = ele.tracesArray[ele.tracesArray.length - 1].AcceptStation + '\n' + ele.tracesArray[ele.tracesArray.length - 1].AcceptTime
-            }
-          }
-        })
-      }
-      this.setData({ orderDetail: res.data })
+      const start = Date.now();
+      let res = await CLOUDFUNC.callCloudFunction('getOrderInfo', {orderID:this.data.orderID})
+      console.log('res:  ', res)
 
-      _isOwner  = (userID == this.data.orderDetail.ownerId) || (this.data.orderDetail.orderStatus == -1);
-      _isBanker = (userID == this.data.orderDetail.bankerId);
-      _canSee   = (_isOwner || _isBanker);
+      while ((Date.now() - start < 10000) && (res.orderInfo.length == 0)) {
+        console.log('res.orderInfo: ', res.orderInfo)
+        console.log('orderDetail', res)
+        if (res.code != 0) {
+          wx.showModal({
+            content: res.msg,
+            showCancel: false
+          })
+          return
+        }
+        res = await CLOUDFUNC.callCloudFunction('getOrderInfo', {orderID:this.data.orderID})
+      }
+      this.setData({ orderDetail: res.orderInfo[0]})
+      console.log('this ordre id:',this.data.orderDetail.order_id)
+
+
+      let _isOwner  = (this.data.userID == this.data.orderDetail.owner_id) || (this.data.orderDetail.order_status == -1);
+      let _isBanker = (this.data.userID == this.data.orderDetail.banker_id);
+      let _canSee   = (_isOwner || _isBanker);
       this.setData({
-              orderNextStep: this.data.statusMapType0[this.data.orderDetail.orderStatus+1],
+              orderNextStep: ORDER_STATUS.statusMap0[this.data.orderDetail.order_status+1],
               isOwner: _isOwner,
               isBanker: _isBanker,
               canSee : _canSee
       });
     },
     updateButtonStatus() {
-      userId = wx.getStorageSync('userID');
-      opEnabled = false;
-      isCanceler = (userId == this.data.orderDetail.cancelerID);
-      curOrderStatus = this.data.orderDetail.orderStatus;
+      let opEnabled = false;
+      let isCanceler = (this.data.userID == this.data.orderDetail.canceler_id);
+      let curOrderStatus = this.data.orderDetail.order_status;
       if (curOrderStatus == -1) {
         //recver firstly see, and then confirm
-        opEnabled = isOwner;
+        opEnabled = this.data.isOwner;
       } else if (curOrderStatus == 0) {
-        opEnabled = isBanker;
+        opEnabled = this.data.isBanker;
         recverAddrNeeded = true;
       } else if (curOrderStatus == 1) {
         //sender can send it to  recver
-        opEnabled = isOwner;
+        opEnabled = this.data.isOwner;
         senderAddrNeeded = true;
-        orderPostID0Needed = true,
+        orderPostID0Needed = true;
       } else if (curOrderStatus >=2 && curOrderStatus < 8) {
         //recver got it, and then sell it, and pay to sender
-        opEnabled = isBanker;
+        opEnabled = this.data.isBanker;
       } else if (curOrderStatus == 8) {
         //sender confirm got payed
-        opEnabled = isOwner;
+        opEnabled = this.data.isOwner;
       } else if (curOrderStatus == 9) {
         //done
         opEnabled = false;
       } else if (curOrderStatus == 10) {
         //any time, cancel should be confirmed by eachother
-        opEnabled = !isCanceler;
+        opEnabled = !this.data.isCanceler;
       } else if (curOrderStatus == 10) {
-        opEnabled = isBanker;
-        orderPostID1Needed = true,
+        opEnabled = this.data.isBanker;
+        orderPostID1Needed = true;
       } else if (curOrderStatus == 11) {
-        opEnabled = isOwner;
+        opEnabled = this.data.isOwner;
       }
       this.data.updatingDisabled = opEnabled;
     },
-    onColorInput(e) { this.setData({ goodsInfo.color: e.detail.value }); },
-    onSizeInputX(e) { this.setData({ goodsInfo.sizeX: e.detail.value }); },
-    onSizeInputY(e) { this.setData({ goodsInfo.sizeY: e.detail.value }); },
-    onSizeInputZ(e) { this.setData({ goodsInfo.sizeZ: e.detail.value }); },
-    onPriceInput(e) { this.setData({ goodsInfo.price: e.detail.value }); },
-    onDescInput(e)  { this.setData({ goodsInfo.description: e.detail.value }); },
-    onSenderAddrInput(e)  { 
-      this.setData({ orderDetail.senderAddr: e.detail.value });
-    },
-    onRecverAddrInput(e)  {
-      this.setData({ orderDetail.recverAddr: e.detail.value });
-    },
+    onColorInput(e) { this.setData({ 'goodsInfo.color': e.detail.value }); },
+    onSizeInputX(e) { this.setData({ 'goodsInfo.sizeX': e.detail.value }); },
+    onSizeInputY(e) { this.setData({ 'goodsInfo.sizeY': e.detail.value }); },
+    onSizeInputZ(e) { this.setData({ 'goodsInfo.sizeZ': e.detail.value }); },
+    onPriceInput(e) { this.setData({ 'goodsInfo.price': e.detail.value }); },
+    onDescInput(e)  { this.setData({ 'goodsInfo.description': e.detail.value }); },
+    onSenderAddrInput(e)  { this.setData({ 'orderDetail.senderAddr': e.detail.value }); },
+    onRecverAddrInput(e)  { this.setData({ 'orderDetail.recverAddr': e.detail.value }); },
     onPostIDInput(e)  {
       if (orderPostID0Needed) {
-        this.setData({ orderDetail.postID0: e.detail.value });
+        this.setData({ 'orderDetail.postID0': e.detail.value });
       } else if (orderPostID1Needed) {
-        this.setData({ orderDetail.postID1: e.detail.value });
+        this.setData({ 'orderDetail.postID1': e.detail.value });
       }
     },
     async updateOrderData() {
       try {
         const res = await CLOUDFUNC.callCloudFunction('updateOrderInfo',
-                orderID: this.data.orderDetail.orderID,
+                {
+		orderID: this.data.orderDetail.orderID,
           	orderDetail: this.data.orderDetail
                 });
         if (res.code != 0) {
@@ -213,7 +149,7 @@ Page({
       wx.previewImage({ current: e.currentTarget.dataset.url, urls });
     },
 
-    addImage() {
+    async addImage() {
       const remain = 9 - this.data.goodsInfo.imageListLen;
       if (remain <= 0) return wx.showToast({ title: 'MAX 9', icon: 'none' });
       const res = await wx.chooseMedia({ count: remain, mediaType: ['image'], sizeType: ['compressed'] });
@@ -231,10 +167,10 @@ Page({
     deleteImage(e) {
       const list = [...this.data.imageList];
       list.splice(e.currentTarget.dataset.index, 1);
-      this.setData({ goodsInfo.imageList: list });
+      this.setData({ 'goodsInfo.imageList': list });
     },
 
-    addVideo() {
+    async addVideo() {
       const remain = 3 - this.data.goodsInfo.videoListLen;
       if (remain <= 0) return wx.showToast({ title: 'MAX 3', icon: 'none' });
       const res = await wx.chooseMedia({ count: remain, mediaType: ['video'], sourceType: ['album', 'camera'] });
@@ -253,7 +189,7 @@ Page({
     deleteVideo(e) {
       const list = [...this.data.videoList];
       list.splice(e.currentTarget.dataset.index, 1);
-      this.setData({ goodsInfo.videoList: list });
+      this.setData({ 'goodsInfo.videoList': list });
     },
 
     async uploadFiles(filePaths, type) {
@@ -305,7 +241,7 @@ Page({
       }
     },
     submitGood() {
-      this.data.goodsInfo.ownerID = wx:getStorageSync("userID");
+      this.data.goodsInfo.ownerID = wx.getStorageSync("userID");
       this.data.goodsInfo.bankID = this.data.orderDetail.salerID;
       if (this.data.goodsInfo.details.color.trim()) return wx.showToast({ title: 'COLOR NEEDED', icon: 'none' });
       if (this.data.goodsInfo.details.sizeX.trim()) return wx.showToast({ title: 'SHAPEX NEEDED', icon: 'none' });

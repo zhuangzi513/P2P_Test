@@ -35,14 +35,22 @@ exports.main = async (event, context) => {
                          .get();
     return {
       code: 0,
-      orders: ordersReturn.data,
-      total,
-      pageNo,
-      pageSize
+      data: {
+        code: 0,
+        orders: ordersReturn.data,
+        total,
+        pageNo,
+        pageSize
+      },
+      message: 'success' 
+
     };
   } catch (err) {
     return {
       code: -1,
+      data: {
+        code: -1
+      },
       message: err.message
     }
   }

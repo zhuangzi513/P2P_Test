@@ -88,9 +88,11 @@ Page({
       }).then(res => {
         if (res.code == 0) {
 	  console.log('orderId', res.orderId)
-          wx.navigateTo({
-            url: '/pages/orders/order-type0-details?id=' + res.orderId,
-          });
+	  setTimeout(() => {
+            wx.navigateTo({
+              url: '/pages/orders/order-type0-details?id=' + res.orderId,
+            });
+	  }, 2000);
         }
       });
   }
