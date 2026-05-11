@@ -108,8 +108,8 @@ App({
     console.log('getUserInfo with userID:', wx.getStorageSync('userID'));
     const res = await CLOUDFUNC.callCloudFunction('getUserInfo', {userID: wx.getStorageSync('userID')});
     console.log('getUserInfo:', res);
-    if (res.code == 0) {
-        this.globalData.userDetailInfo = res.data.userInfo;
+    if (res && res.userInfo) {
+        this.globalData.userDetailInfo = res.userInfo;
     }
   },
 

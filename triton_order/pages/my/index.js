@@ -44,10 +44,8 @@ Page({
   },
   updateUserDetail() {
     CLOUDFUNC.callCloudFunction('updateUserInfo', { userID: wx.getStorageSync('userID'), userDetail: this.data.userInfoMap})
-	     .then(res => {
-               if (res.code != 0) {
-                 console.log("updateUserDetail FAILED");
-               }
+	     .catch(err => {
+               console.log("updateUserDetail FAILED", err);
 	     });
   },
   orderStatistics() {
@@ -58,11 +56,11 @@ Page({
 				  isBanker: this.data.isBanker,
 				  pageNo:1
 				}).then(res=> {
-      if (res.code == 0) {
+      if (res) {
         const {
           orderListInput,
           orderListOutput
-        } = res.data || {};
+        } = res || {};
         this.setData({
           order_list_input: orderListInput,
           order_list_output: orderListOutput
@@ -86,14 +84,13 @@ Page({
         orderType:0,
         recverAddr: wx.getStorageSync('userAddr')
       }).then(res => {
-        if (res.code == 0) {
-	  console.log('orderId', res.orderId)
-	  setTimeout(() => {
-            wx.navigateTo({
-              url: '/pages/orders/order-type0-details?id=' + res.orderId,
-            });
-	  }, 2000);
+        if (res && res.orderId) {
+	  wx.navigateTo({
+            url: '/pages/orders/order-type0-details?id=' + res.orderId,
+          });
         }
+      }).catch(err => {
+        wx.showToast({ title: '创建订单失败', icon: 'none' });
       });
   },
   switchToInputOrders() {

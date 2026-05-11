@@ -24,9 +24,9 @@ Page({
   async fetchDetail() {
     wx.showLoading({ title: 'loading...' });
     try {
-      const res = await CLOUDFUNC.callCloudFunction('queryGoods', {id : this.data.goodId });
-      if (res.code === 0 && res.data && res.data.length > 0) {
-        const p = res.data[0];
+      const res = await CLOUDFUNC.callCloudFunction('getGoodsInfo', {goodsID : this.data.goodId });
+      if (res && res.goodsInfo && res.goodsInfo.length > 0) {
+        const p = res.goodsInfo[0];
         this.setData({
           form: {
             color: p.color || '',
@@ -130,11 +130,11 @@ Page({
 
   uploadFile(filePath, type) {
     return new Promise((resolve, reject) => {
-      CLOUDFUNC.callCloudFunction('uploadFile', {path:filePath}).then(res => {
-        if (res.code === 0 && res.data && res.data.url) {
-          resolve(res.data.url);
+      CLOUDFUNC.callCloudFunction('uploadFile', {fileID:filePath}).then(res => {
+        if (res && res.fileUrl) {
+          resolve(res.fileUrl);
         } else {
-          reject(res.message || 'FAILED TO UPLOAD file');
+          reject('FAILED TO UPLOAD file');
         }
       })
 
@@ -157,7 +157,7 @@ Page({
       const res = await CLOUDFUNC.callCloudFunction('updateGoodsData',
 	      { 
 		goodID: goodId,
-		ownerID: userID,
+		ownerID: wx.getStorageSync('userID'),
 	        info: {
 		  color: form.color.trim(), 
 	          sizeX: form.sizeX.trim(),
@@ -170,14 +170,14 @@ Page({
 		}
 	      });
       wx.hideLoading();
-      if (res.code === 0) {
+      if (res && res.goods_id) {
         wx.showToast({ title: 'SUCCESSFULLY UPDATED', icon: 'success' });
         const pages = getCurrentPages();
         const prevPage = pages[pages.length - 2];
         if (prevPage && prevPage.onRefresh) prevPage.onRefresh();
         setTimeout(() => wx.navigateBack(), 1500);
       } else {
-        wx.showToast({ title: res.message || 'FAIL TO UPDATE', icon: 'none' });
+        wx.showToast({ title: 'FAIL TO UPDATE', icon: 'none' });
       }
     } catch (err) {
       wx.hideLoading();

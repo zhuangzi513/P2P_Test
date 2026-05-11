@@ -53,10 +53,10 @@ exports.main = async (event, context) => {
           user_id: userId,
 	  is_banker: isBanker,
           data: {
-            nick: "007",
-            level: 0,
-            socre: 100,
-            created_at: new Date()
+          nick: "007",
+          level: 0,
+          score: 100,
+          created_at: new Date()
           }
         }
       });

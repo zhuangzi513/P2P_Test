@@ -8,24 +8,41 @@ exports.main = async (event, context) => {
   console.log('event', event);
   const userID = event.userID;
 
-  console.log('userID', userID);
+  if (!userID) {
+    return {
+      code: -1,
+      data: {
+        message: 'userID is required',
+        userInfo: {}
+      }
+    };
+  }
 
   const usersCollection = db.collection('users_info');
   
   try {
     let userRecord = await usersCollection.where({user_id: userID}).get();
     console.log('userRecord:', userRecord)
+    if (!userRecord.data || userRecord.data.length === 0) {
       return {
-        code: 0,
+        code: -1,
         data: {
-          userInfo: userRecord.data[0].data
+          message: 'User not found',
+          userInfo: {}
         }
       };
+    }
+    return {
+      code: 0,
+      data: {
+        userInfo: userRecord.data[0].data
+      }
+    };
   } catch (err) {
     return {
       code: -1,
       data: {
-        message: err.message + 'users_info query failed for userID:' + userID,
+        message: err.message + ' users_info query failed for userID:' + userID,
         userInfo:{}
       }
     }

@@ -1,9 +1,9 @@
-const CLOUDFUC = require('../../utils/cloud.js');
+const CLOUDFUNC = require('../../utils/cloud.js');
 const ORDER_STATUS= require('../../utils/order_status.js');
 
 Page({
     data:{
-      orderId:0,
+      orderID:0,
       goodId:0,
       userID:0,
       submitting: false,
@@ -23,7 +23,7 @@ Page({
     },
     onLoad:function(e){
       this.setData({
-        orderId: e.id,
+        orderID: e.id,
         userID: wx.getStorageSync('userID'),
       })
     },
@@ -33,17 +33,17 @@ Page({
       });
     },
     async orderDetail() {
-      if (!this.data.orderId) {
+      if (!this.data.orderID) {
         return
       }
       wx.showLoading({
         title: '',
       })
-      const res = await CLOUDFUNC.callCloudFunction('getOrderInfo', {orderID:this.data.orderId})
+      const res = await CLOUDFUNC.callCloudFunction('getOrderInfo', {orderID:this.data.orderID})
       wx.hideLoading()
-      if (res.code != 0) {
+      if (!res || !res.orderInfo) {
         wx.showModal({
-          content: res.msg,
+          content: '订单信息获取失败',
           showCancel: false
         })
         return
@@ -51,12 +51,12 @@ Page({
       this.setData({
         orderDetail: res.orderInfo,
       });
-      if (!this.data.orderDetail.bankerID.strim()) {
+      if (this.data.orderDetail.banker_id && !this.data.orderDetail.banker_id.toString().trim()) {
           wx.showToast({ title: 'empty bankerID:', icon: 'none' });
       }
-      let _isOwner = (userID == this.data.orderDetail.owner_id);
-      let _isSaler = (userID == this.data.orderDetail.banker_id);
-      let _isBuyer = (userID == this.data.orderDetail.buyer_id);
+      let _isOwner = (this.data.userID == this.data.orderDetail.owner_id);
+      let _isSaler = (this.data.userID == this.data.orderDetail.banker_id);
+      let _isBuyer = (this.data.userID == this.data.orderDetail.buyer_id);
       let _canSee  = (_isOwner || _isSaler || _isBuyer);
       this.setData({
 	      orderNextStep: ORDER_STATUS.statusMap1[this.data.orderDetail.order_status+1],
@@ -70,7 +70,9 @@ Page({
       let userId = this.data.userID; 
       let opEnabled = false;
       let isCanceler = (userId == this.data.orderDetail.canceler_id);
-      curOrderStatus = this.data.orderDetail.order_status;
+      let curOrderStatus = this.data.orderDetail.order_status;
+      let needPostID0 = false;
+      let needPostID1 = false;
       if (curOrderStatus == -1) {
         //recver firstly see, and then confirm
         opEnabled = this.data.isBuyer;
@@ -80,7 +82,7 @@ Page({
       } else if (curOrderStatus == 1) {
         //sender can send it to  recver
         opEnabled = this.data.isSaler;
-        orderPostID0Needed = true;
+        needPostID0 = true;
       } else if (curOrderStatus >=2 && curOrderStatus < 8) {
         //recver got it, and then sell it, and pay to sender
         opEnabled = this.data.isBuyer;
@@ -92,16 +94,20 @@ Page({
         opEnabled = false;
       } else if (curOrderStatus == 10) {
         //any time, cancel should be confirmed by eachother
-        opEnabled = !this.data.isCanceler && (this.data.isSaler || this.data.isBuyer);
-      } else if (curOrderStatus == 10) {
-        opEnabled = this.data.isBuyer;
-        orderPostID1Needed = true;
+        opEnabled = !isCanceler && (this.data.isSaler || this.data.isBuyer);
       } else if (curOrderStatus == 11) {
         opEnabled = this.data.isSaler;
+        needPostID1 = true;
+      } else if (curOrderStatus == 12) {
+        opEnabled = this.data.isBuyer;
       } else {
         opEnabled = false;
       }
-      this.data.updatingDisabled = opEnabled;
+      this.setData({
+        updatingDisabled: !opEnabled,
+        orderPostID0Needed: needPostID0,
+        orderPostID1Needed: needPostID1
+      });
     },
     onPriceInput(e) {
       if (this.data.isBuyer) {
@@ -127,24 +133,21 @@ Page({
     },
     async updateOrderData() {
       try {
-        const res = await CLOUDFUNC.callCloudFunction('updateOrderInfo',
+        await CLOUDFUNC.callCloudFunction('updateOrderInfo',
                 {orderID: this.data.orderDetail.order_id, orderDetail: this.data.orderDetail});
-        if (res.code != 0) {
-          wx.showToast({ title: res.message || 'FAIL TO UPDATE', icon: 'none' });
-        }
       } catch (err) {
         wx.showToast({ title: 'INTERNET ERROR', icon: 'none' });
         console.error(err);
       }
     },
     cancelOrder()  {
-      this.data.orderDetail.order_status = ORDER_STATUS.ORDERSTATUS_ENUM1.CANCELLED; 
-      updateOrderData();
+      this.setData({ 'orderDetail.order_status': ORDER_STATUS.ORDERSTATUS_ENUM1.CANCELLED }); 
+      this.updateOrderData();
     },
     nextStep()  {
-      if (canSee) {
-        this.data.orderDetail.order_status = this.data.orderDetail.order_status + 1;
-        updateOrderData();
+      if (this.data.canSee) {
+        this.setData({ 'orderDetail.order_status': this.data.orderDetail.order_status + 1 });
+        this.updateOrderData();
       }
     },
     previewImage(e) {
@@ -168,9 +171,9 @@ Page({
     },
 
     deleteImage(e) {
-      //const list = [...this.data.imageList];
-      //list.splice(e.currentTarget.dataset.index, 1);
-      //this.setData({ goodInfo.imageList: list });
+      const list = [...this.data.imageList];
+      list.splice(e.currentTarget.dataset.index, 1);
+      this.setData({ imageList: list });
     },
 
     async uploadFiles(filePaths, type) {
@@ -195,14 +198,27 @@ Page({
 
     uploadFile(filePath, type) {
       return new Promise((resolve, reject) => {
-        CLOUDFUNC.callCloudFunction('uploadFile', {path:filePath}).then(res => {
-          if (res.code === 0 && res.data && res.data.url) {
-            resolve(res.data.url);
+        CLOUDFUNC.callCloudFunction('uploadFile', {fileID:filePath}).then(res => {
+          if (res && res.fileUrl) {
+            resolve(res.fileUrl);
           } else {
-            reject(res.message || 'FAILED TO UPLOAD file');
+            reject('FAILED TO UPLOAD file');
           }
         })
 
       });
+    },
+    onShareAppMessage: function() {
+      return {
+          title: `SHARED FROM ${this.data.userName} `,
+          path: '/pages/orders/order-type1-details?id=' + this.data.orderID
+      };
+    },
+    onShareTimeline() { 
+      return {
+        title: '"' + wx.getStorageSync('userName') + '" ' + wx.getStorageSync('share_profile'),
+        query: 'inviter_id=' + wx.getStorageSync('userID'),
+        imageUrl: wx.getStorageSync('share_pic')
+      }
     }
 })

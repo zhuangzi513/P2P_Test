@@ -9,36 +9,19 @@ Page({
   },
   async loginAsBanker() {
     const res = await AUTH.loginAsBanker()
-    if (res.code == 10000) {
-      wx.showModal({
-        content: 'CONTENTS BANKER',
-        showCancel: false
+    if (res && res.token) {
+      wx.reLaunch({
+        url: '/pages/index/index',
       })
-      return
     }
-    if (res.code != 0) {
-      return
-    }
-    wx.reLaunch({
-      url: '/pages/index/index',
-    })
   },
   async loginAsCustomer() {
     const res = await AUTH.loginAsCustomer()
     console.log('res', res)
-    if (res.code == 10000) {
-      wx.showModal({
-        content: 'CONTENTS CUSTOMRER',
-        showCancel: false
+    if (res && res.token) {
+      wx.reLaunch({
+        url: '/pages/index/index',
       })
-      return
     }
-    if (res.code != 0) {
-      return
-    }
-
-    wx.reLaunch({
-      url: '/pages/index/index',
-    })
   }
 })

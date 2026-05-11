@@ -9,48 +9,45 @@ exports.main = async (event, context) => {
   const userID = event.userID;
   const orderType = event.orderType;
   const isBanker = event.isBanker;
-  const pageNo = event.pageNo;
+  const pageNo = event.pageNo || 1;
   const pageSize = 20;
   const ordersCollection = db.collection('orders_info');
   
   const skip = (pageNo - 1) * pageSize;
-  var query;
   try {
+    let query;
     if (!isBanker) {
         if (orderType == 0) {
-          query = await ordersCollection.where({owner_id: userID});
+          query = ordersCollection.where({owner_id: userID});
 	} else if (orderType == 1) {
-          query = await ordersCollection.where({buyer_id: userID});
-	}
+          query = ordersCollection.where({buyer_id: userID});
+	} else {
+          query = ordersCollection.where({owner_id: userID});
+        }
     } else {
-        query = await ordersCollection.where({banker_id: userID});
+        query = ordersCollection.where({banker_id: userID});
     }
-    const result = query.get();
-    console.log('orderStatics:', result);
+    const countResult = await query.count();
+    const total = countResult.total;
 
-    const total = query.count().total;
-    ordersReturn = await query 
+    const ordersResult = await query 
                          .skip(skip)
                          .limit(pageSize)
                          .get();
     return {
       code: 0,
       data: {
-        code: 0,
-        orders: ordersReturn.data,
+        orders: ordersResult.data,
         total,
         pageNo,
         pageSize
       },
       message: 'success' 
-
     };
   } catch (err) {
     return {
       code: -1,
-      data: {
-        code: -1
-      },
+      data: {},
       message: err.message
     }
   }

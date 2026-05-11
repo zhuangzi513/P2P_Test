@@ -22,7 +22,7 @@ function wxpay(type, money, orderId, redirectUrl, data, content) {
     postData.remark = "优惠买单 ：" + data.money;
     postData.nextAction = {
       type: 4,
-      uid: wx.getStorageSync('uid'),
+      uid: wx.getStorageSync('userID'),
       money: data.money
     };
   }
@@ -55,7 +55,7 @@ function wxpay(type, money, orderId, redirectUrl, data, content) {
         fail: function (aaa) {
           console.error(aaa)
           wx.showToast({
-            title: '支付失败:' + aaa
+            title: '支付失败:' + (aaa.errMsg || JSON.stringify(aaa))
           })
         },
         success: function () {

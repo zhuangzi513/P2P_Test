@@ -18,11 +18,9 @@ Page({
       content: '',
       success: function(res) {
         if (res.confirm) {
-          CLOUDFUNC.callCloudFunction('updateOrderInfo', { orderID:orderId, orderStatus:9}).then(result => {
-            if (result.code == 0) {
+          CLOUDFUNC.callCloudFunction('updateOrderInfo', { orderID:orderId, field:'order_status', value:9}).then(result => {
               that.orderList()
               that.getOrderStatistics()
-            }
           });
 
           }
@@ -51,7 +49,7 @@ Page({
 				  isBanker:this.data.isBanker,
 				  pageNo:this.data.page
 				}).then(res=> {
-      if (res.code == 0) {
+      if (res && res.orders) {
         this.setData({
           orderList:res.orders, 
           total:res.total 
@@ -63,9 +61,8 @@ Page({
   onShow: function() {
   },
   onPullDownRefresh: function () {
-    this.data.page = 1
+    this.setData({ page: 1 })
     this.getOrderStatistics()
-    this.orderList()
     wx.stopPullDownRefresh()
   },
   onReachBottom() {
@@ -87,7 +84,7 @@ Page({
     };
     const res = await CLOUDFUNC.callCloudFunction('orderStatics', postData);
     wx.hideLoading()
-    if (res.code == 0) {
+    if (res && res.orders) {
       if (this.data.page == 1) {
         this.setData({
           orderList: res.orders

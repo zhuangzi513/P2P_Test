@@ -43,7 +43,7 @@ exports.main = async (event, context) => {
         data: {
           nick: "007",
           level: 0,
-          socre: 100,
+          score: 100,
           created_at: new Date()
         }
       }

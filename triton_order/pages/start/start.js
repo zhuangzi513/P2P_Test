@@ -1,5 +1,5 @@
 const CONFIG = require('../../config.js')
-const CLOUDFUC = require('../../utils/cloud.js');
+const CLOUDFUNC = require('../../utils/cloud.js');
 
 Page({
   data: {
@@ -39,8 +39,23 @@ Page({
         })
       }
     } else {
-      const res = await CLOUDFUNC.callCloudFunction('banners', { type: 'app' });
-      if (res.code == 700) {
+      try {
+        const res = await CLOUDFUNC.callCloudFunction('banners', { type: 'app' });
+        if (res && res.banners) {
+          this.setData({
+            banners: res.banners,
+            swiperMaxNumber: res.banners.length
+          });
+        } else {
+          if (shopMod==1) {
+            this.goSelectPage()
+          } else {
+            wx.switchTab({
+              url: '/pages/index/index',
+            })
+          }
+        }
+      } catch (err) {
         if (shopMod==1) {
           this.goSelectPage()
         } else {
@@ -48,11 +63,6 @@ Page({
             url: '/pages/index/index',
           })
         }
-      } else {
-        this.setData({
-          banners: res.data,
-          swiperMaxNumber: res.data.length
-        });
       }
     }
   },
@@ -116,19 +126,18 @@ Page({
       })
       return
     }
-    const res = await CLOUDFUNC.callCloudFunction('goSelectPage', {});
-    if (res.code != 0) {
+    try {
+      const res = await CLOUDFUNC.callCloudFunction('goSelectPage', {});
+      if (res && res.info) {
+        wx.setStorageSync('shopInfo', res.info)
+        wx.setStorageSync('userIds', res.info.id)
+      }
+    } catch (err) {
       wx.showToast({
         title: 'NOT IMPLEMENT YET, goSelectPage',
         icon: 'none',
       })
-      //wx.redirectTo({
-      //  url: '/pages/shop/select'
-      //})
-      return
     }
-    wx.setStorageSync('shopInfo', res.data.info)
-    wx.setStorageSync('userIds', res.data.info.id)
     wx.switchTab({
       url: '/pages/index/index'
     })

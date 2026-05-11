@@ -1,4 +1,4 @@
-const AUTH = require('../../utils/auth')
+const CLOUDFUNC = require('../../utils/cloud.js')
 
 const app = getApp()
 Page({
@@ -8,7 +8,7 @@ Page({
   selectTap: function(e) {
     console.log(e);
     var id = e.currentTarget.dataset.id;
-    WXAPI.updateAddress({
+    CLOUDFUNC.callCloudFunction('updateAddress', {
       token: wx.getStorageSync('token'),
       id: id,
       isDefault: 'true'
@@ -41,12 +41,10 @@ Page({
     wx.showLoading({
       title: '',
     })
-    const res = await WXAPI.queryAddressV2({
+    const res = await CLOUDFUNC.callCloudFunction('queryAddress', {
       token: wx.getStorageSync('token')
     })
-    wx.hideLoading({
-      success: (res) => {},
-    })
+    wx.hideLoading()
     if (res.code == 0) {
       this.setData({
         addressList: res.data.result
@@ -71,17 +69,17 @@ Page({
     const id = e.currentTarget.dataset.id
     const index = e.currentTarget.dataset.index
     wx.showModal({
-      content: 'çSURE ?',
+      content: 'SURE ?',
       success: async (res) => {
         if (res.confirm) {
           wx.showLoading({
             title: '',
           })
-          const res = await WXAPI.deleteAddress(wx.getStorageSync('token'), id)
+          const delRes = await CLOUDFUNC.callCloudFunction('deleteAddress', { token: wx.getStorageSync('token'), id: id })
           wx.hideLoading()
-          if (res.code != 0) {
+          if (delRes.code != 0) {
             wx.showToast({
-              title: res.msg,
+              title: delRes.msg,
               icon: 'none'
             })
           } else {

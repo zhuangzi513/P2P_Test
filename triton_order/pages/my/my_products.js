@@ -20,12 +20,10 @@ Page({
     })
   },
   onLoad: function(e) {
-    CLOUDFUNC.callCloudFunction('goodsStatics', {userID:getStorageSync('userID')}).then(res=> {
-      if (res.code === 0){
-        that.setData({
-          my_products: res.data
-        })
-      }   
+    CLOUDFUNC.callCloudFunction('goodsStatics', {userID:wx.getStorageSync('userID')}).then(res=> {
+      this.setData({
+        my_products: res
+      })
     })
    
     this.readConfigVal()
@@ -53,19 +51,13 @@ Page({
   },
   async getMyGoodsList(myUserId, append) {
     const res = await CLOUDFUNC.callCloudFunction('goodsStatics', { userID: myUserId, pageSize: this.data.pageSize })
-    if (res.code != 0) {
-      let newData = {
-        loadingMoreHidden: false
-      }
-      if (!append) {
-        newData.goods = []
-      }
-      this.setData(newData);
-      return
-    }
     let goods = [];
     if (append) {
       goods = this.data.goods
+    }
+    if (!res || !res.goods) {
+      this.setData({ loadingMoreHidden: false });
+      return;
     }
     for (var i = 0; i < res.goods.length; i++) {
       const item = res.goods[i]
@@ -79,7 +71,7 @@ Page({
     this.setData({
       curPage: 1
     });
-    this.getMyGoodsList(userID)
+    this.getMyGoodsList(wx.getStorageSync('userID'))
     wx.stopPullDownRefresh()
   }
 })

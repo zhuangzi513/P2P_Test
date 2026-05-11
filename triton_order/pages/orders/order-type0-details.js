@@ -5,6 +5,7 @@ Page({
     data:{
       orderID:0,
       goodId:0,
+      userID:0,
       submitting: false,
       loading: true,
       updatingDisabled: true,
@@ -24,7 +25,7 @@ Page({
     },
     onLoad:function(e){
       this.setData({
-        orderID: e.id - 1,
+        orderID: e.id,
 	userID: wx.getStorageSync('userID'),
       })
     },
@@ -37,25 +38,18 @@ Page({
       if (!this.data.orderID) {
         return
       }
-      const start = Date.now();
-      let res = await CLOUDFUNC.callCloudFunction('getOrderInfo', {orderID:this.data.orderID})
-      console.log('res:  ', res)
-
-      while ((Date.now() - start < 10000) && (res.orderInfo.length == 0)) {
-        console.log('res.orderInfo: ', res.orderInfo)
-        console.log('orderDetail', res)
-        if (res.code != 0) {
-          wx.showModal({
-            content: res.msg,
-            showCancel: false
-          })
-          return
-        }
-        res = await CLOUDFUNC.callCloudFunction('getOrderInfo', {orderID:this.data.orderID})
+      wx.showLoading({ title: '' })
+      const res = await CLOUDFUNC.callCloudFunction('getOrderInfo', {orderID:this.data.orderID})
+      wx.hideLoading()
+      if (!res || !res.orderInfo || res.orderInfo.length == 0) {
+        wx.showModal({
+          content: '订单信息获取失败',
+          showCancel: false
+        })
+        return
       }
       this.setData({ orderDetail: res.orderInfo[0]})
-      console.log('this ordre id:',this.data.orderDetail.order_id)
-
+      console.log('this order id:',this.data.orderDetail.order_id)
 
       let _isOwner  = (this.data.userID == this.data.orderDetail.owner_id) || (this.data.orderDetail.order_status == -1);
       let _isBanker = (this.data.userID == this.data.orderDetail.banker_id);
@@ -71,17 +65,21 @@ Page({
       let opEnabled = false;
       let isCanceler = (this.data.userID == this.data.orderDetail.canceler_id);
       let curOrderStatus = this.data.orderDetail.order_status;
+      let needSenderAddr = false;
+      let needRecverAddr = false;
+      let needPostID0 = false;
+      let needPostID1 = false;
       if (curOrderStatus == -1) {
         //recver firstly see, and then confirm
         opEnabled = this.data.isOwner;
       } else if (curOrderStatus == 0) {
         opEnabled = this.data.isBanker;
-        recverAddrNeeded = true;
+        needRecverAddr = true;
       } else if (curOrderStatus == 1) {
         //sender can send it to  recver
         opEnabled = this.data.isOwner;
-        senderAddrNeeded = true;
-        orderPostID0Needed = true;
+        needSenderAddr = true;
+        needPostID0 = true;
       } else if (curOrderStatus >=2 && curOrderStatus < 8) {
         //recver got it, and then sell it, and pay to sender
         opEnabled = this.data.isBanker;
@@ -93,14 +91,22 @@ Page({
         opEnabled = false;
       } else if (curOrderStatus == 10) {
         //any time, cancel should be confirmed by eachother
-        opEnabled = !this.data.isCanceler;
-      } else if (curOrderStatus == 10) {
-        opEnabled = this.data.isBanker;
-        orderPostID1Needed = true;
+        opEnabled = !isCanceler;
       } else if (curOrderStatus == 11) {
+        opEnabled = this.data.isBanker;
+        needPostID1 = true;
+      } else if (curOrderStatus == 12) {
         opEnabled = this.data.isOwner;
+      } else {
+        opEnabled = false;
       }
-      this.data.updatingDisabled = opEnabled;
+      this.setData({
+        updatingDisabled: !opEnabled,
+        senderAddrNeeded: needSenderAddr,
+        recverAddrNeeded: needRecverAddr,
+        orderPostID0Needed: needPostID0,
+        orderPostID1Needed: needPostID1
+      });
     },
     onColorInput(e) { this.setData({ 'goodsInfo.color': e.detail.value }); },
     onSizeInputX(e) { this.setData({ 'goodsInfo.sizeX': e.detail.value }); },
@@ -111,9 +117,9 @@ Page({
     onSenderAddrInput(e)  { this.setData({ 'orderDetail.senderAddr': e.detail.value }); },
     onRecverAddrInput(e)  { this.setData({ 'orderDetail.recverAddr': e.detail.value }); },
     onPostIDInput(e)  {
-      if (orderPostID0Needed) {
+      if (this.data.orderPostID0Needed) {
         this.setData({ 'orderDetail.postID0': e.detail.value });
-      } else if (orderPostID1Needed) {
+      } else if (this.data.orderPostID1Needed) {
         this.setData({ 'orderDetail.postID1': e.detail.value });
       }
     },
@@ -124,25 +130,22 @@ Page({
 		orderID: this.data.orderDetail.order_id,
           	orderDetail: this.data.orderDetail
                 });
-        if (res.code != 0) {
-          wx.showToast({ title: res.message || 'FAIL TO UPDATE', icon: 'none' });
-        }
       } catch (err) {
         wx.showToast({ title: 'INTERNET ERROR', icon: 'none' });
         console.error(err);
       }
     },
     cancelOrder()  {
-      this.data.orderDetail.orderStatus = ORDERSTATUS.CANCELLED; 
-      updateOrderData();
+      this.setData({ 'orderDetail.order_status': ORDER_STATUS.ORDERSTATUS_ENUM0.CANCELLED }); 
+      this.updateOrderData();
     },
     nextStep()  {
-      if (isOwner && this.data.orderDetail.orderStatus == -1) {
-        submitGood();
+      if (this.data.isOwner && this.data.orderDetail.order_status == -1) {
+        this.submitGood();
       }
-      checkInfo();
-      this.data.orderDetail.orderStatus = this.data.orderDetail.orderStatus + 1;
-      updateOrderData();
+      this.checkOrder();
+      this.setData({ 'orderDetail.order_status': this.data.orderDetail.order_status + 1 });
+      this.updateOrderData();
     },
     previewImage(e) {
       const urls = this.data.imageList.map(i => i.url);
@@ -214,11 +217,11 @@ Page({
 
     uploadFile(filePath, type) {
       return new Promise((resolve, reject) => {
-        CLOUDFUNC.callCloudFunction('uploadFile', {path:filePath}).then(res => {
-          if (res.code === 0 && res.data && res.data.url) {
-            resolve(res.data.url);
+        CLOUDFUNC.callCloudFunction('uploadFile', {fileID:filePath}).then(res => {
+          if (res && res.fileUrl) {
+            resolve(res.fileUrl);
           } else {
-            reject(res.message || 'FAILED TO UPLOAD file');
+            reject('FAILED TO UPLOAD file');
           }
         })
 
@@ -232,8 +235,8 @@ Page({
                   bankerID: this.data.goodsInfo.bankID,
                   goodsInfo: this.data.goodsInfo.details
                 });
-        if (res.code != 0) {
-          wx.showToast({ title: res.message || 'FAIL TO UPDATE', icon: 'none' });
+        if (!res || !res.goodsID) {
+          wx.showToast({ title: 'FAIL TO CREATE GOODS', icon: 'none' });
         }
       } catch (err) {
         wx.showToast({ title: 'INTERNET ERROR', icon: 'none' });
@@ -243,33 +246,45 @@ Page({
     submitGood() {
       this.data.goodsInfo.ownerID = wx.getStorageSync("userID");
       this.data.goodsInfo.bankID = this.data.orderDetail.salerID;
-      if (this.data.goodsInfo.details.color.trim()) return wx.showToast({ title: 'COLOR NEEDED', icon: 'none' });
-      if (this.data.goodsInfo.details.sizeX.trim()) return wx.showToast({ title: 'SHAPEX NEEDED', icon: 'none' });
-      if (this.data.goodsInfo.details.sizeY.trim()) return wx.showToast({ title: 'SHAPEY NEEDED', icon: 'none' });
-      if (this.data.goodsInfo.details.sizeZ.trim()) return wx.showToast({ title: 'SHAPEZ NEEDED', icon: 'none' });
+      if (!this.data.goodsInfo.details.color.trim()) return wx.showToast({ title: 'COLOR NEEDED', icon: 'none' });
+      if (!this.data.goodsInfo.details.sizeX.trim()) return wx.showToast({ title: 'SHAPEX NEEDED', icon: 'none' });
+      if (!this.data.goodsInfo.details.sizeY.trim()) return wx.showToast({ title: 'SHAPEY NEEDED', icon: 'none' });
+      if (!this.data.goodsInfo.details.sizeZ.trim()) return wx.showToast({ title: 'SHAPEZ NEEDED', icon: 'none' });
       const priceNum = parseFloat(this.data.goodsInfo.details.price);
       if (isNaN(priceNum)) return wx.showToast({ title: 'PRICE NEEDED', icon: 'none' });
-      newGoods();
+      this.newGoods();
     },
     checkOrder() {
-      if (!this.data.orderDetail.goodID.trim()) return wx.showToast({ title: 'EMPTY GOODS', icon: 'none' });
-      if (!this.data.orderDetail.ownerID.trim()) return wx.showToast({ title: 'EMPTY ownerID', icon: 'none' });
-      if (!this.data.orderDetail.salerID.trim()) return wx.showToast({ title: 'EMPTY salerID', icon: 'none' });
-      if (!this.data.orderDetail.orderType.trim()) return wx.showToast({ title: 'ORDER TYPE NEEDED', icon: 'none' });
+      if (!this.data.orderDetail.goods_id) return wx.showToast({ title: 'EMPTY GOODS', icon: 'none' });
+      if (!this.data.orderDetail.owner_id) return wx.showToast({ title: 'EMPTY ownerID', icon: 'none' });
+      if (!this.data.orderDetail.banker_id) return wx.showToast({ title: 'EMPTY bankerID', icon: 'none' });
 
-      if (senderAddrNeeded) {
-        if (!this.data.orderDetail.senderAddr.trim())
+      if (this.data.senderAddrNeeded) {
+        if (!this.data.orderDetail.senderAddr || !this.data.orderDetail.senderAddr.trim())
 	  return wx.showToast({ title: 'SENDERADDR NEEDED', icon: 'none' });
       }
-      if (recverAddrNeeded) {
-        if (!this.data.orderDetail.recverAddr.trim())
+      if (this.data.recverAddrNeeded) {
+        if (!this.data.orderDetail.recverAddr || !this.data.orderDetail.recverAddr.trim())
 	  return wx.showToast({ title: 'RECVERADDR NEEDED', icon: 'none' });
       }
 
       if (this.data.orderPostID0Needed) {
-        if (!orderDetail.postID0.trim()) return wx.showToast({title: "EMPTY POSTID", icon: 'none'});
+        if (!this.data.orderDetail.postID0 || !this.data.orderDetail.postID0.trim()) return wx.showToast({title: "EMPTY POSTID", icon: 'none'});
       } else if (this.data.orderPostID1Needed) {
-        if (!orderDetail.postID1.trim()) return wx.showToast({title: "EMPTY POSTID", icon: 'none'});
+        if (!this.data.orderDetail.postID1 || !this.data.orderDetail.postID1.trim()) return wx.showToast({title: "EMPTY POSTID", icon: 'none'});
+      }
+    },
+    onShareAppMessage: function() {
+      return {
+          title: `SHARED FROM ${this.data.userName} `,
+          path: '/pages/orders/order-type0-details?id=' + this.data.orderID
+      };
+    },
+    onShareTimeline() { 
+      return {
+        title: '"' + wx.getStorageSync('userName') + '" ' + wx.getStorageSync('share_profile'),
+        query: 'inviter_id=' + wx.getStorageSync('userID'),
+        imageUrl: wx.getStorageSync('share_pic')
       }
     }
 })

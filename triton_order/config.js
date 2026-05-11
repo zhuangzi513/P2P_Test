@@ -3,6 +3,6 @@ module.exports = {
   subDomain: 'tz',
   sdkAppID: 1400450467,
   bindSeller: false,
-  customerServiceType: 'QW', // QW: companny
+  customerServiceType: 'QW', // QW: company
   openIdAutoRegister: true, // auto register
 }

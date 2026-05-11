@@ -6,16 +6,43 @@ const _ = db.command;
 
 
 exports.main = async (event, context) => {
-  const { orderID, field, value } = event
+  const { orderID, field, value, orderDetail } = event
 
-  if (!orderID || !field || value === undefined) {
+  if (!orderID) {
     return {
       success: false,
-      message: 'LACK OF orderID/field/value'
+      message: 'LACK OF orderID'
     }
   }
 
   try {
+    // 支持整体更新 orderDetail 对象
+    if (orderDetail) {
+      const record = await db.collection('orders_info').where({order_id: orderID}).get();
+      if (record.data && record.data.length > 0) {
+        await db.collection('orders_info').doc(record.data[0]._id).update({
+          data: orderDetail
+        });
+        return {
+          success: true,
+          message: 'ORDER UPDATED'
+        }
+      } else {
+        return {
+          success: false,
+          message: 'ORDER NOT FOUND'
+        }
+      }
+    }
+
+    // 支持单字段更新
+    if (!field || value === undefined) {
+      return {
+        success: false,
+        message: 'LACK OF field/value'
+      }
+    }
+
     const updateData = {}
     updateData[field] = value
 

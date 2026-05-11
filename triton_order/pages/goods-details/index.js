@@ -33,7 +33,7 @@ Page({
   },
   async goodsFavCheck() {
     const res = await CLOUDFUNC.callCloudFunction('goodsFavCheck', { userID: wx.getStorageSync('userID'), goodsID: this.data.goodsID})
-    if (res.code == 0) {
+    if (res && res.faved) {
       this.setData({
         faved: true
       })
@@ -46,19 +46,15 @@ Page({
   async addFav() {
         if (this.data.faved) {
           const res = await CLOUDFUNC.callCloudFunction('goodsFavDelete', {userID: wx.getStorageSync('userID'), goodID: this.data.goodsID});
-          if (res.code == 0) {
-            this.goodsFavCheck()
-          }
+          this.goodsFavCheck()
         } else {
           const res = await CLOUDFUNC.callCloudFunction('goodsFavPut', {userID: wx.getStorageSync('userID'), goodID: this.data.goodsID});
-          if (res.code == 0) {
-            this.goodsFavCheck()
-          }
+          this.goodsFavCheck()
         }
   },
   async getGoodsDetail(goodsID) {
-    const res = await CLOUDFUNC.callCloudFunction('getDoodsInfo', {userID : userID,  goodsID: goodsID});
-    if (res.code == 0) {
+    const res = await CLOUDFUNC.callCloudFunction('getGoodsInfo', {userID : wx.getStorageSync('userID'),  goodsID: goodsID});
+    if (res && res.goodsInfo) {
       this.setData({
         userID: wx.getStorageSync('userID'),
         goodsID: goodsID,
@@ -90,12 +86,12 @@ Page({
     return _data
   },
   onShareTimeline() {
-    let title = this.data.goodsDetail.name
-    let query = 'id=' + this.data.goodsDetail.goodsID + '&inviter_id=' + wx.getStorageSync('userID')
+    let title = this.data.goodsDetail.basicInfo ? this.data.goodsDetail.basicInfo.name : ''
+    let query = 'id=' + this.data.goodsID + '&inviter_id=' + wx.getStorageSync('userID')
     return {
       title,
       query,
-      imageUrl: this.data.goodsDetail.imageList[0]
+      imageUrl: (this.data.goodsDetail.pics && this.data.goodsDetail.pics[0]) ? this.data.goodsDetail.pics[0].pic : ''
     }
   },
   async likeIt() {
@@ -125,14 +121,14 @@ Page({
         })
 	return
     }
-    const ownerID = this.data.goodDetail.ownerID;
+    const ownerID = this.data.goodsDetail.ownerID;
     const buyerID = this.data.userID;
     const goodsID = this.data.goodsID;
-    const bankerID = this.data.goodDetail.bankerID;
+    const bankerID = this.data.goodsDetail.bankerID;
     CLOUDFUNC.callCloudFunction('newOrder', {ownerId: ownerID, bankerId:bankerID, buyerId:buyerID, goodsId:goodsID}).then(res => {
-      if (res.code == 0) {
+      if (res && res.orderId) {
         wx.navigateTo({
-          url: "/pages/order/order-details?id=" + res.orderID
+          url: "/pages/orders/order-type0-details?id=" + res.orderId
         })
       }
     });

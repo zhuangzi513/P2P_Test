@@ -28,21 +28,23 @@ exports.main = async (event, context) => {
   const bankerID= event.bankerId;
   const goodsInfo = event.goodsInfo;
 
-  if (!ownerID || !bankerID || !goodsID) {
+  if (!ownerID || !bankerID || !goodsInfo) {
     return {
-      success: false,
-      message: 'LACK OF IDs'
+      code: -1,
+      message: 'LACK OF IDs or goodsInfo'
     }
   }
 
   const newGoodsID = await generateNewGoodsId();
-  const ordersCollection = db.collection('goods_info');
+  const goodsCollection = db.collection('goods_info');
   try {
-    await ordersCollection.add({
-      goods_id: newGoodsID,
-      owner_id: ownID,
-      banker_id: bankerID,
-      goods_info:goodsInfo
+    await goodsCollection.add({
+      data: {
+        goods_id: newGoodsID,
+        owner_id: ownerID,
+        banker_id: bankerID,
+        goods_info: goodsInfo
+      }
     });
     return {
       code: 0,

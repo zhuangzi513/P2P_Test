@@ -9,8 +9,9 @@ exports.main = async (event, context) => {
   const goodsCollection = db.collection('goods_info');
   
   try {
-    const query = await goodsCollection.where({owner_id: userID});
-    const total = query.count().total;
+    const query = goodsCollection.where({owner_id: userID});
+    const countResult = await query.count();
+    const total = countResult.total;
     const skip = (pageNo - 1) * pageSize;
     const goodsReturn = await query 
                                .skip(skip)

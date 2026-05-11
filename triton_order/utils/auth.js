@@ -1,17 +1,24 @@
 const CONFIG = require('../config.js')
-const CLOUDFUC = require('./cloud.js');
+const CLOUDFUNC = require('./cloud.js');
 
 async function checkHasLogined() {
   const token = wx.getStorageSync('token')
   if (!token) {
     return false
   }
-  const checkTokenRes = await CLOUDFUC.callCloudFunction('checkToken', {token:token});
-  if (checkTokenRes.code != 0) {
+  try {
+    const checkTokenRes = await CLOUDFUNC.callCloudFunction('checkToken', {token:token});
+    // checkToken 返回 {code:0, data:{code:0, message:...}}
+    // cloud.js 解包后得到 {code:0, message:...}
+    if (checkTokenRes.code != 0) {
+      wx.removeStorageSync('token')
+      return false
+    }
+    return true
+  } catch (err) {
     wx.removeStorageSync('token')
     return false
   }
-  return true
 }
 
 async function wxaCode(){
@@ -25,104 +32,110 @@ async function wxaCode(){
           title: 'wxaCode failed',
           icon: 'none'
         })
-        return resolve('wxaCode FAILED')
+        return resolve('')
       }
     })
   })
 }
 
 async function login(page) {
-  const _this = this
-  const wxa_code = await wxaCode()
-  CLOUDFUC.callCloudFunction('login_wx', {code: wxa_code}).then(function (res) {        
-    if (res.code == 10000) {
-      return;
-    }
-    if (res.code != 0) {
+  try {
+    const res = await CLOUDFUNC.callCloudFunction('login', {isBanker: false});
+    // login 返回 {code:0, data:{code:0, token, userID}}
+    // cloud.js 解包后得到 {code:0, token, userID}
+    if (res.token) {
+      wx.setStorageSync('token', res.token)
+      wx.setStorageSync('userID', res.userID)
+      if (page) {
+        page.onShow()
+      }
+    } else {
       wx.showModal({
         title: 'login failed',
-        content: res.msg,
+        content: '登录失败',
         showCancel: false
       })
-      return;
     }
-    wx.setStorageSync('token', res.data.token)
-    wx.setStorageSync('userID', res.data.uid)
-    if ( page ) {
-      page.onShow()
-    }
-  });
+  } catch (err) {
+    wx.showModal({
+      title: 'login failed',
+      content: err.message || '网络错误',
+      showCancel: false
+    })
+  }
 }
 
 async function authorize() {
-  return new Promise((resolve, reject) => {
-    wx.login({
-      success: function (res) {
-        const code = res.code
-        let _referrer = ''
-        let referrer_storge = wx.getStorageSync('referrer');
-        if (referrer_storge) {
-          _referrer = referrer_storge;
-        }
-        CLOUDFUC.callCloudFunction('authorize', {code:code, referrer:_referrer}).then(function (res) {
-          if (res.code == 0) {
-            wx.setStorageSync('token', res.data.token)
-            wx.setStorageSync('userID', res.data.uid)
-            resolve(res)
-          } else {
-            wx.showToast({
-              title: res.msg,
-              icon: 'none'
-            })
-            reject(res.msg)
-          }
-        });
-      },
-      fail: err => {
-        reject(err)
-      }
+  try {
+    const res = await CLOUDFUNC.callCloudFunction('login', {isBanker: false});
+    if (res.token) {
+      wx.setStorageSync('token', res.token)
+      wx.setStorageSync('userID', res.userID)
+      return res
+    } else {
+      wx.showToast({
+        title: '授权失败',
+        icon: 'none'
+      })
+      return null
+    }
+  } catch (err) {
+    wx.showToast({
+      title: err.message || '授权失败',
+      icon: 'none'
     })
-  })
+    return null
+  }
 }
 
 async function loginAsBanker_() {
   wx.setStorageSync('isBanker', true)
   wx.setStorageSync('isCustomer', false)
-  const wxa_code = await wxaCode()
-  const res = await CLOUDFUC.callCloudFunction('login', {isBanker: true});
-  if (res.code == 10000) {
-    return res;
-  }
-  if (res.code != 0) {
+  try {
+    const res = await CLOUDFUNC.callCloudFunction('login', {isBanker: true});
+    if (res.token) {
+      wx.setStorageSync('token', res.token)
+      wx.setStorageSync('userID', res.userID)
+      return res
+    } else {
+      wx.showModal({
+        content: 'login failed',
+        showCancel: false
+      })
+      return null
+    }
+  } catch (err) {
     wx.showModal({
-      content: res.msg,
+      content: err.message || 'login failed',
       showCancel: false
     })
-    return res;
+    return null
   }
-  wx.setStorageSync('token', res.token)
-  wx.setStorageSync('userID', res.userID)
-  return res
 }
 
 async function loginAsCustomer_() {
   wx.setStorageSync('isBanker', false)
   wx.setStorageSync('isCustomer', true)
-  const wxa_code = await wxaCode()
-  const res = await CLOUDFUC.callCloudFunction('login', {isBanker: false});
-  if (res.code == 10000) {
-    return res;
-  }
-  if (res.code != 0) {
+  try {
+    const res = await CLOUDFUNC.callCloudFunction('login', {isBanker: false});
+    if (res.token) {
+      wx.setStorageSync('token', res.token)
+      wx.setStorageSync('userID', res.userID)
+      return res
+    } else {
+      wx.showModal({
+        content: 'login failed',
+        showCancel: false
+      })
+      return null
+    }
+  } catch (err) {
     wx.showModal({
-      content: res.msg,
+      content: err.message || 'login failed',
       showCancel: false
     })
-    return res;
+    return null
   }
-  wx.setStorageSync('token', res.token)
-  wx.setStorageSync('userID', res.userID)
-  return res
 }
 
 function loginOut(){

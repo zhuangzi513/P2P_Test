@@ -91,7 +91,7 @@ Component({
         wx.showToast({
           title: this.data.successText || '绑定成功'
         })
-        this.data.mobile = res.data
+        this.setData({ mobile: res.data })
         this.triggerEvent('ok', this.data)
       } else {
         wx.showModal({

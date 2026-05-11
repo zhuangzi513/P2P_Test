@@ -1,11 +1,11 @@
 {
-  "cloud": true,
   "pages": [
     "pages/index/index",
     "pages/login/index",
     "pages/start/start",
     "pages/goods-details/index",
     "pages/my/index",
+    "pages/my/edit_product",
     "pages/my/edit_products",
     "pages/my/my_products",
     "pages/my/select_addr",
@@ -36,8 +36,7 @@
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "",
-    "navigationBarTextStyle": "black",
-    "onReachBottomDistance": 50
+    "navigationBarTextStyle": "black"
   },
   "tabBar": {
     "color": "#6e6d6b",
