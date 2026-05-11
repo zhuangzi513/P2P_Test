@@ -16,10 +16,30 @@ exports.main = async (event, context) => {
   }
 
   try {
+    // 支持整体更新 goods_info 对象
+    if (typeof value === 'object' && value !== null) {
+      const record = await db.collection('goods_info').where({goods_id: Number(goodsID)}).get();
+      if (record.data && record.data.length > 0) {
+        await db.collection('goods_info').doc(record.data[0]._id).update({
+          data: value
+        });
+        return {
+          success: true,
+          message: 'GOODS INFO UPDATED'
+        }
+      } else {
+        return {
+          success: false,
+          message: 'GOODS NOT FOUND'
+        }
+      }
+    }
+
+    // 支持单字段更新
     const updateData = {}
     updateData[field] = value
 
-    await db.collection('goods_info').doc(goodsID).update({
+    await db.collection('goods_info').where({goods_id: Number(goodsID)}).update({
       data: updateData
     })
 

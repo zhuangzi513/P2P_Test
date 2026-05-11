@@ -125,10 +125,16 @@ Page({
     const buyerID = this.data.userID;
     const goodsID = this.data.goodsID;
     const bankerID = this.data.goodsDetail.bankerID;
-    CLOUDFUNC.callCloudFunction('newOrder', {ownerId: ownerID, bankerId:bankerID, buyerId:buyerID, goodsId:goodsID}).then(res => {
+    CLOUDFUNC.callCloudFunction('newOrder', {
+      orderType: 1,
+      ownerId: ownerID, 
+      bankerId: bankerID, 
+      buyerId: buyerID, 
+      goodsId: goodsID
+    }).then(res => {
       if (res && res.orderId) {
         wx.navigateTo({
-          url: "/pages/orders/order-type0-details?id=" + res.orderId
+          url: "/pages/orders/order-type1-details?id=" + res.orderId
         })
       }
     });

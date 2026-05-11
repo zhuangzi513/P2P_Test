@@ -14,7 +14,10 @@
   },
   "scripts": {
     "lint": "eslint . --ext .js,.ts && stylelint \"**/*.wxss\"",
-    "prebuild": "npm run lint"
+    "prebuild": "npm run lint",
+    "ci": "node ci-build.js",
+    "preview": "npx miniprogram-ci preview --project . --appid wxffe63b8bf92fea11",
+    "upload": "npx miniprogram-ci upload --project . --appid wxffe63b8bf92fea11 --upload-desc 'CI upload'"
   },
   "repository": {
     "type": "git",

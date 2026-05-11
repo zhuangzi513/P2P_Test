@@ -102,6 +102,31 @@ Page({
     wx.navigateTo({
       url: '/pages/orders/order-list?type=1',
     });
+  },
+  logout() {
+    wx.showModal({
+      title: 'LOGOUT',
+      content: 'Are you sure to logout?',
+      confirmText: 'Yes',
+      cancelText: 'Cancel',
+      success: (res) => {
+        if (res.confirm) {
+          wx.clearStorageSync();
+          this.setData({
+            hasLogined: false,
+            userID: '',
+            isBanker: false,
+            isCustomer: false,
+            userInfoMap: {}
+          });
+          wx.showToast({
+            title: 'Logged out',
+            icon: 'success',
+            duration: 1500
+          });
+        }
+      }
+    });
   }
 
- })
+})

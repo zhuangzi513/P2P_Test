@@ -35,7 +35,10 @@ exports.main = async (event, context) => {
     return {
       code: 0,
       data: {
-        userInfo: userRecord.data[0].data
+        userInfo: {
+          user_id: userRecord.data[0].user_id,
+          ...userRecord.data[0].data
+        }
       }
     };
   } catch (err) {

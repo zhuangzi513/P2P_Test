@@ -44,6 +44,7 @@ exports.main = async (event, context) => {
           nick: "007",
           level: 0,
           score: 100,
+          user_id: userId,
           created_at: new Date()
         }
       }

@@ -57,10 +57,29 @@ const statusMapType1 = [
 
 
 
+// 安全获取状态文本，防止数组越界
+function getStatusText0(status) {
+  const idx = status + 1;
+  if (idx >= 0 && idx < statusMapType0.length) {
+    return statusMapType0[idx];
+  }
+  return 'Unknown';
+}
+
+function getStatusText1(status) {
+  const idx = status + 1;
+  if (idx >= 0 && idx < statusMapType1.length) {
+    return statusMapType1[idx];
+  }
+  return 'Unknown';
+}
+
 module.exports = {
-statusMap0: statusMapType0,
-ORDERSTATUS_ENUM0: ORDERSTATUS0,
-statusMap1: statusMapType1,
-ORDERSTATUS_ENUM1: ORDERSTATUS1,
+  statusMap0: statusMapType0,
+  ORDERSTATUS_ENUM0: ORDERSTATUS0,
+  statusMap1: statusMapType1,
+  ORDERSTATUS_ENUM1: ORDERSTATUS1,
+  getStatusText0,
+  getStatusText1
 }
 

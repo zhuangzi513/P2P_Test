@@ -286,3 +286,31 @@ button::after {
 navigator.menu-item {
   display: flex;
 }
+
+/* LOGOUT */
+.logout-section {
+  margin: 40rpx 32rpx;
+}
+
+.logout-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 32rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.04);
+}
+
+.logout-icon {
+  font-size: 36rpx;
+  color: #666;
+  margin-right: 16rpx;
+}
+
+.logout-text {
+  font-size: 28rpx;
+  color: #666;
+  font-weight: 500;
+  letter-spacing: 2rpx;
+}

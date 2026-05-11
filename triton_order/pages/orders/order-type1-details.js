@@ -59,7 +59,7 @@ Page({
       let _isBuyer = (this.data.userID == this.data.orderDetail.buyer_id);
       let _canSee  = (_isOwner || _isSaler || _isBuyer);
       this.setData({
-	      orderNextStep: ORDER_STATUS.statusMap1[this.data.orderDetail.order_status+1],
+	      orderNextStep: ORDER_STATUS.getStatusText1(this.data.orderDetail.order_status),
 	      isOwner: _isOwner,
 	      isSaler: _isSaler,
 	      isBuyer: _isBuyer, 

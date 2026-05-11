@@ -39,7 +39,7 @@ Page({
         return
       }
       wx.showLoading({ title: '' })
-      const res = await CLOUDFUNC.callCloudFunction('getOrderInfo', {orderID:this.data.orderID})
+      const res = await CLOUDFUNC.callCloudFunction('getOrderInfo', {orderID:this.data.orderID - 1})
       wx.hideLoading()
       if (!res || !res.orderInfo || res.orderInfo.length == 0) {
         wx.showModal({
@@ -55,7 +55,7 @@ Page({
       let _isBanker = (this.data.userID == this.data.orderDetail.banker_id);
       let _canSee   = (_isOwner || _isBanker);
       this.setData({
-              orderNextStep: ORDER_STATUS.statusMap0[this.data.orderDetail.order_status+1],
+              orderNextStep: ORDER_STATUS.getStatusText0(this.data.orderDetail.order_status),
               isOwner: _isOwner,
               isBanker: _isBanker,
               canSee : _canSee
@@ -285,6 +285,13 @@ Page({
         title: '"' + wx.getStorageSync('userName') + '" ' + wx.getStorageSync('share_profile'),
         query: 'inviter_id=' + wx.getStorageSync('userID'),
         imageUrl: wx.getStorageSync('share_pic')
+      }
+    },
+    goGoodsDetail() {
+      if (this.data.goodId) {
+        wx.navigateTo({
+          url: '/pages/goods-details/index?id=' + this.data.goodId
+        });
       }
     }
 })

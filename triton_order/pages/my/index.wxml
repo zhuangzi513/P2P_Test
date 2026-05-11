@@ -13,7 +13,7 @@
           <view class="nickname-row">
             <text class="nickname">{{ userInfoMap.nick ? userInfoMap.nick : 'to reset nickname' }}</text>
           </view>
-          <view class="user-id">ID: {{ userInfoMap.userID }}</view>
+          <view class="user-id">ID: {{ userInfoMap.user_id }}</view>
         </view>
       </view>
     </view>
@@ -38,5 +38,12 @@
       <view class="menu-label">MY ADDR</view>
       <text class="arrow">MY ADDR</text>
     </navigator>
+  </view>
+
+  <view wx:if="{{ hasLogined }}" class="logout-section">
+    <view bindtap="logout" class="logout-btn">
+      <text class="logout-icon">⏻</text>
+      <text class="logout-text">LOGOUT</text>
+    </view>
   </view>
 </view>

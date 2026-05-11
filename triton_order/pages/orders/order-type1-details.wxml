@@ -2,8 +2,8 @@
   <view class="status-card">
     <view class="status-header">
       <view class="status-info">
-        <view class="status-title">{{orderDetail.orderStatusStr}}</view>
-        <view class="order-number-text">ID:{{orderDetail.orderInfo.orderNumber}}</view>
+        <view class="status-title">{{orderNextStep}}</view>
+        <view class="order-number-text">ID: {{orderDetail.order_id || '加载中...'}}</view>
       </view>
     </view>
   </view>
