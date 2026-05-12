@@ -172,6 +172,9 @@ Page({
     })
     TOOLS.showTabBarBadge()
     this.goodsDynamicV2()
+    // 每次显示页面时刷新商品列表
+    this.setData({ curPage: 1 })
+    this.getGoodsList(0)
     const refreshIndex = wx.getStorageSync('refreshIndex')
     if (refreshIndex) {
       this.onPullDownRefresh()
@@ -187,55 +190,67 @@ Page({
     //}
   },
   async categories(){
-    //const res = await CLOUDFUNC.callCloudFunction('goodsCategory', {});
-    //let categories = [];
-    //if (res.code == 0) {
-    //  const _categories = res.data.filter(ele => {
-    //    return ele.level == 1
-    //  })
-    //  categories = categories.concat(_categories)
-    //}
-    //this.setData({
-    //  categories: categories,
-    //  curPage: 1
-    //});
-    //this.getGoodsList(0);
+    const res = await CLOUDFUNC.callCloudFunction('goodsCategory', {});
+    let categories = [];
+    if (res.code == 0) {
+      const _categories = res.data.filter(ele => {
+        return ele.level == 1
+      })
+      categories = categories.concat(_categories)
+    }
+    this.setData({
+      categories: categories,
+      curPage: 1
+    });
+    this.getGoodsList(0);
   },
   async getGoodsList(categoryId, append) {
     if (categoryId == 0) {
       categoryId = "";
     }
-    //wx.showLoading({
-    //  title: ''
-    //})
-    //const res = await CLOUDFUNC.callCloudFunction('goodsV2', { categoryId: categoryId, page: this.data.curPage, pageSize: this.data.pageSize });
-    //wx.hideLoading()
-    //if (res.code == 404 || res.code == 700) {
-    //  let newData = {
-    //    loadingMoreHidden: false
-    //  }
-    //  if (!append) {
-    //    newData.goods = []
-    //  }
-    //  this.setData(newData);
-    //  return
-    //}
-    //let goods = [];
-    //if (append) {
-    //  goods = this.data.goods
-    //}
-    //for (var i = 0; i < res.data.result.length; i++) {
-    //  const item = res.data.result[i]
-    //  const hidden_goods_index = wx.getStorageSync('hidden_goods_index')
-    //  if (hidden_goods_index.indexOf(item.id) != -1) {
-    //    continue
-    //  }
-    //  goods.push(item);
-    //}
-    //this.setData({
-    //  loadingMoreHidden: true,
-    //  goods: goods,
-    //});
+    wx.showLoading({
+      title: ''
+    })
+    // 不传 userID，获取所有商品
+    const res = await CLOUDFUNC.callCloudFunction('goodsStatics', { pageNo: this.data.curPage, pageSize: this.data.pageSize });
+    wx.hideLoading()
+    if (res.code != 0) {
+      let newData = {
+        loadingMoreHidden: false
+      }
+      if (!append) {
+        newData.goods = []
+      }
+      this.setData(newData);
+      return
+    }
+    let goods = [];
+    if (append) {
+      goods = this.data.goods
+    }
+    console.log('res.goods', res.goods)
+    for (var i = 0; i < res.goods.length; i++) {
+      const item = res.goods[i];
+      const hidden_goods_index = wx.getStorageSync('hidden_goods_index')
+      if (hidden_goods_index && hidden_goods_index.indexOf(item.goods_id) != -1) {
+        continue
+      }
+      // 转换数据结构以适配前端显示
+      goods.push({
+        id: item.goods_id,
+        name: item.goods_info?.description || '',
+        price: item.goods_info?.price || '0',
+        pic: (item.goods_info?.imageList && item.goods_info.imageList[0]) ? item.goods_info.imageList[0].url : '',
+        color: item.goods_info?.color || '',
+        sizeX: item.goods_info?.sizeX || '',
+        sizeY: item.goods_info?.sizeY || '',
+        sizeZ: item.goods_info?.sizeZ || ''
+      });
+    }
+    this.setData({
+      loadingMoreHidden: true,
+      goods: goods,
+    });
   },
   onShareAppMessage: function() {
     return {

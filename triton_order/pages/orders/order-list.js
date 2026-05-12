@@ -22,9 +22,8 @@ Page({
               that.orderList()
               that.getOrderStatistics()
           });
-
-          }
         }
+      }
     })
   },
   onLoad: function(options) {

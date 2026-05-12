@@ -178,7 +178,6 @@ Page({
       list.splice(e.currentTarget.dataset.index, 1);
       this.setData({ 'goodInfo.imageList': list });
     },
-    },
     onShareAppMessage: function() {
       return {
           title: `SHARED FROM ${this.data.userName} `,

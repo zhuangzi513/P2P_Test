@@ -9,21 +9,29 @@ exports.main = async (event, context) => {
   const goodsCollection = db.collection('goods_info');
   
   try {
-    const query = goodsCollection.where({owner_id: userID});
+    let query;
+    if (!userID) {
+      query = goodsCollection;
+    } else {
+      query = goodsCollection.where({owner_id: userID});
+    }
+    console.log('userID', userID)
     const countResult = await query.count();
     const total = countResult.total;
     const skip = (pageNo - 1) * pageSize;
     const goodsReturn = await query 
                                .skip(skip)
                                .limit(pageSize)
-                               .orderBy('create_time')
                                .get();
     return {
       code: 0,
-      goods: goodsReturn.data,
-      total,
-      pageNo,
-      pageSize
+      data : {
+        code: 0,
+        goods: goodsReturn.data,
+        total,
+        pageNo,
+        pageSize
+      }
     };
   } catch (err) {
     return {
