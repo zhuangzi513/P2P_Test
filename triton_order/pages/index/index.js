@@ -238,7 +238,7 @@ Page({
       // 转换数据结构以适配前端显示
       goods.push({
         id: item.goods_id,
-        name: item.goods_info?.description || '',
+        name: item.goods_info?.name || '',
         price: item.goods_info?.price || '0',
         pic: (item.goods_info?.imageList && item.goods_info.imageList[0]) ? item.goods_info.imageList[0].url : '',
         color: item.goods_info?.color || '',

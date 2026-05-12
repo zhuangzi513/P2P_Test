@@ -20,6 +20,7 @@ Page({
       isBuyer: false,
       canSee: false,
       goodInfo: {
+        name: '',
         imageList: [],
         videoList: [],
       },
@@ -111,6 +112,7 @@ Page({
         orderPostID1Needed: needPostID1
       });
     },
+    onNameInput(e) { this.setData({ 'goodInfo.name': e.detail.value }); },
     onColorInput(e) { this.setData({ 'goodInfo.color': e.detail.value }); },
     onSizeInputX(e) { this.setData({ 'goodInfo.sizeX': e.detail.value }); },
     onSizeInputY(e) { this.setData({ 'goodInfo.sizeY': e.detail.value }); },
@@ -227,6 +229,7 @@ Page({
       console.log('submitGood')
       this.data.goodInfo.ownerID = wx.getStorageSync("userID");
       this.data.goodInfo.bankID = this.data.orderDetail.banker_id;
+      if (!this.data.goodInfo.name.trim()) return wx.showToast({ title: 'NAME NEEDED', icon: 'none' });
       if (!this.data.goodInfo.color.trim()) return wx.showToast({ title: 'COLOR NEEDED', icon: 'none' });
       if (!this.data.goodInfo.sizeX.trim()) return wx.showToast({ title: 'SHAPEX NEEDED', icon: 'none' });
       if (!this.data.goodInfo.sizeY.trim()) return wx.showToast({ title: 'SHAPEY NEEDED', icon: 'none' });

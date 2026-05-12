@@ -61,7 +61,7 @@ module.exports = {
           <view class="jd-goods-price-box">
             <view class="jd-goods-price">
               <text class="jd-price-symbol">¥</text>
-              <text class="jd-price-num">{{item.minPrice}}</text>
+              <text class="jd-price-num">{{item.price}}</text>
             </view>
           </view>
         </view>
@@ -87,7 +87,7 @@ module.exports = {
         <view class="jd-goods-price-box">
           <view class="jd-goods-price">
             <text class="jd-price-symbol">¥</text>
-            <text class="jd-price-num">{{item.minPrice}}</text>
+            <text class="jd-price-num">{{item.price}}</text>
           </view>
         </view>
       </view>
