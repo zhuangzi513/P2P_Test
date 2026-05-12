@@ -9,12 +9,20 @@ exports.main = async (event, context) => {
   const goodsCollection = db.collection('goods_info');
   
   try {
-    let goodsRecord = await goodsCollection.where({goods_id: goodsID}).get();
+    console.log('getGoodsInfo query goodsID:', goodsID, typeof goodsID);
+    // 同时尝试字符串和数字类型匹配
+    let goodsRecord = await goodsCollection.where({
+      goods_id: Number(goodsID) || String(goodsID)
+    }).get();
+    console.log('goodsRecord:', JSON.stringify(goodsRecord.data));
     return {
       code: 0,
-      goodsInfo: goodsRecord.data
+      data: {
+        goodsInfo: goodsRecord.data
+      }
     };
   } catch (err) {
+    console.error('getGoodsInfo error:', err);
     return {
       code: -1,
       message: err.message

@@ -1,8 +1,8 @@
 <view class="container">
 
-  <scroll-view class="scroll-container" scroll-into-view="{{toView}}" scroll-y="true" scroll-with-animation="true" bindscroll="bindscroll">
+  <scroll-view class="scroll-container" scroll-y="true">
     
-    <view class="goods-title">{{goodsDetail.basicInfo.name}}</view>
+    <view class="goods-title">商品详情</view>
 
     <view class="divider-icon-center">
       <view class="line"></view>
@@ -10,83 +10,74 @@
       <view class="line"></view>
     </view>
 
+    <!-- 图片/视频轮播 -->
     <view class="swiper-container" id="swiper-container">
-      <swiper class="swiper_box" indicator-dots="true" indicator-active-color="#fff"
-        autoplay="{{!goodsDetail.basicInfo.videoId}}" circular>
-        <swiper-item wx:if="{{goodsDetail.basicInfo.videoId}}">
-          <video src="{{videoMp4Src}}" autoplay="true" loop="true" style='width:100%;height:100%;'></video>
+      <swiper class="swiper_box" indicator-dots="true" indicator-active-color="#fff" autoplay="true" circular>
+        <swiper-item wx:if="{{goodsInfo.videoList && goodsInfo.videoList.length > 0}}">
+          <video src="{{goodsInfo.videoList[0].url}}" autoplay="true" style='width:100%;height:100%;' object-fit="cover"></video>
         </swiper-item>
-        <swiper-item wx:for="{{goodsDetail.pics}}" wx:key="id">
-          <image src="{{item.pic}}" class="slide-image" mode="aspectFill" lazy-load="true" bindtap="previewImage2" data-url="{{ item.pic }}" />
+        <swiper-item wx:for="{{goodsInfo.imageList}}" wx:key="index">
+          <image src="{{item.url}}" class="slide-image" mode="aspectFill" lazy-load="true" bindtap="previewImages" data-url="{{ item.url }}" />
         </swiper-item>
       </swiper>
     </view>
 
+    <!-- 商品基本信息 -->
     <view class="goods-info-card">
-      <view class="table">
-        <view class="table-row"  wx:for="{{goodsBasicInfo}}" wx:key="index">
-          <view class="table-cell label">{{item.fieldName}}</view>
-          <view class="table-cell value">{{item.fieldValue}}</view>
-        </view>
+      <view class="info-header">
+        <text class="info-title">基本信息</text>
       </view>
-      <view class="goods-des-info">
-        <view class="label-title"> 
-          <view class="left">AAAAAAAAAAAAAAAAAAAA</view>
+      <view class="info-table">
+        <view class="info-row">
+          <text class="info-label">颜色</text>
+          <text class="info-value">{{goodsInfo.color || '-'}}</text>
         </view>
-        <view class="characteristic"><text>{{ goodsDetail.basicInfo.purchaseNotes }}</text></view>
-      </view>
-
-      <view class="goods-des-info">
-        <view class="label-title"> 
-          <view class="left">BBBBBBBBBBBBBBBBBBBB</view>
+        <view class="info-row">
+          <text class="info-label">尺寸</text>
+          <text class="info-value">{{goodsInfo.sizeX || '-'}}{{goodsInfo.sizeY ? ' × ' + goodsInfo.sizeY : ''}}{{goodsInfo.sizeZ ? ' × ' + goodsInfo.sizeZ : ''}}</text>
         </view>
-        <view class="characteristic"><text>{{ goodsDetail.basicInfo.characteristic }}</text></view>
+        <view class="info-row">
+          <text class="info-label">价格</text>
+          <text class="info-value price">¥{{goodsInfo.price || '0'}}</text>
+        </view>
       </view>
     </view>
 
-    <view class="divider-icon-center">
-      <view class="line"></view>
-      <icon type="success" size="16" color="#07c160"></icon>
-      <view class="line"></view>
-    </view>
-
-    <view class="goods-des-info" id="goods-des-info">
-      <view class="label-title"> 
-        <view class="left">EEEEEEEEEEEEEEEEE</view>
+    <!-- 商品描述 -->
+    <view class="goods-info-card">
+      <view class="info-header">
+        <text class="info-title">商品描述</text>
       </view>
-      <view class="goods-text">
-        <mp-html content="{{goodsDetail.content}}" />
+      <view class="description-content">
+        <text>{{goodsInfo.description || '暂无描述'}}</text>
       </view>
     </view>
 
-
-    <view class="divider-icon-center">
-      <view class="line"></view>
-      <icon type="success" size="16" color="#07c160"></icon>
-      <view class="line"></view>
+    <!-- 图片列表 -->
+    <view class="goods-info-card" wx:if="{{goodsInfo.imageList && goodsInfo.imageList.length > 0}}">
+      <view class="info-header">
+        <text class="info-title">商品图片 ({{goodsInfo.imageList.length}})</text>
+      </view>
+      <view class="image-grid">
+        <image wx:for="{{goodsInfo.imageList}}" wx:key="index" src="{{item.url}}" mode="aspectFill" lazy-load="true" 
+          bindtap="previewImages" data-url="{{ item.url }}" class="grid-image" />
+      </view>
     </view>
 
+    <!-- 视频列表 -->
+    <view class="goods-info-card" wx:if="{{goodsInfo.videoList && goodsInfo.videoList.length > 1}}">
+      <view class="info-header">
+        <text class="info-title">商品视频 ({{goodsInfo.videoList.length}})</text>
+      </view>
+      <view class="video-list">
+        <video wx:for="{{goodsInfo.videoList}}" wx:key="index" src="{{item.url}}" class="video-item" object-fit="cover" />
+      </view>
+    </view>
 
-    <van-cell-group id="reputation" wx:if="{{reputation}}" custom-class="vw100 reputation-cell-group">
-      <block wx:for="{{reputation.result}}" wx:key="id">
-        <van-cell custom-class="reputation-cell" title="{{ item.user.nick }}"
-          label="{{item.goods.dateReputation}}" border="{{ false }}">
-          <van-image slot="icon" custom-class="avatarUrl-img" src="{{ item.user.avatarUrl ? (item.user.avatarUrl + '_m') : '/images/default.png' }}" round/>
-          <van-rate value="{{ item.goods.goodReputation }}" color="#e64340" readonly />          
-        </van-cell>
-        <van-cell wx:if="{{ item.goods.goodReputationRemark }}" title-class="reputation-cell-reamrk"
-          title="{{item.goods.goodReputationRemark}}" />
-        <view wx:if="{{ item.reputationPics }}" class="reputation-pics">
-          <image wx:for="{{item.reputationPics}}" wx:for-item="picItem" src="{{ picItem.pic }}_m" mode="aspectFill"
-            bindtap="previewImage" data-url="{{ picItem.pic }}"></image>
-        </view>
-        <van-cell wx:if="{{ item.goods.goodReputationReply }}" title-class="reputation-cell-reamrk"
-          title="RRRRResponse: {{item.goods.goodReputationReply}}" />
-      </block>
-    </van-cell-group>
   </scroll-view>
+  
   <van-goods-action>
-    <van-goods-action-icon icon="{{faved?'like':'like-o'}}" text="FAV" bind:click="addFav" />
-    <van-goods-action-button text="{{goodsDetail.basicInfo.goodsStatus}}" type="warning" bind:click="tobuy" />
+    <van-goods-action-icon icon="{{faved?'like':'like-o'}}" text="收藏" bind:click="addFav" />
+    <van-goods-action-button text="立即购买" type="warning" bind:click="tobuy" />
   </van-goods-action>
 </view>
