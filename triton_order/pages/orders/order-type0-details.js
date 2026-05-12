@@ -19,7 +19,7 @@ Page({
       isBanker: false,
       isBuyer: false,
       canSee: false,
-      goodsInfo: {
+      goodInfo: {
         imageList: [],
         videoList: [],
       },
@@ -111,12 +111,12 @@ Page({
         orderPostID1Needed: needPostID1
       });
     },
-    onColorInput(e) { this.setData({ 'goodsInfo.color': e.detail.value }); },
-    onSizeInputX(e) { this.setData({ 'goodsInfo.sizeX': e.detail.value }); },
-    onSizeInputY(e) { this.setData({ 'goodsInfo.sizeY': e.detail.value }); },
-    onSizeInputZ(e) { this.setData({ 'goodsInfo.sizeZ': e.detail.value }); },
-    onPriceInput(e) { this.setData({ 'goodsInfo.price': e.detail.value }); },
-    onDescInput(e)  { this.setData({ 'goodsInfo.description': e.detail.value }); },
+    onColorInput(e) { this.setData({ 'goodInfo.color': e.detail.value }); },
+    onSizeInputX(e) { this.setData({ 'goodInfo.sizeX': e.detail.value }); },
+    onSizeInputY(e) { this.setData({ 'goodInfo.sizeY': e.detail.value }); },
+    onSizeInputZ(e) { this.setData({ 'goodInfo.sizeZ': e.detail.value }); },
+    onPriceInput(e) { this.setData({ 'goodInfo.price': e.detail.value }); },
+    onDescInput(e)  { this.setData({ 'goodInfo.description': e.detail.value }); },
     onSenderAddrInput(e)  { this.setData({ 'orderDetail.senderAddr': e.detail.value }); },
     onRecverAddrInput(e)  { this.setData({ 'orderDetail.recverAddr': e.detail.value }); },
     onPostIDInput(e)  {
@@ -134,7 +134,7 @@ Page({
           	orderDetail: this.data.orderDetail
                 });
       } catch (err) {
-        wx.showToast({ title: 'INTERNET ERROR', icon: 'none' });
+        wx.showToast({ title: 'updateOrderInfo INTERNET ERROR', icon: 'none' });
         console.error(err);
       }
     },
@@ -156,13 +156,13 @@ Page({
     },
 
     async addImage() {
-      const remain = 9 - this.data.goodsInfo.imageListLen;
+      const remain = 9 - this.data.goodInfo.imageList.length;
       if (remain <= 0) return wx.showToast({ title: 'MAX 9', icon: 'none' });
       const res = await wx.chooseMedia({ count: remain, mediaType: ['image'], sizeType: ['compressed'] });
       wx.showLoading({ title: 'uploading...' });
       try {
         const urls = await UPLOAD.uploadFiles(res.tempFiles.map(f => f.tempFilePath), 'image', CLOUDFUNC);
-        this.setData({ imageList: [...this.data.goodsInfo.imageList, ...urls.map(url => ({ url }))] });
+        this.setData({ 'goodInfo.imageList': [...this.data.goodInfo.imageList, ...urls.map(url => ({ url }))] });
         wx.hideLoading();
       } catch (err) {
         wx.hideLoading();
@@ -172,20 +172,20 @@ Page({
     },
 
     deleteImage(e) {
-      const list = [...this.data.imageList];
+      const list = [...this.data.goodInfo.imageList];
       list.splice(e.currentTarget.dataset.index, 1);
-      this.setData({ 'goodsInfo.imageList': list });
+      this.setData({ 'goodInfo.imageList': list });
     },
 
     async addVideo() {
-      const remain = 3 - this.data.goodsInfo.videoListLen;
+      const remain = 3 - this.data.goodInfo.videoList.length;
       if (remain <= 0) return wx.showToast({ title: 'MAX 3', icon: 'none' });
       const res = await wx.chooseMedia({ count: remain, mediaType: ['video'], sourceType: ['album', 'camera'] });
       wx.showLoading({ title: 'uploading...' });
       try {
         const urls = await UPLOAD.uploadFiles(res.tempFiles.map(f => f.tempFilePath), 'video', CLOUDFUNC);
         const newVideos = urls.map(url => ({ url, thumb: '' }));
-        this.setData({ videoList: [...this.data.goodsInfo.videoList, ...newVideos] });
+        this.setData({ 'goodInfo.videoList': [...this.data.goodInfo.videoList, ...newVideos] });
         wx.hideLoading();
       } catch (err) {
         wx.hideLoading();
@@ -194,37 +194,46 @@ Page({
     },
 
     deleteVideo(e) {
-      const list = [...this.data.videoList];
+      const list = [...this.data.goodInfo.videoList];
       list.splice(e.currentTarget.dataset.index, 1);
-      this.setData({ 'goodsInfo.videoList': list });
+      this.setData({ 'goodInfo.videoList': list });
     },
 
     async newGoods() {
       try {
         const res = await CLOUDFUNC.callCloudFunction('newGoods',
                 {
-                  ownerID: wx.getStorageSync('userID'),
-                  bankerID: this.data.goodsInfo.bankID,
-                  goodsInfo: this.data.goodsInfo.details
+                  ownerId: wx.getStorageSync('userID'),
+                  bankerId: this.data.goodInfo.bankID, 
+                  goodsInfo: this.data.goodInfo
                 });
+        console.log('new Goods returned')
         if (!res || !res.goodsID) {
           wx.showToast({ title: 'FAIL TO CREATE GOODS', icon: 'none' });
+          return;
         }
+        wx.showToast({ title: 'GOODS CREATED', icon: 'none' });
+        setTimeout(() => {
+          wx.redirectTo({
+            url: '/pages/goods-details/index?id=' + res.goodsID
+          });
+        }, 1000);
       } catch (err) {
-        wx.showToast({ title: 'INTERNET ERROR', icon: 'none' });
+        wx.showToast({ title: 'newGoods INTERNET ERROR', icon: 'none' });
         console.error(err);
       }
     },
     submitGood() {
-      this.data.goodsInfo.ownerID = wx.getStorageSync("userID");
-      this.data.goodsInfo.bankID = this.data.orderDetail.salerID;
-      if (!this.data.goodsInfo.details.color.trim()) return wx.showToast({ title: 'COLOR NEEDED', icon: 'none' });
-      if (!this.data.goodsInfo.details.sizeX.trim()) return wx.showToast({ title: 'SHAPEX NEEDED', icon: 'none' });
-      if (!this.data.goodsInfo.details.sizeY.trim()) return wx.showToast({ title: 'SHAPEY NEEDED', icon: 'none' });
-      if (!this.data.goodsInfo.details.sizeZ.trim()) return wx.showToast({ title: 'SHAPEZ NEEDED', icon: 'none' });
-      const priceNum = parseFloat(this.data.goodsInfo.details.price);
+      console.log('submitGood')
+      this.data.goodInfo.ownerID = wx.getStorageSync("userID");
+      this.data.goodInfo.bankID = this.data.orderDetail.banker_id;
+      if (!this.data.goodInfo.color.trim()) return wx.showToast({ title: 'COLOR NEEDED', icon: 'none' });
+      if (!this.data.goodInfo.sizeX.trim()) return wx.showToast({ title: 'SHAPEX NEEDED', icon: 'none' });
+      if (!this.data.goodInfo.sizeY.trim()) return wx.showToast({ title: 'SHAPEY NEEDED', icon: 'none' });
+      if (!this.data.goodInfo.sizeZ.trim()) return wx.showToast({ title: 'SHAPEZ NEEDED', icon: 'none' });
+      const priceNum = parseFloat(this.data.goodInfo.price);
       if (isNaN(priceNum)) return wx.showToast({ title: 'PRICE NEEDED', icon: 'none' });
-      this.newGoods();
+      this.newGoods().then();
     },
     checkOrder() {
       if (!this.data.orderDetail.goods_id) return wx.showToast({ title: 'EMPTY GOODS', icon: 'none' });

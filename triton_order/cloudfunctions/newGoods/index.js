@@ -5,7 +5,7 @@ const db = cloud.database();
 const _ = db.command;
 
 async function generateNewGoodsId() {
-  const counterCollection = db.collection('id_counters');
+  const counterCollection = db.collection('ids_info');
   const counterId = 'goods_id_counter';
 
   try {
@@ -28,6 +28,9 @@ exports.main = async (event, context) => {
   const bankerID= event.bankerId;
   const goodsInfo = event.goodsInfo;
 
+  console.log('owner:', ownerID)
+  console.log('banker:', bankerID)
+  console.log('goodsinfo', goodsInfo)
   if (!ownerID || !bankerID || !goodsInfo) {
     return {
       code: -1,

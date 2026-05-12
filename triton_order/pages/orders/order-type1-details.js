@@ -159,13 +159,13 @@ Page({
     },
 
     async addImage() {
-      const remain = 9 - this.data.goodInfo.imageListLen;
+      const remain = 9 - this.data.goodInfo.imageList.length;
       if (remain <= 0) return wx.showToast({ title: 'MAX 9', icon: 'none' });
       const res = await wx.chooseMedia({ count: remain, mediaType: ['image'], sizeType: ['compressed'] });
       wx.showLoading({ title: 'uploading...' });
       try {
         const urls = await UPLOAD.uploadFiles(res.tempFiles.map(f => f.tempFilePath), 'image', CLOUDFUNC);
-        this.setData({ imageList: [...this.data.goodInfo.imageList, ...urls.map(url => ({ url }))] });
+        this.setData({ 'goodInfo.imageList': [...this.data.goodInfo.imageList, ...urls.map(url => ({ url }))] });
         wx.hideLoading();
       } catch (err) {
         wx.hideLoading();
@@ -174,9 +174,9 @@ Page({
     },
 
     deleteImage(e) {
-      const list = [...this.data.imageList];
+      const list = [...this.data.goodInfo.imageList];
       list.splice(e.currentTarget.dataset.index, 1);
-      this.setData({ imageList: list });
+      this.setData({ 'goodInfo.imageList': list });
     },
     },
     onShareAppMessage: function() {

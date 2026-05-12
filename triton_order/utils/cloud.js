@@ -33,6 +33,7 @@ async function callCloudFunction(name, data) {
     }
     throw { message: '未知错误' };
   } catch (err) {
+    console.error('Cloud function error:', name, err);
     throw err;
   }
 }
