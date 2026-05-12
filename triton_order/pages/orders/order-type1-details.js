@@ -1,5 +1,6 @@
 const CLOUDFUNC = require('../../utils/cloud.js');
 const ORDER_STATUS= require('../../utils/order_status.js');
+const UPLOAD = require('../../utils/upload.js');
 
 Page({
     data:{
@@ -17,6 +18,8 @@ Page({
       isBuyer: false,
       canSee: false,
       goodInfo: {
+        imageList: [],
+        videoList: [],
       },
       orderDetail: {
       }
@@ -161,7 +164,7 @@ Page({
       const res = await wx.chooseMedia({ count: remain, mediaType: ['image'], sizeType: ['compressed'] });
       wx.showLoading({ title: 'uploading...' });
       try {
-        const urls = await this.uploadFiles(res.tempFiles.map(f => f.tempFilePath), 'image');
+        const urls = await UPLOAD.uploadFiles(res.tempFiles.map(f => f.tempFilePath), 'image', CLOUDFUNC);
         this.setData({ imageList: [...this.data.goodInfo.imageList, ...urls.map(url => ({ url }))] });
         wx.hideLoading();
       } catch (err) {
@@ -175,38 +178,6 @@ Page({
       list.splice(e.currentTarget.dataset.index, 1);
       this.setData({ imageList: list });
     },
-
-    async uploadFiles(filePaths, type) {
-      const concurrency = 3;
-      let index = 0;
-      const results = new Array(filePaths.length);
-      const uploadNext = () => {
-        if (index >= filePaths.length) return Promise.resolve();
-        const i = index++;
-        return this.uploadFile(filePaths[i], type)
-          .then(url => {
-            results[i] = url;
-            return uploadNext();
-          });
-      };
-      const tasks = [];
-      for (let i = 0; i < Math.min(concurrency, filePaths.length); i++) {
-        tasks.push(uploadNext());
-      }
-      return Promise.all(tasks).then(() => results);
-    },
-
-    uploadFile(filePath, type) {
-      return new Promise((resolve, reject) => {
-        CLOUDFUNC.callCloudFunction('uploadFile', {fileID:filePath}).then(res => {
-          if (res && res.fileUrl) {
-            resolve(res.fileUrl);
-          } else {
-            reject('FAILED TO UPLOAD file');
-          }
-        })
-
-      });
     },
     onShareAppMessage: function() {
       return {

@@ -1,4 +1,5 @@
 const CLOUDFUNC = require('../../utils/cloud.js');
+const UPLOAD = require('../../utils/upload.js');
 
 
 Page({
@@ -71,7 +72,7 @@ Page({
     const res = await wx.chooseMedia({ count: remain, mediaType: ['image'], sizeType: ['compressed'] });
     wx.showLoading({ title: 'uploading...' });
     try {
-      const urls = await this.uploadFiles(res.tempFiles.map(f => f.tempFilePath), 'image');
+      const urls = await UPLOAD.uploadFiles(res.tempFiles.map(f => f.tempFilePath), 'image', CLOUDFUNC);
       this.setData({ imageList: [...this.data.imageList, ...urls.map(url => ({ url }))] });
       wx.hideLoading();
     } catch (err) {
@@ -92,7 +93,7 @@ Page({
     const res = await wx.chooseMedia({ count: remain, mediaType: ['video'], sourceType: ['album', 'camera'] });
     wx.showLoading({ title: 'uploading...' });
     try {
-      const urls = await this.uploadFiles(res.tempFiles.map(f => f.tempFilePath), 'video');
+      const urls = await UPLOAD.uploadFiles(res.tempFiles.map(f => f.tempFilePath), 'video', CLOUDFUNC);
       const newVideos = urls.map(url => ({ url, thumb: '' }));
       this.setData({ videoList: [...this.data.videoList, ...newVideos] });
       wx.hideLoading();
@@ -106,39 +107,6 @@ Page({
     const list = [...this.data.videoList];
     list.splice(e.currentTarget.dataset.index, 1);
     this.setData({ videoList: list });
-  },
-
-  uploadFiles(filePaths, type) {
-    const concurrency = 3;
-    let index = 0;
-    const results = new Array(filePaths.length);
-    const uploadNext = () => {
-      if (index >= filePaths.length) return Promise.resolve();
-      const i = index++;
-      return this.uploadFile(filePaths[i], type)
-        .then(url => {
-          results[i] = url;
-          return uploadNext();
-        });
-    };
-    const tasks = [];
-    for (let i = 0; i < Math.min(concurrency, filePaths.length); i++) {
-      tasks.push(uploadNext());
-    }
-    return Promise.all(tasks).then(() => results);
-  },
-
-  uploadFile(filePath, type) {
-    return new Promise((resolve, reject) => {
-      CLOUDFUNC.callCloudFunction('uploadFile', {fileID:filePath}).then(res => {
-        if (res && res.fileUrl) {
-          resolve(res.fileUrl);
-        } else {
-          reject('FAILED TO UPLOAD file');
-        }
-      })
-
-    });
   },
 
   async submit() {

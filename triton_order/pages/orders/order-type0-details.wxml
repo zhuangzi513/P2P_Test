@@ -106,22 +106,51 @@
     </view>
 
     <!-- 图片区域 -->
-    <view class="card form-card">
+    <view class="card form-card media-card">
       <view class="card-header">
         <text class="card-title">商品图片</text>
         <text class="img-count">{{goodInfo.imageList.length}}/9</text>
       </view>
-      <view class="image-grid">
-        <block wx:for="{{goodInfo.imageList}}" wx:key="index">
-          <view class="image-item">
-            <image class="preview-image" src="{{item.url}}" mode="aspectFill" bindtap="previewImage" data-url="{{item.url}}" />
-            <view class="delete-btn" catchtap="deleteImage" data-index="{{index}}">×</view>
+      
+      <!-- 已上传图片 -->
+      <view class="image-grid" wx:if="{{goodInfo.imageList.length > 0}}">
+        <view class="image-item" wx:for="{{goodInfo.imageList}}" wx:key="index">
+          <image class="preview-image" src="{{item.url}}" mode="aspectFill" bindtap="previewImage" data-url="{{item.url}}" />
+          <view class="delete-btn" catchtap="deleteImage" data-index="{{index}}">
+            <text class="delete-icon">✕</text>
           </view>
-        </block>
-        <view class="add-image-btn" wx:if="{{goodInfo.imageList.length < 9 && isOwner}}" bindtap="addImage">
-          <text class="add-icon">+</text>
-          <text class="add-text">添加图片</text>
         </view>
+      </view>
+      
+      <!-- 上传按钮组 -->
+      <view class="upload-actions" wx:if="{{isOwner}}">
+        <view class="upload-btn image-upload-btn" bindtap="addImage">
+          <view class="upload-icon-wrapper">
+            <text class="upload-icon">🖼️</text>
+          </view>
+          <view class="upload-info">
+            <text class="upload-title">上传图片</text>
+            <text class="upload-hint">最多9张</text>
+          </view>
+          <view class="upload-arrow">›</view>
+        </view>
+        
+        <view class="upload-btn video-upload-btn" bindtap="addVideo">
+          <view class="upload-icon-wrapper">
+            <text class="upload-icon">🎬</text>
+          </view>
+          <view class="upload-info">
+            <text class="upload-title">上传视频</text>
+            <text class="upload-hint">最多3个</text>
+          </view>
+          <view class="upload-arrow">›</view>
+        </view>
+      </view>
+      
+      <!-- 空状态提示 -->
+      <view class="empty-state" wx:if="{{goodInfo.imageList.length === 0 && !isOwner}}">
+        <text class="empty-icon">📷</text>
+        <text class="empty-text">暂无图片</text>
       </view>
     </view>
 

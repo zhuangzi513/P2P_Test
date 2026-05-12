@@ -1,9 +1,56 @@
-<view class="box">
-  <view class="title">Login first</view>
-  <view class="login-btn" bindtap="loginAsCustomer">
-    <text>LOGIN AS CUSTOMER</text>
+<view class="page-container">
+  <!-- 背景装饰 -->
+  <view class="bg-decoration">
+    <view class="circle circle-1"></view>
+    <view class="circle circle-2"></view>
+    <view class="circle circle-3"></view>
   </view>
-  <view class="login-btn" bindtap="loginAsBanker">
-    <text>LOGIN AS BANKER</text>
+
+  <!-- 主内容区 -->
+  <view class="content-area">
+    <!-- Logo/图标区域 -->
+    <view class="logo-section">
+      <view class="logo-wrapper">
+        <text class="logo-icon">📦</text>
+      </view>
+      <text class="app-name">P2P Order</text>
+      <text class="app-tagline">Welcome to P2P Trading Platform</text>
+    </view>
+
+    <!-- 登录卡片 -->
+    <view class="login-card">
+      <text class="card-title">Select Your Role</text>
+      
+      <!-- Customer 登录 -->
+      <view class="role-option" bindtap="loginAsCustomer">
+        <view class="role-icon customer-icon">👤</view>
+        <view class="role-info">
+          <text class="role-title">Customer</text>
+          <text class="role-desc">Browse and purchase items</text>
+        </view>
+        <view class="role-arrow">›</view>
+      </view>
+
+      <view class="divider">
+        <view class="divider-line"></view>
+        <text class="divider-text">OR</text>
+        <view class="divider-line"></view>
+      </view>
+
+      <!-- Banker 登录 -->
+      <view class="role-option banker" bindtap="loginAsBanker">
+        <view class="role-icon banker-icon">🏦</view>
+        <view class="role-info">
+          <text class="role-title">Banker</text>
+          <text class="role-desc">Manage and sell items</text>
+        </view>
+        <view class="role-arrow">›</view>
+      </view>
+    </view>
+
+    <!-- 底部说明 -->
+    <view class="footer-tips">
+      <text class="tip-text">By logging in, you agree to our Terms of Service</text>
+    </view>
   </view>
 </view>
