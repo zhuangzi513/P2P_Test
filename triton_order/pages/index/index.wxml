@@ -53,7 +53,7 @@ module.exports = {
 
       <view class="jd-goods-card" wx:for="{{goodsRecommend}}" wx:key="id" bindtap="toDetailsTap" data-id="{{item.id}}" data-supplytype="{{item.supplyType}}" data-yyid="{{item.yyId}}">
         <view class="jd-goods-img-wrap">
-          <image src="{{item.pic}}" mode="aspectFill" lazy-load="true" />
+          <image src="{{item.pic}}" mode="aspectFill" lazy-load="true" data-url="{{ item.pic }}" />
         </view>
         <view class="jd-goods-info">
           <view class="jd-goods-name">{{item.name}}</view>
@@ -79,7 +79,7 @@ module.exports = {
   <view class="jd-goods-grid">
     <view class="jd-goods-card" wx:for="{{goods}}" wx:key="id" bindtap="toDetailsTap" data-id="{{item.id}}" data-supplytype="{{item.supplyType}}" data-yyid="{{item.yyId}}">
       <view class="jd-goods-img-wrap">
-        <image src="{{item.pic}}" mode="aspectFill" lazy-load="true" />
+        <image src="{{item.pic}}" mode="aspectFill" lazy-load="true" data-url="{{ item.pic }}" />
       </view>
 
       <view class="jd-goods-info">
