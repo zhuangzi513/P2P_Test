@@ -11,7 +11,7 @@ exports.main = async (event, context) => {
   const value = event.value;
   const orderDetail = event.orderDetail;
 
-  console.log('event:',event)
+  console.log('orderId:',orderId)
   if (!orderId) {
     return {
       success: false,
@@ -23,9 +23,10 @@ exports.main = async (event, context) => {
     if (orderDetail) {
       const updateData = orderDetail;
       console.log('updateData', updateData)
-      const record = await db.collection('orders_info').where({order_id: orderId}).get();
+      const record = await db.collection('orders_info').where({order_id: Number(orderId)}).get();
+      console.log('record', record) 
       if (record.data && record.data.length > 0) {
-        await db.collection('orders_info').where({order_id: orderId}).update({
+        await db.collection('orders_info').where({order_id: Number(orderId)}).update({
           data: updateData
         });
         return {

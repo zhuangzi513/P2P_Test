@@ -11,7 +11,7 @@ exports.main = async (event, context) => {
   
   try {
     console.log(new Date())
-    let orderRecord = await ordersCollection.where({order_id:orderID}).get();
+    let orderRecord = await ordersCollection.where({order_id:Number(orderID)}).get();
     console.log('cloud getOrderInfo :', orderRecord)
     return {
       code: 0,

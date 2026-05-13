@@ -12,7 +12,7 @@ exports.main = async (event, context) => {
     console.log('getGoodsInfo query goodsID:', goodsID, typeof goodsID);
     // 同时尝试字符串和数字类型匹配
     let goodsRecord = await goodsCollection.where({
-      goods_id: Number(goodsID) || String(goodsID)
+      goods_id: Number(goodsID)
     }).get();
     console.log('goodsRecord:', JSON.stringify(goodsRecord.data));
     return {
