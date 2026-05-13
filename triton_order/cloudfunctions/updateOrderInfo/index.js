@@ -16,13 +16,12 @@ exports.main = async (event, context) => {
   }
 
   try {
-    // 支持整体更新 orderDetail 对象
     if (orderDetail) {
-      // 移除 _id 字段，防止更新时报错
       const { _id, ...updateData } = orderDetail;
+      console.log('updateData', updateData)
       const record = await db.collection('orders_info').where({order_id: orderID}).get();
       if (record.data && record.data.length > 0) {
-        await db.collection('orders_info').doc(record.data[0]._id).update({
+        await db.collection('orders_info').where({order_id: orderID}).update({
           data: updateData
         });
         return {

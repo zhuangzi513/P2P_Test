@@ -153,8 +153,16 @@ Page({
         this.updateOrderData();
       }
     },
+    navigateToGoods(e) {
+      const goodsId = e.currentTarget.dataset.id;
+      if (goodsId) {
+        wx.navigateTo({
+          url: '/pages/goods-details/index?id=' + goodsId
+        });
+      }
+    },
     previewImage(e) {
-      const urls = this.data.imageList.map(i => i.url);
+      const urls = this.data.imageList ? this.data.imageList.map(i => i.url) : [e.currentTarget.dataset.url];
       wx.previewImage({ current: e.currentTarget.dataset.url, urls });
     },
 

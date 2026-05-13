@@ -1,15 +1,21 @@
-<view class="container">
+<view class="page-container">
+  <!-- 状态卡片 -->
   <view class="status-card">
     <view class="status-header">
-      <view class="status-info">
-        <view class="status-title">{{orderNextStep}}</view>
-        <view class="order-number-text">ID: {{orderDetail.order_id || '加载中...'}}</view>
+      <view class="status-badge {{orderDetail.orderStatus < 0 ? 'warning' : orderDetail.orderStatus >= 9 ? 'success' : 'active'}}">
+        {{orderDetail.orderStatus < 0 ? '待确认' : orderDetail.orderStatus >= 9 ? '已完成' : '进行中'}}
       </view>
+      <view class="status-title">{{orderNextStep}}</view>
+      <view class="order-number">订单ID: {{orderDetail.order_id || '加载中...'}}</view>
     </view>
   </view>
 
-  <view class="section">
-      <view class="section-title">GOODS INFO</view>
+  <!-- 商品信息 -->
+  <view class="section-block">
+    <view class="section-header">
+      <view class="section-title">商品信息</view>
+    </view>
+    <view class="card goods-card">
       <wxs module="goodsDetailPage">
       module.exports = {
         url : function(goodsId) {
@@ -17,71 +23,108 @@
         }
       }
       </wxs>
-      <view class="goods-card">
-        <block>
-          <van-card
-            price="{{goodInfo.price}}"
-            desc ="{{goodInfo.description}}"
-            title="{{goodInfo.goodsName}}"
-            thumb="{{goodInfo.pic}}"
-            thumb-link="{{ goodsDetailPage.url(goodInfo.goodsID) }}"
-            centered
-          />
-        </block>
+      <view class="goods-content" bindtap="navigateToGoods" data-id="{{goodInfo.goodsID}}">
+        <image class="goods-thumb" src="{{goodInfo.pic}}" mode="aspectFill" />
+        <view class="goods-info">
+          <view class="goods-name">{{goodInfo.goodsName}}</view>
+          <view class="goods-desc">{{goodInfo.description}}</view>
+          <view class="goods-price">¥{{goodInfo.price}}</view>
+        </view>
+        <view class="goods-arrow">›</view>
       </view>
-  </view>
-
-  <view class="container">
-    <view class="section">
-      <view class="section-title">PRICE OFFERED</view>
-      <input class="input" type="digit" placeholder="INPUT PRICE" value="{{form.price}}" disabled="{{isBuyer && (orderDetail.orderStatus > -1)}}" bindinput="onPriceInput" />
-    </view>
-    <view class="section" wx:if="{{isSaler}}">
-      <view class="section-title">ADDRESS SENDER</view>
-      <input class="input" placeholder="INPUT ADDR" value="{{orderDetail.senderAddr}}" disabled="{{!isSaler}}" bindinput="onSenderAddrInput" maxlength="200" auto-height />
-    </view>
-    <view class="section" wx:if="{{isBuyer}}">
-      <view class="section-title">ADDRESS RECVER</view>
-      <input class="input" placeholder="INPUT ADDR" value="{{orderDetail.recverAddr}}" disabled="{{!isBuyer}}" bindinput="onRecverAddrInput" maxlength="200" auto-height />
-    </view>
-    <view class="section" wx:if="{{isSaler}}">
-      <view class="section-title">POST0 ID</view>
-      <input class="input" placeholder="POST0 ID" value="{{orderDetail.postID0}}" disabled="{{!isSaler}}" bindinput="onPostIDInput" maxlength="200" auto-height />
-    </view>
-    <view class="section" wx:if="{{isBuyer}}">
-      <view class="section-title">POST1 ID</view>
-      <input class="input" placeholder="POST1 ID" value="{{orderDetail.postID1}}" disabled="{{!isBuyer}}" bindinput="onPostIDInput" maxlength="200" auto-height />
     </view>
   </view>
 
-  <view class="section" wx:if="{{isSaler||isBuyer}}">
-    <view class="section-title">PAYMENT</view>
-    <view class="media-item" wx:if="{{isBuyer && (orderDetail.orderStatus <= 1)}}">
-      <view class="add-btn" disabled="{{payment}}" bindtap="addImage">+</view>
+  <!-- 订单信息 -->
+  <view class="section-block">
+    <view class="section-header">
+      <view class="section-title">订单信息</view>
     </view>
-    <view class="media-item" wx:else>
-      <image class="preview-image" src="{{payment.url}}" mode="aspectFill" bindtap="previewImage" data-url="{{payment.url}}" />
+    <view class="card info-card">
+      <!-- 价格 -->
+      <view class="info-row">
+        <view class="info-label">出价金额</view>
+        <view class="info-value">
+          <input class="input-field" type="digit" placeholder="输入价格" value="{{form.price}}" disabled="{{isBuyer && (orderDetail.orderStatus > -1)}}" bindinput="onPriceInput" />
+        </view>
+      </view>
+
+      <!-- 发件人地址 -->
+      <view class="info-row" wx:if="{{isSaler}}">
+        <view class="info-label">发货地址</view>
+        <view class="info-value">
+          <input class="input-field" placeholder="输入发货地址" value="{{orderDetail.senderAddr}}" disabled="{{!isSaler}}" bindinput="onSenderAddrInput" maxlength="200" />
+        </view>
+      </view>
+
+      <!-- 收件人地址 -->
+      <view class="info-row" wx:if="{{isBuyer}}">
+        <view class="info-label">收货地址</view>
+        <view class="info-value">
+          <input class="input-field" placeholder="输入收货地址" value="{{orderDetail.recverAddr}}" disabled="{{!isBuyer}}" bindinput="onRecverAddrInput" maxlength="200" />
+        </view>
+      </view>
+
+      <!-- 发货快递 -->
+      <view class="info-row" wx:if="{{isSaler && orderDetail.orderStatus >= 1}}">
+        <view class="info-label">发货快递</view>
+        <view class="info-value">
+          <input class="input-field" placeholder="输入快递单号" value="{{orderDetail.postID0}}" disabled="{{!isSaler}}" bindinput="onPostIDInput" maxlength="50" />
+        </view>
+      </view>
+
+      <!-- 收货快递 -->
+      <view class="info-row" wx:if="{{isBuyer && orderDetail.orderStatus >= 11}}">
+        <view class="info-label">收货快递</view>
+        <view class="info-value">
+          <input class="input-field" placeholder="输入快递单号" value="{{orderDetail.postID1}}" disabled="{{!isBuyer}}" bindinput="onPostIDInput" maxlength="50" />
+        </view>
+      </view>
     </view>
   </view>
-  <view class="button-group">
-    <button class="action-btn primary-btn" disabled="{{updatingDisabled}}"  bind:tap="nextStep">  {{orderNextStep}}</button>
-    <button class="action-btn primary-btn" disabled="{{cancelIsDisabled}}"  bind:tap="cancelOrder">CANCEL</button>
+
+  <!-- 支付凭证 -->
+  <view class="section-block" wx:if="{{isSaler||isBuyer}}">
+    <view class="section-header">
+      <view class="section-title">支付凭证</view>
+      <view class="section-subtitle" wx:if="{{orderDetail.orderStatus <= 1 && isBuyer}}">点击添加付款截图</view>
+    </view>
+    <view class="card">
+      <view class="payment-area">
+        <view class="add-btn" wx:if="{{isBuyer && (orderDetail.orderStatus <= 1)}}" bindtap="addImage">+</view>
+        <view class="preview-container" wx:elif="{{payment.url}}">
+          <image class="preview-image" src="{{payment.url}}" mode="aspectFill" bindtap="previewImage" data-url="{{payment.url}}" />
+        </view>
+        <view class="payment-placeholder" wx:else>
+          <text class="placeholder-text">暂无支付凭证</text>
+        </view>
+      </view>
+    </view>
   </view>
 
+  <!-- 操作按钮 -->
+  <view class="action-area">
+    <button class="btn btn-primary" disabled="{{updatingDisabled}}" bind:tap="nextStep">
+      {{orderNextStep}}
+    </button>
+    <button class="btn btn-outline" disabled="{{cancelIsDisabled}}" bind:tap="cancelOrder">
+      取消订单
+    </button>
+  </view>
 
-  <view wx:if="{{ orderDetail.logs && orderDetail.logs.length > 0 }}" class="card-section">
-    <view class="card-title">
-      <view class="title-line"></view>
-      <text>ORDER RECORD</text>
+  <!-- 订单记录 -->
+  <view class="section-block" wx:if="{{orderDetail.logs && orderDetail.logs.length > 0}}">
+    <view class="section-header">
+      <view class="section-title">订单记录</view>
     </view>
-    <view class="logs-card">
+    <view class="card timeline-card">
       <view class="timeline">
-        <view class="timeline-item" wx:for="{{ orderDetail.logs }}" wx:key="id">
+        <view class="timeline-item" wx:for="{{orderDetail.logs}}" wx:key="id">
           <view class="timeline-dot"></view>
-          <view class="timeline-line" wx:if="{{ index < orderDetail.logs.length - 1 }}"></view>
+          <view class="timeline-line" wx:if="{{index < orderDetail.logs.length - 1}}"></view>
           <view class="timeline-content">
-            <view class="log-operation">{{ item.typeStr }}</view>
-            <view class="log-time">{{ item.dateAdd }}</view>
+            <view class="log-operation">{{item.typeStr}}</view>
+            <view class="log-time">{{item.dateAdd}}</view>
           </view>
         </view>
       </view>

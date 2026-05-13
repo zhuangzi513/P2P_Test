@@ -86,7 +86,7 @@ Page({
       }).then(res => {
         if (res && res.orderId) {
 	  wx.navigateTo({
-            url: '/pages/orders/order-type0-details?id=' + res.orderId,
+            url: '/pages/orders/order-type0-details?is_new=true&banker_id=' + this.data.userID + '&id=' + res.orderId,
           });
         }
       }).catch(err => {

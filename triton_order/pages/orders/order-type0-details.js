@@ -4,7 +4,9 @@ const UPLOAD = require('../../utils/upload.js');
 
 Page({
     data:{
+      isNewOrder:false,
       orderID:0,
+      bankerID:0,
       goodId:0,
       userID:0,
       submitting: false,
@@ -27,11 +29,16 @@ Page({
       orderDetail: {
       }
     },
-    onLoad:function(e){
+    onLoad:function(options){
       this.setData({
-        orderID: e.id,
+        orderID: options.id,
+        isNewOrder: (options.is_new == undefined) ? false : options.is_new,
+        bankerID: (options.banker_id == undefined) ? -1 : options.banker_id,
 	userID: wx.getStorageSync('userID'),
       })
+      console.log('orderID:', this.data.orderID)
+      console.log('isNewOrder:', this.data.isNewOrder)
+      console.log('bankerID:', this.data.bankerID)
     },
     onShow() {
       this.orderDetail().then(res => {
@@ -42,8 +49,20 @@ Page({
       if (!this.data.orderID) {
         return
       }
+
+      if (this.data.isNewOrder) {
+        this.setData({
+                orderNextStep: ORDER_STATUS.getStatusText0(ORDER_STATUS.ORDERSTATUS_ENUM0.CREATED),
+                isOwner: true, //any one see this page may be owner.
+                isBanker: (this.data.userID == this.data.bankerID),
+                canSee : true 
+        });
+	console.log('new order, nothing to be shown')
+	return;
+      }
+
       wx.showLoading({ title: '' })
-      const res = await CLOUDFUNC.callCloudFunction('getOrderInfo', {orderID:this.data.orderID - 1})
+      const res = await CLOUDFUNC.callCloudFunction('getOrderInfo', {orderID:this.data.orderID})
       wx.hideLoading()
       if (!res || !res.orderInfo || res.orderInfo.length == 0) {
         wx.showModal({
@@ -53,9 +72,12 @@ Page({
         return
       }
       this.setData({ orderDetail: res.orderInfo[0]})
+      this.setData({ bankerID: res.orderInfo[0].banker_id})
+      this.setData({ ownerID: res.orderInfo[0].owner_id})
+      this.setData({ goodsID: res.orderInfo[0].goods_id})
       console.log('this order id:',this.data.orderDetail.order_id)
 
-      let _isOwner  = (this.data.userID == this.data.orderDetail.owner_id) || (this.data.orderDetail.order_status == -1);
+      let _isOwner  = (this.data.userID == this.data.orderDetail.owner_id)
       let _isBanker = (this.data.userID == this.data.orderDetail.banker_id);
       let _canSee   = (_isOwner || _isBanker);
       this.setData({
@@ -68,38 +90,40 @@ Page({
     updateButtonStatus() {
       let opEnabled = false;
       let isCanceler = (this.data.userID == this.data.orderDetail.canceler_id);
-      let curOrderStatus = this.data.orderDetail.order_status;
+      let curOrderStatus = (this.data.isNewOrder == undefined) ? this.data.orderDetail.order_status : ORDER_STATUS.ORDERSTATUS_ENUM0.CREATED;
+      console.log('curOrderStatus:', curOrderStatus)
       let needSenderAddr = false;
       let needRecverAddr = false;
       let needPostID0 = false;
       let needPostID1 = false;
-      if (curOrderStatus == -1) {
+      if (curOrderStatus == ORDER_STATUS.ORDERSTATUS_ENUM0.CREATED) {
         //recver firstly see, and then confirm
         opEnabled = this.data.isOwner;
-      } else if (curOrderStatus == 0) {
+      } else if (curOrderStatus == ORDER_STATUS.ORDERSTATUS_ENUM0.INIT) {
         opEnabled = this.data.isBanker;
         needRecverAddr = true;
-      } else if (curOrderStatus == 1) {
+      } else if (curOrderStatus == ORDER_STATUS.ORDERSTATUS_ENUM0.CONFIRM) {
         //sender can send it to  recver
         opEnabled = this.data.isOwner;
         needSenderAddr = true;
         needPostID0 = true;
-      } else if (curOrderStatus >=2 && curOrderStatus < 8) {
+      } else if (curOrderStatus >= ORDER_STATUS.ORDERSTATUS_ENUM0.SEND0
+                 && curOrderStatus < ORDER_STATUS.ORDERSTATUS_ENUM0.DONE) {
         //recver got it, and then sell it, and pay to sender
         opEnabled = this.data.isBanker;
-      } else if (curOrderStatus == 8) {
+      } else if (curOrderStatus == ORDER_STATUS.ORDERSTATUS_ENUM0.DONE) {
         //sender confirm got payed
         opEnabled = this.data.isOwner;
-      } else if (curOrderStatus == 9) {
+      } else if (curOrderStatus == ORDER_STATUS.ORDERSTATUS_ENUM0.CANCELLED) {
         //done
         opEnabled = false;
-      } else if (curOrderStatus == 10) {
+      } else if (curOrderStatus == ORDER_STATUS.ORDERSTATUS_ENUM0.SEND1) {
         //any time, cancel should be confirmed by eachother
         opEnabled = !isCanceler;
-      } else if (curOrderStatus == 11) {
+      } else if (curOrderStatus == ORDER_STATUS.ORDERSTATUS_ENUM0.RECVED1) {
         opEnabled = this.data.isBanker;
         needPostID1 = true;
-      } else if (curOrderStatus == 12) {
+      } else if (curOrderStatus == ORDER_STATUS.ORDERSTATUS_ENUM0.CLOSE) {
         opEnabled = this.data.isOwner;
       } else {
         opEnabled = false;
@@ -132,8 +156,10 @@ Page({
       try {
         const res = await CLOUDFUNC.callCloudFunction('updateOrderInfo',
                 {
-		orderID: this.data.orderDetail.order_id,
-          	orderDetail: this.data.orderDetail
+                  owner_id: this.data.userID,
+		  goods_id: this.data.goodsId,
+		  order_status: this.data.orderDetail.order_status,
+		  order_details : this.data.orderDetail
                 });
       } catch (err) {
         wx.showToast({ title: 'updateOrderInfo INTERNET ERROR', icon: 'none' });
@@ -145,11 +171,21 @@ Page({
       this.updateOrderData();
     },
     nextStep()  {
-      if (this.data.isOwner && this.data.orderDetail.order_status == -1) {
-        this.submitGood();
+      if (this.data.isNewOrder) {
+	if (this.data.bankerID > 0) {
+          this.setData({ 'orderDetail.banker_id': this.data.bankerID });
+          this.setData({ 'orderDetail.order_id': this.data.orderID});
+          this.submitGood();
+	} else {
+	  wx.showToast({title:'NEW ORDER WITHOUT bankerID', icon:'none'});
+	  return;
+	}
       }
       this.checkOrder();
-      this.setData({ 'orderDetail.order_status': this.data.orderDetail.order_status + 1 });
+      if (this.data.isNewOrder)
+        this.setData({ 'orderDetail.order_status': ORDER_STATUS.ORDERSTATUS_ENUM0.INIT });
+      else
+        this.setData({ 'orderDetail.order_status': this.data.orderDetail.order_status + 1 });
       this.updateOrderData();
     },
     previewImage(e) {
@@ -205,8 +241,8 @@ Page({
       try {
         const res = await CLOUDFUNC.callCloudFunction('newGoods',
                 {
-                  ownerId: wx.getStorageSync('userID'),
-                  bankerId: this.data.goodInfo.bankID, 
+                  ownerId: this.data.userID,
+                  bankerId: this.data.bankerID, 
                   goodsInfo: this.data.goodInfo
                 });
         console.log('new Goods returned')
@@ -214,6 +250,7 @@ Page({
           wx.showToast({ title: 'FAIL TO CREATE GOODS', icon: 'none' });
           return;
         }
+	this.setData({goodsID : res.goodsID});
         wx.showToast({ title: 'GOODS CREATED', icon: 'none' });
         setTimeout(() => {
           wx.redirectTo({
@@ -228,7 +265,7 @@ Page({
     submitGood() {
       console.log('submitGood')
       this.data.goodInfo.ownerID = wx.getStorageSync("userID");
-      this.data.goodInfo.bankID = this.data.orderDetail.banker_id;
+      this.data.goodInfo.bankID = this.data.bankerID;
       if (!this.data.goodInfo.name.trim()) return wx.showToast({ title: 'NAME NEEDED', icon: 'none' });
       if (!this.data.goodInfo.color.trim()) return wx.showToast({ title: 'COLOR NEEDED', icon: 'none' });
       if (!this.data.goodInfo.sizeX.trim()) return wx.showToast({ title: 'SHAPEX NEEDED', icon: 'none' });
