@@ -51,7 +51,10 @@ exports.main = async (event, context) => {
     });
     return {
       code: 0,
-      goodsID: newGoodsID
+      data: {
+        code: 0,
+        goodsID: newGoodsID
+      }
     }
   } catch (err) {
     return {

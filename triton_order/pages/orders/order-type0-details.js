@@ -35,6 +35,7 @@ Page({
         isNewOrder: (options.is_new == undefined) ? false : options.is_new,
         bankerID: (options.banker_id == undefined) ? -1 : options.banker_id,
 	userID: wx.getStorageSync('userID'),
+	ownerID: wx.getStorageSync('userID'),
       })
       console.log('orderID:', this.data.orderID)
       console.log('isNewOrder:', this.data.isNewOrder)
@@ -157,7 +158,7 @@ Page({
         console.log('updateOrderData, owner_id, goods_id, order_status', this.data.userID, this.data.goodsID, this.data.orderDetail.order_status)
         const res = await CLOUDFUNC.callCloudFunction('updateOrderInfo',
                 {
-		  orderID: this.data.userID,
+		  orderID: this.data.orderID,
 		  orderDetail: {
                     owner_id: this.data.userID,
 		    goods_id: this.data.goodsID,
@@ -165,32 +166,106 @@ Page({
 		    order_details : this.data.orderDetail
 		  }
                 });
+        return res;
       } catch (err) {
         wx.showToast({ title: 'updateOrderInfo INTERNET ERROR', icon: 'none' });
         console.error(err);
+        throw err;
       }
     },
     cancelOrder()  {
       this.setData({ 'orderDetail.order_status': ORDER_STATUS.ORDERSTATUS_ENUM0.CANCELLED }); 
-      this.updateOrderData();
+      this.updateOrderData().catch(err => console.error('cancelOrder failed:', err));
     },
-    nextStep()  {
+    async nextStep()  {
+      let goodsID = null;  // 用局部变量存储，避免依赖 setData 异步更新
+      
       if (this.data.isNewOrder) {
 	if (this.data.bankerID > 0) {
-          this.setData({ 'orderDetail.banker_id': this.data.bankerID });
-          this.setData({ 'orderDetail.order_id': this.data.orderID});
-          this.submitGood();
+          this.setData({ 
+            'orderDetail.banker_id': this.data.bankerID,
+            'orderDetail.order_id': this.data.orderID
+          });
+          
+          try {
+            // ✅ submitGood 返回 { goodsID, _setDataDone } 对象
+            const result = await this.submitGood();
+            if (!result || !result.goodsID) {
+              wx.showToast({ title: 'GOODS NOT CREATED', icon: 'none' });
+              return;
+            }
+            // ✅ 使用返回的 goodsID，不依赖 this.data.goodsID
+            goodsID = result.goodsID;
+            console.log('submitGood returned goodsID:', goodsID);
+          } catch (err) {
+            console.error('submitGood failed:', err);
+            return;
+          }
 	} else {
 	  wx.showToast({title:'NEW ORDER WITHOUT bankerID', icon:'none'});
 	  return;
 	}
       }
-      this.checkOrder();
-      if (this.data.isNewOrder)
+      
+      // 验证订单数据（传入 goodsID）
+      const validation = this.checkOrder(goodsID);
+      if (!validation) return;
+      
+      if (this.data.isNewOrder) {
         this.setData({ 'orderDetail.order_status': ORDER_STATUS.ORDERSTATUS_ENUM0.INIT });
-      else
+      } else {
         this.setData({ 'orderDetail.order_status': this.data.orderDetail.order_status + 1 });
-      this.updateOrderData();
+      }
+      
+      // 等待订单更新完成
+      await this.updateOrderData();
+      
+      // ✅ 使用局部变量 goodsID，而不是 this.data.goodsID
+      setTimeout(() => {
+        const redirectID = goodsID || this.data.goodsID;
+        wx.redirectTo({
+          url: '/pages/goods-details/index?id=' + redirectID,
+        });
+      }, 1000);
+    },
+    /**
+     * 提交商品 - 返回 Promise，结果包含 goodsID
+     * 避免依赖 setData 异步更新后的 this.data.goodsID
+     */
+    async submitGood() {
+      console.log('submitGood')
+      this.data.goodInfo.ownerID = wx.getStorageSync("userID");
+      this.data.goodInfo.bankID = this.data.bankerID;
+      
+      // 验证
+      if (!this.data.goodInfo.name.trim()) {
+        wx.showToast({ title: 'NAME NEEDED', icon: 'none' });
+        throw new Error('NAME NEEDED');
+      }
+      if (!this.data.goodInfo.color.trim()) {
+        wx.showToast({ title: 'COLOR NEEDED', icon: 'none' });
+        throw new Error('COLOR NEEDED');
+      }
+      if (!this.data.goodInfo.sizeX.trim()) {
+        wx.showToast({ title: 'SHAPEX NEEDED', icon: 'none' });
+        throw new Error('SHAPEX NEEDED');
+      }
+      if (!this.data.goodInfo.sizeY.trim()) {
+        wx.showToast({ title: 'SHAPEY NEEDED', icon: 'none' });
+        throw new Error('SHAPEY NEEDED');
+      }
+      if (!this.data.goodInfo.sizeZ.trim()) {
+        wx.showToast({ title: 'SHAPEZ NEEDED', icon: 'none' });
+        throw new Error('SHAPEZ NEEDED');
+      }
+      const priceNum = parseFloat(this.data.goodInfo.price);
+      if (isNaN(priceNum)) {
+        wx.showToast({ title: 'PRICE NEEDED', icon: 'none' });
+        throw new Error('PRICE NEEDED');
+      }
+      
+      // ✅ 等待 newGoods 完成并获取结果
+      return await this.newGoods();
     },
     previewImage(e) {
       const urls = this.data.imageList.map(i => i.url);
@@ -240,64 +315,91 @@ Page({
       list.splice(e.currentTarget.dataset.index, 1);
       this.setData({ 'goodInfo.videoList': list });
     },
-
-    async newGoods() {
-      try {
-        const res = await CLOUDFUNC.callCloudFunction('newGoods',
-                {
-                  ownerId: this.data.userID,
-                  bankerId: this.data.bankerID, 
-                  goodsInfo: this.data.goodInfo
-                });
-        console.log('new Goods returned')
+    /**
+     * 创建商品 - 返回 Promise，包含 goodsID
+     * ✅ 核心：返回结果对象而不是依赖 setData 后的 this.data
+     */
+    newGoods() {
+      return CLOUDFUNC.callCloudFunction('newGoods', {
+        ownerId: this.data.userID,
+        bankerId: this.data.bankerID,
+        goodsInfo: this.data.goodInfo
+      }).then(res => {
+        console.log('new Goods returned:', res);
         if (!res || !res.goodsID) {
           wx.showToast({ title: 'FAIL TO CREATE GOODS', icon: 'none' });
-          return;
+          throw new Error('FAIL TO CREATE GOODS');
         }
-	this.setData({goodsID : res.goodsID});
-        wx.showToast({ title: 'GOODS CREATED', icon: 'none' });
-        setTimeout(() => {
-          wx.redirectTo({
-            url: '/pages/goods-details/index?id=' + res.goodsID
-          });
-        }, 1000);
-      } catch (err) {
+        
+        // ✅ 同时更新 setData（用于 UI）和返回结果（用于逻辑）
+        const goodsID = res.goodsID;
+        const setDataDone = new Promise(resolve => {
+          this.setData({ goodsID: goodsID }, resolve);
+        });
+        
+        // 返回对象，包含 goodsID 和 setData 完成 Promise
+        return { 
+          goodsID: goodsID,
+          _setDataDone: setDataDone
+        };
+      }).catch(err => {
         wx.showToast({ title: 'newGoods INTERNET ERROR', icon: 'none' });
         console.error(err);
+        throw err;
+      });
+    },
+    /**
+     * 验证订单数据
+     * @param {number|null} passedGoodsID - 从 newGoods 返回的 goodsID，避免依赖 setData 异步
+     */
+    checkOrder(passedGoodsID) {
+      // ✅ 优先使用传入的 goodsID，新订单模式下不依赖 setData 异步更新
+      let _goodsID  = this.data.isNewOrder 
+        ? (passedGoodsID || this.data.goodsID)  // 优先用传入值
+        : this.data.orderDetail.goods_id;
+      let _ownerID  = this.data.isNewOrder ? this.data.ownerID : this.data.orderDetail.owner_id;
+      let _bankerID = this.data.isNewOrder ? this.data.bankerID : this.data.orderDetail.banker_id;
+      if (!_goodsID) {
+        wx.showToast({ title: 'EMPTY GOODS', icon: 'none' });
+	console.log('checkOrder, goodsid', _goodsID )
+        return false;
       }
-    },
-    submitGood() {
-      console.log('submitGood')
-      this.data.goodInfo.ownerID = wx.getStorageSync("userID");
-      this.data.goodInfo.bankID = this.data.bankerID;
-      if (!this.data.goodInfo.name.trim()) return wx.showToast({ title: 'NAME NEEDED', icon: 'none' });
-      if (!this.data.goodInfo.color.trim()) return wx.showToast({ title: 'COLOR NEEDED', icon: 'none' });
-      if (!this.data.goodInfo.sizeX.trim()) return wx.showToast({ title: 'SHAPEX NEEDED', icon: 'none' });
-      if (!this.data.goodInfo.sizeY.trim()) return wx.showToast({ title: 'SHAPEY NEEDED', icon: 'none' });
-      if (!this.data.goodInfo.sizeZ.trim()) return wx.showToast({ title: 'SHAPEZ NEEDED', icon: 'none' });
-      const priceNum = parseFloat(this.data.goodInfo.price);
-      if (isNaN(priceNum)) return wx.showToast({ title: 'PRICE NEEDED', icon: 'none' });
-      this.newGoods().then();
-    },
-    checkOrder() {
-      if (!this.data.orderDetail.goods_id) return wx.showToast({ title: 'EMPTY GOODS', icon: 'none' });
-      if (!this.data.orderDetail.owner_id) return wx.showToast({ title: 'EMPTY ownerID', icon: 'none' });
-      if (!this.data.orderDetail.banker_id) return wx.showToast({ title: 'EMPTY bankerID', icon: 'none' });
+      if (!_ownerID) {
+        wx.showToast({ title: 'EMPTY ownerID', icon: 'none' });
+	console.log('checkOrder ownerid', _ownerID )
+        return false;
+      }
+      if (!_bankerID) {
+        wx.showToast({ title: 'EMPTY bankerID', icon: 'none' });
+	console.log('checkOrder bankerid', _bankerID )
+        return false;
+      }
 
       if (this.data.senderAddrNeeded) {
-        if (!this.data.orderDetail.senderAddr || !this.data.orderDetail.senderAddr.trim())
-	  return wx.showToast({ title: 'SENDERADDR NEEDED', icon: 'none' });
+        if (!this.data.orderDetail.senderAddr || !this.data.orderDetail.senderAddr.trim()) {
+          wx.showToast({ title: 'SENDERADDR NEEDED', icon: 'none' });
+          return false;
+        }
       }
       if (this.data.recverAddrNeeded) {
-        if (!this.data.orderDetail.recverAddr || !this.data.orderDetail.recverAddr.trim())
-	  return wx.showToast({ title: 'RECVERADDR NEEDED', icon: 'none' });
+        if (!this.data.orderDetail.recverAddr || !this.data.orderDetail.recverAddr.trim()) {
+          wx.showToast({ title: 'RECVERADDR NEEDED', icon: 'none' });
+          return false;
+        }
       }
 
       if (this.data.orderPostID0Needed) {
-        if (!this.data.orderDetail.postID0 || !this.data.orderDetail.postID0.trim()) return wx.showToast({title: "EMPTY POSTID", icon: 'none'});
+        if (!this.data.orderDetail.postID0 || !this.data.orderDetail.postID0.trim()) {
+          wx.showToast({ title: "EMPTY POSTID", icon: 'none' });
+          return false;
+        }
       } else if (this.data.orderPostID1Needed) {
-        if (!this.data.orderDetail.postID1 || !this.data.orderDetail.postID1.trim()) return wx.showToast({title: "EMPTY POSTID", icon: 'none'});
+        if (!this.data.orderDetail.postID1 || !this.data.orderDetail.postID1.trim()) {
+          wx.showToast({ title: "EMPTY POSTID", icon: 'none' });
+          return false;
+        }
       }
+      return true;
     },
     onShareAppMessage: function() {
       return {
