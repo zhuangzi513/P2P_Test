@@ -26,20 +26,25 @@ Page({
         imageList: [],
         videoList: [],
       },
-      orderDetail: {
+      orderDetails: {
       }
     },
     onLoad:function(options){
+      // URL 参数都是字符串，orderID 保持字符串以便云函数处理
+      const orderID = options.id ? String(options.id) : 0;
+      const bankerID = options.banker_id ? String(options.banker_id) : -1;
+      const isNewOrder = (options.is_new == undefined) ? false : options.is_new;
+      
+      console.log('onLoad options:', options);
+      console.log('orderID:', orderID, 'bankerID:', bankerID, 'isNewOrder:', isNewOrder);
+
       this.setData({
-        orderID: options.id,
-        isNewOrder: (options.is_new == undefined) ? false : options.is_new,
-        bankerID: (options.banker_id == undefined) ? -1 : options.banker_id,
-	userID: wx.getStorageSync('userID'),
-	ownerID: wx.getStorageSync('userID'),
+        orderID: orderID,
+        isNewOrder: isNewOrder,
+        bankerID: bankerID,
+        userID: wx.getStorageSync('userID'),
+        ownerID: wx.getStorageSync('userID'),
       })
-      console.log('orderID:', this.data.orderID)
-      console.log('isNewOrder:', this.data.isNewOrder)
-      console.log('bankerID:', this.data.bankerID)
     },
     onShow() {
       this.orderDetail().then(res => {
@@ -48,7 +53,8 @@ Page({
     },
     async orderDetail() {
       if (!this.data.orderID) {
-        return
+        console.log('orderID 为空，无法获取订单详情');
+        return;
       }
 
       if (this.data.isNewOrder) {
@@ -58,31 +64,92 @@ Page({
                 isBanker: (this.data.userID == this.data.bankerID),
                 canSee : true 
         });
-	console.log('new order, nothing to be shown')
+	console.log('new order, nothing to be shown');
 	return;
       }
 
-      wx.showLoading({ title: '' })
-      const res = await CLOUDFUNC.callCloudFunction('getOrderInfo', {orderID:this.data.orderID})
-      wx.hideLoading()
-      if (!res || !res.orderInfo || res.orderInfo.length == 0) {
-        wx.showModal({
-          content: '订单信息获取失败',
-          showCancel: false
-        })
-        return
+      wx.showLoading({ title: '加载中...' });
+      console.log('开始获取订单详情, orderID:', this.data.orderID, typeof this.data.orderID);
+      
+      try {
+        const res = await CLOUDFUNC.callCloudFunction('getOrderInfo', {orderID: this.data.orderID});
+        console.log('getOrderInfo 返回结果:', JSON.stringify(res));
+        
+        wx.hideLoading();
+        
+        if (!res) {
+          console.log('res 为空');
+          wx.showModal({ content: '网络错误，请重试', showCancel: false });
+          return;
+        }
+        
+        if (!res.orderInfo || res.orderInfo.length == 0) {
+          console.log('orderInfo 为空或长度为0');
+          wx.showModal({ content: '订单不存在', showCancel: false });
+          return;
+        }
+        
+        console.log('获取到订单数据:', res.orderInfo[0]);
+        this.setData({ orderDetails: res.orderInfo[0].order_details });
+        this.setData({ bankerID: res.orderInfo[0].banker_id });
+        this.setData({ ownerID: res.orderInfo[0].owner_id });
+        this.setData({ goodsID: res.orderInfo[0].goods_id });
+        console.log('this order id:', this.data.orderDetails.order_id);
+        
+        // 加载商品信息
+        if (res.orderInfo[0].goods_id) {
+          this.loadGoodsInfo(res.orderInfo[0].goods_id);
+        }
+      } catch (err) {
+        wx.hideLoading();
+        console.error('获取订单详情失败:', err);
+        wx.showModal({ content: '获取订单失败: ' + (err.message || err), showCancel: false });
       }
-      this.setData({ orderDetail: res.orderInfo[0]})
-      this.setData({ bankerID: res.orderInfo[0].banker_id})
-      this.setData({ ownerID: res.orderInfo[0].owner_id})
-      this.setData({ goodsID: res.orderInfo[0].goods_id})
-      console.log('this order id:',this.data.orderDetail.order_id)
-
-      let _isOwner  = (this.data.userID == this.data.orderDetail.owner_id)
-      let _isBanker = (this.data.userID == this.data.orderDetail.banker_id);
+    },
+    async loadGoodsInfo(goodsID) {
+      if (!goodsID) {
+        console.log('goodsID 为空，无法获取商品信息');
+        return;
+      }
+      
+      console.log('开始获取商品信息, goodsID:', goodsID);
+      try {
+        const res = await CLOUDFUNC.callCloudFunction('getGoodsInfo', { goodsID: goodsID });
+        console.log('getGoodsInfo 返回结果:', JSON.stringify(res));
+        
+        // 处理返回数据结构 { code: 0, data: { goodsInfo: [...] } }
+        const goodsList = res.data?.goodsInfo || res.goodsInfo;
+        if (goodsList && goodsList.length > 0) {
+          const goods = goodsList[0].goods_info;
+          // 映射字段名：goodsName -> name, pic -> 第一张图片
+          const mappedGoodsInfo = {
+            ...goods,
+            name: goods.goodsName || goods.name || '',
+            price: goods.price || '',
+            color: goods.color || '',
+            sizeX: goods.sizeX || '',
+            sizeY: goods.sizeY || '',
+            sizeZ: goods.sizeZ || '',
+            description: goods.description || '',
+            imageList: goods.imageList || [],
+            videoList: goods.videoList || [],
+            pic: goods.pic || (goods.imageList && goods.imageList[0]?.url) || ''
+          };
+          this.setData({ goodInfo: mappedGoodsInfo });
+          console.log('获取到商品数据:', mappedGoodsInfo);
+        } else {
+          console.log('goodsInfo 为空');
+        }
+      } catch (err) {
+        console.error('获取商品信息失败:', err);
+      }
+    },
+    updateOrderViewStatus() {
+      let _isOwner  = (this.data.userID == this.data.orderDetails.owner_id)
+      let _isBanker = (this.data.userID == this.data.orderDetails.banker_id);
       let _canSee   = (_isOwner || _isBanker);
       this.setData({
-              orderNextStep: ORDER_STATUS.getStatusText0(this.data.orderDetail.order_status),
+              orderNextStep: ORDER_STATUS.getStatusText0(this.data.orderDetails.order_status),
               isOwner: _isOwner,
               isBanker: _isBanker,
               canSee : _canSee
@@ -90,8 +157,8 @@ Page({
     },
     updateButtonStatus() {
       let opEnabled = false;
-      let isCanceler = (this.data.userID == this.data.orderDetail.canceler_id);
-      let curOrderStatus = (this.data.isNewOrder == undefined) ? this.data.orderDetail.order_status : ORDER_STATUS.ORDERSTATUS_ENUM0.CREATED;
+      let isCanceler = (this.data.userID == this.data.orderDetails.canceler_id);
+      let curOrderStatus = (this.data.isNewOrder == undefined) ? this.data.orderDetails.order_status : ORDER_STATUS.ORDERSTATUS_ENUM0.CREATED;
       console.log('curOrderStatus:', curOrderStatus)
       let needSenderAddr = false;
       let needRecverAddr = false;
@@ -144,26 +211,26 @@ Page({
     onSizeInputZ(e) { this.setData({ 'goodInfo.sizeZ': e.detail.value }); },
     onPriceInput(e) { this.setData({ 'goodInfo.price': e.detail.value }); },
     onDescInput(e)  { this.setData({ 'goodInfo.description': e.detail.value }); },
-    onSenderAddrInput(e)  { this.setData({ 'orderDetail.senderAddr': e.detail.value }); },
-    onRecverAddrInput(e)  { this.setData({ 'orderDetail.recverAddr': e.detail.value }); },
+    onSenderAddrInput(e)  { this.setData({ 'orderDetails.senderAddr': e.detail.value }); },
+    onRecverAddrInput(e)  { this.setData({ 'orderDetails.recverAddr': e.detail.value }); },
     onPostIDInput(e)  {
       if (this.data.orderPostID0Needed) {
-        this.setData({ 'orderDetail.postID0': e.detail.value });
+        this.setData({ 'orderDetails.postID0': e.detail.value });
       } else if (this.data.orderPostID1Needed) {
-        this.setData({ 'orderDetail.postID1': e.detail.value });
+        this.setData({ 'orderDetails.postID1': e.detail.value });
       }
     },
     async updateOrderData() {
       try {
-        console.log('updateOrderData, owner_id, goods_id, order_status', this.data.userID, this.data.goodsID, this.data.orderDetail.order_status)
+        console.log('updateOrderData, owner_id, goods_id, order_status', this.data.userID, this.data.goodsID, this.data.orderDetails.order_status)
         const res = await CLOUDFUNC.callCloudFunction('updateOrderInfo',
                 {
 		  orderID: this.data.orderID,
 		  orderDetail: {
                     owner_id: this.data.userID,
 		    goods_id: this.data.goodsID,
-		    order_status: this.data.orderDetail.order_status,
-		    order_details : this.data.orderDetail
+		    order_status: this.data.orderDetails.order_status,
+		    order_details : this.data.orderDetails
 		  }
                 });
         return res;
@@ -174,7 +241,7 @@ Page({
       }
     },
     cancelOrder()  {
-      this.setData({ 'orderDetail.order_status': ORDER_STATUS.ORDERSTATUS_ENUM0.CANCELLED }); 
+      this.setData({ 'orderDetails.order_status': ORDER_STATUS.ORDERSTATUS_ENUM0.CANCELLED }); 
       this.updateOrderData().catch(err => console.error('cancelOrder failed:', err));
     },
     async nextStep()  {
@@ -183,8 +250,8 @@ Page({
       if (this.data.isNewOrder) {
 	if (this.data.bankerID > 0) {
           this.setData({ 
-            'orderDetail.banker_id': this.data.bankerID,
-            'orderDetail.order_id': this.data.orderID
+            'orderDetails.banker_id': this.data.bankerID,
+            'orderDetails.order_id': this.data.orderID
           });
           
           try {
@@ -212,9 +279,9 @@ Page({
       if (!validation) return;
       
       if (this.data.isNewOrder) {
-        this.setData({ 'orderDetail.order_status': ORDER_STATUS.ORDERSTATUS_ENUM0.INIT });
+        this.setData({ 'orderDetails.order_status': ORDER_STATUS.ORDERSTATUS_ENUM0.INIT });
       } else {
-        this.setData({ 'orderDetail.order_status': this.data.orderDetail.order_status + 1 });
+        this.setData({ 'orderDetails.order_status': this.data.orderDetails.order_status + 1 });
       }
       
       // 等待订单更新完成
@@ -356,9 +423,9 @@ Page({
       // ✅ 优先使用传入的 goodsID，新订单模式下不依赖 setData 异步更新
       let _goodsID  = this.data.isNewOrder 
         ? (passedGoodsID || this.data.goodsID)  // 优先用传入值
-        : this.data.orderDetail.goods_id;
-      let _ownerID  = this.data.isNewOrder ? this.data.ownerID : this.data.orderDetail.owner_id;
-      let _bankerID = this.data.isNewOrder ? this.data.bankerID : this.data.orderDetail.banker_id;
+        : this.data.orderDetails.goods_id;
+      let _ownerID  = this.data.isNewOrder ? this.data.ownerID : this.data.orderDetails.owner_id;
+      let _bankerID = this.data.isNewOrder ? this.data.bankerID : this.data.orderDetails.banker_id;
       if (!_goodsID) {
         wx.showToast({ title: 'EMPTY GOODS', icon: 'none' });
 	console.log('checkOrder, goodsid', _goodsID )
@@ -376,25 +443,25 @@ Page({
       }
 
       if (this.data.senderAddrNeeded) {
-        if (!this.data.orderDetail.senderAddr || !this.data.orderDetail.senderAddr.trim()) {
+        if (!this.data.orderDetails.senderAddr || !this.data.orderDetails.senderAddr.trim()) {
           wx.showToast({ title: 'SENDERADDR NEEDED', icon: 'none' });
           return false;
         }
       }
       if (this.data.recverAddrNeeded) {
-        if (!this.data.orderDetail.recverAddr || !this.data.orderDetail.recverAddr.trim()) {
+        if (!this.data.orderDetails.recverAddr || !this.data.orderDetails.recverAddr.trim()) {
           wx.showToast({ title: 'RECVERADDR NEEDED', icon: 'none' });
           return false;
         }
       }
 
       if (this.data.orderPostID0Needed) {
-        if (!this.data.orderDetail.postID0 || !this.data.orderDetail.postID0.trim()) {
+        if (!this.data.orderDetails.postID0 || !this.data.orderDetails.postID0.trim()) {
           wx.showToast({ title: "EMPTY POSTID", icon: 'none' });
           return false;
         }
       } else if (this.data.orderPostID1Needed) {
-        if (!this.data.orderDetail.postID1 || !this.data.orderDetail.postID1.trim()) {
+        if (!this.data.orderDetails.postID1 || !this.data.orderDetails.postID1.trim()) {
           wx.showToast({ title: "EMPTY POSTID", icon: 'none' });
           return false;
         }

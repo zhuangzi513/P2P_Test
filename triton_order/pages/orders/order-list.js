@@ -107,17 +107,28 @@ Page({
     }
   },
   goOrderDetail(e) {
-    const item = e.currentTarget.dataset.item
-    console.log('item:', item)
-    console.log('e:', e)
-    if (item.order_type == 0) {
-      wx.navigateTo({
-        url: '/pages/orders/order-type0-details?id=' + item.order_id,
-      })
-    } else if (item.order_type == 1) {
-      wx.navigateTo({
-        url: '/pages/orders/order-type1-details?id=' + item.order_id,
-      })
+    const item = e.currentTarget.dataset.item;
+    const index = e.currentTarget.dataset.index;
+    
+    console.log('点击订单，index:', index, 'item:', JSON.stringify(item));
+    
+    // 兼容不同的字段名
+    const orderId = item.order_id || item.orderId || item.id;
+    const orderType = item.order_type !== undefined ? item.order_type : (item.orderType || 0);
+    
+    console.log('orderId:', orderId, 'orderType:', orderType);
+    
+    if (!orderId) {
+      wx.showToast({ title: 'ORDER ID EMPTY', icon: 'none' });
+      return;
     }
+    
+    // 根据 orderType 跳转，默认跳转到 type0
+    const url = orderType == 1 
+      ? '/pages/orders/order-type1-details?id=' + orderId
+      : '/pages/orders/order-type0-details?id=' + orderId;
+    
+    console.log('跳转URL:', url);
+    wx.navigateTo({ url });
   }
 })

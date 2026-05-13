@@ -21,7 +21,7 @@ exports.main = async (event, context) => {
 
   try {
     if (orderDetail) {
-      const { _id, ...updateData } = orderDetail;
+      const updateData = orderDetail;
       console.log('updateData', updateData)
       const record = await db.collection('orders_info').where({order_id: orderId}).get();
       if (record.data && record.data.length > 0) {
