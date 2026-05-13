@@ -7,7 +7,7 @@ Page({
       isNewOrder:false,
       orderID:0,
       bankerID:0,
-      goodId:0,
+      goodsID:0,
       userID:0,
       submitting: false,
       loading: true,
@@ -154,12 +154,16 @@ Page({
     },
     async updateOrderData() {
       try {
+        console.log('updateOrderData, owner_id, goods_id, order_status', this.data.userID, this.data.goodsID, this.data.orderDetail.order_status)
         const res = await CLOUDFUNC.callCloudFunction('updateOrderInfo',
                 {
-                  owner_id: this.data.userID,
-		  goods_id: this.data.goodsId,
-		  order_status: this.data.orderDetail.order_status,
-		  order_details : this.data.orderDetail
+		  orderID: this.data.userID,
+		  orderDetail: {
+                    owner_id: this.data.userID,
+		    goods_id: this.data.goodsID,
+		    order_status: this.data.orderDetail.order_status,
+		    order_details : this.data.orderDetail
+		  }
                 });
       } catch (err) {
         wx.showToast({ title: 'updateOrderInfo INTERNET ERROR', icon: 'none' });

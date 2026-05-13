@@ -6,9 +6,13 @@ const _ = db.command;
 
 
 exports.main = async (event, context) => {
-  const { orderID, field, value, orderDetail } = event
+  const orderId = event.orderID;
+  const field = event.field;
+  const value = event.value;
+  const orderDetail = event.orderDetail;
 
-  if (!orderID) {
+  console.log('event:',event)
+  if (!orderId) {
     return {
       success: false,
       message: 'LACK OF orderID'
@@ -19,9 +23,9 @@ exports.main = async (event, context) => {
     if (orderDetail) {
       const { _id, ...updateData } = orderDetail;
       console.log('updateData', updateData)
-      const record = await db.collection('orders_info').where({order_id: orderID}).get();
+      const record = await db.collection('orders_info').where({order_id: orderId}).get();
       if (record.data && record.data.length > 0) {
-        await db.collection('orders_info').where({order_id: orderID}).update({
+        await db.collection('orders_info').where({order_id: orderId}).update({
           data: updateData
         });
         return {
@@ -47,7 +51,7 @@ exports.main = async (event, context) => {
     const updateData = {}
     updateData[field] = value
 
-    await db.collection('orders_info').where({order_id:orderID}).update({
+    await db.collection('orders_info').where({order_id:orderId}).update({
       data: updateData
     })
 
