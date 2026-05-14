@@ -31,6 +31,7 @@ const statusMapType0 = [
 ];
 
 const ORDERSTATUS1 = {
+CREATED: -1,
 AGREED: 0,
 CONFIRM: 1,
 PAYED: 2,

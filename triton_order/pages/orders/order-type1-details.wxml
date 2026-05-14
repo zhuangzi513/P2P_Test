@@ -50,10 +50,10 @@
       </view>
 
       <!-- 发件人地址 -->
-      <view class="info-row" wx:if="{{isSaler}}">
+      <view class="info-row" wx:if="{{isBanker}}">
         <view class="info-label">发货地址</view>
         <view class="info-value">
-          <input class="input-field" placeholder="输入发货地址" value="{{orderDetail.senderAddr}}" disabled="{{!isSaler}}" bindinput="onSenderAddrInput" maxlength="200" />
+          <input class="input-field" placeholder="输入发货地址" value="{{orderDetail.senderAddr}}" disabled="{{!isBanker}}" bindinput="onSenderAddrInput" maxlength="200" />
         </view>
       </view>
 
@@ -66,10 +66,10 @@
       </view>
 
       <!-- 发货快递 -->
-      <view class="info-row" wx:if="{{isSaler && orderDetail.orderStatus >= 1}}">
+      <view class="info-row" wx:if="{{isBanker && orderDetail.orderStatus >= 1}}">
         <view class="info-label">发货快递</view>
         <view class="info-value">
-          <input class="input-field" placeholder="输入快递单号" value="{{orderDetail.postID0}}" disabled="{{!isSaler}}" bindinput="onPostIDInput" maxlength="50" />
+          <input class="input-field" placeholder="输入快递单号" value="{{orderDetail.postID0}}" disabled="{{!isBanker}}" bindinput="onPostIDInput" maxlength="50" />
         </view>
       </view>
 
@@ -84,7 +84,7 @@
   </view>
 
   <!-- 支付凭证 -->
-  <view class="section-block" wx:if="{{isSaler||isBuyer}}">
+  <view class="section-block" wx:if="{{isBanker||isBuyer}}">
     <view class="section-header">
       <view class="section-title">支付凭证</view>
       <view class="section-subtitle" wx:if="{{orderDetail.orderStatus <= 1 && isBuyer}}">点击添加付款截图</view>

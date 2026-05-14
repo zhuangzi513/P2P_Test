@@ -95,6 +95,7 @@ Page({
         this.setData({ ownerID: res.orderInfo[0].owner_id });
         this.setData({ goodsID: res.orderInfo[0].goods_id });
         console.log('this order id:', this.data.orderDetails.order_id);
+        this.updateOrderViewStatus();
         
         // 加载商品信息
         if (res.orderInfo[0].goods_id) {
