@@ -23,7 +23,7 @@ Page({
     })
   },
   onLoad: function(e) {
-    getMyGoodsList(wx.getStorageSync('userID'), false);
+    this.getMyGoodsList(wx.getStorageSync('userID'), false);
   },
   onShow: function(e){
     this.setData({
@@ -45,6 +45,7 @@ Page({
     }
     for (var i = 0; i < res.goods.length; i++) {
       const item = res.goods[i]
+      console.log(item);
       goods.push(item);
     }
     this.setData({

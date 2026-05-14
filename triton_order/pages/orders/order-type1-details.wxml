@@ -6,7 +6,7 @@
         {{orderDetail.orderStatus < 0 ? '待确认' : orderDetail.orderStatus >= 9 ? '已完成' : '进行中'}}
       </view>
       <view class="status-title">{{orderNextStep}}</view>
-      <view class="order-number">订单ID: {{orderDetail.order_id || '加载中...'}}</view>
+      <view class="order-number">订单ID: {{orderID || '加载中...'}}</view>
     </view>
   </view>
 

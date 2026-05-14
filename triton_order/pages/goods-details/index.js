@@ -179,7 +179,7 @@ Page({
     }).then(res => {
       if (res && res.orderId) {
         wx.navigateTo({
-          url: "/pages/orders/order-type1-details?id=" + res.orderId
+          url: "/pages/orders/order-type1-details?goods_id=" + this.data.goodsID + "&id=" + res.orderId + "&is_new=true"
         })
       } else {
         wx.showToast({

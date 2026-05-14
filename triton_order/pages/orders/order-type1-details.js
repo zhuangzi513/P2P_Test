@@ -7,7 +7,7 @@ Page({
       isNewOrder:false,
       orderID:0,
       goodsID:0,
-      ownerID:
+      ownerID:0,
       userID:0,
       submitting: false,
       loading: true,
@@ -27,13 +27,14 @@ Page({
       orderDetails: {
       }
     },
-    onLoad:function(e){
+    onLoad:function(options){
       const orderID = options.id ? String(options.id) : -1;
       const isNewOrder = (options.is_new == undefined) ? false : options.is_new;
-      const goodsID = options.goods_id ? String(options.goodsID) : -1;
+      const goodsID = options.goods_id ? String(options.goods_id) : -1;
+      console.log(options)
 
       this.setData({
-        orderID: e.id,
+        orderID: orderID,
         isNewOrder: isNewOrder,
         goodsID: goodsID,
         userID: wx.getStorageSync('userID'),
@@ -56,7 +57,7 @@ Page({
                 isBuyer: true,
                 canSee : true,
         });
-        const goodsInfo = await loadGoodsInfo(this.data.goodsID);
+        const goodsInfo = await this.loadGoodsInfo(this.data.goodsID);
         this.setData({
                 ownerID: goodsInfo.owner_id,
                 bankerID: goodsInfo.banker_id,
@@ -158,7 +159,7 @@ Page({
         needPostID1 = true;
       } else if (curOrderStatus == ORDER_STATUS.ORDERSTATUS_ENUM1.BACKED) {
         opEnabled = this.data.isBuyer;
-      } else if (curOrderStatus == ORDER_STATUS.ORDERSTATUS_ENUM1.CLOSE) {{
+      } else if (curOrderStatus == ORDER_STATUS.ORDERSTATUS_ENUM1.CLOSE) {
         opEnabled = false;
       } else {
         opEnabled = false;
@@ -220,7 +221,7 @@ Page({
     },
     nextStep()  {
       if (this.data.canSee) {
-        const _newStatus = this.data.orderDetail.order_status + 1 ;
+        const _newStatus = this.data.orderDetails.order_status + 1 ;
         this.setData({ 'orderDetail.order_status': _newStatus });
         this.updateOrderData(_newStatus);
       }
