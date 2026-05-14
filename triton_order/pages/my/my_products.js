@@ -6,11 +6,14 @@ const APP = getApp()
 
 Page({
   data: {
+    userID:'',
     inputVal: "",
     selectCurrent: 0,
     goods: [],
     loadingMoreHidden: true,
-    pageSize: 20
+    pageSize: 20,
+    curPage: 1,
+    total: -1
   },
   toModifyTap: function(e) {
     console.log(e);
@@ -20,26 +23,7 @@ Page({
     })
   },
   onLoad: function(e) {
-    CLOUDFUNC.callCloudFunction('goodsStatics', {userID:wx.getStorageSync('userID')}).then(res=> {
-      this.setData({
-        my_products: res
-      })
-    })
-   
-    this.readConfigVal()
-    getApp().configLoadOK = () => {
-      this.readConfigVal()
-    }
-  },
-  readConfigVal() {
-    const userName = wx.getStorageSync('userName')
-    if (!userName) {
-      return
-    }
-    this.setData({
-      userName:wx.getStorageSync('userName') ,
-      userID:wx.getStorageSync('userID')
-    })
+    getMyGoodsList(wx.getStorageSync('userID'), false);
   },
   onShow: function(e){
     this.setData({
@@ -50,7 +34,7 @@ Page({
     })
   },
   async getMyGoodsList(myUserId, append) {
-    const res = await CLOUDFUNC.callCloudFunction('goodsStatics', { userID: myUserId, pageSize: this.data.pageSize })
+    const res = await CLOUDFUNC.callCloudFunction('goodsStatics', { userID: wx.getStorageSync('userID'), pageSize: this.data.pageSize })
     let goods = [];
     if (append) {
       goods = this.data.goods
@@ -65,13 +49,20 @@ Page({
     }
     this.setData({
       goods: goods,
+      total: res.total
     });
   },
   onPullDownRefresh: function() {
     this.setData({
       curPage: 1
     });
-    this.getMyGoodsList(wx.getStorageSync('userID'))
+    this.getMyGoodsList(wx.getStorageSync('userID'), true)
     wx.stopPullDownRefresh()
-  }
+  },
+  onReachBottom() {
+    this.setData({
+      curPage: this.data.curPage + 1
+    });
+    this.getMyGoodsList(wx.getStorageSync('userID'), true)
+  },
 })

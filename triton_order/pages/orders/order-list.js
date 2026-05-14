@@ -34,17 +34,20 @@ Page({
           isBanker: wx.getStorageSync('isBanker')
         });
     }      
-    this.getOrderStatistics();
+    this.getOrderStatistics(options.type);
   },
     
   onReady: function() {
 
   },
-  getOrderStatistics() {
+  getOrderStatistics(orderType) {
+    if (!orderType)
+      orderType = this.data.orderType;	  i
+
     CLOUDFUNC.callCloudFunction('orderStatics',
                                 {
 				  userID:wx.getStorageSync('userID'),
-				  orderType:this.data.orderType,
+				  orderType:orderType,
 				  isBanker:this.data.isBanker,
 				  pageNo:this.data.page
 				}).then(res=> {

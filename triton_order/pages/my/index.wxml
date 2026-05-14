@@ -38,6 +38,10 @@
       <view class="menu-label">MY ADDR</view>
       <text class="arrow">MY ADDR</text>
     </navigator>
+    <navigator url="/pages/my/my_products" class="menu-item">
+      <view class="menu-label">MY PRO</view>
+      <text class="arrow">MY PRO</text>
+    </navigator>
   </view>
 
   <view wx:if="{{ hasLogined }}" class="logout-section">

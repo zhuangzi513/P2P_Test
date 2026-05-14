@@ -13,7 +13,7 @@ exports.main = async (event, context) => {
     if (!userID) {
       query = goodsCollection;
     } else {
-      query = goodsCollection.where({owner_id: userID});
+      query = goodsCollection.where({owner_id: Number(userID)});
     }
     console.log('userID', userID)
     const countResult = await query.count();
