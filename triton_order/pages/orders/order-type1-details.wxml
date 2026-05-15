@@ -45,7 +45,7 @@
       <view class="info-row">
         <view class="info-label">出价金额</view>
         <view class="info-value">
-          <input class="input-field" type="digit" placeholder="输入价格" value="{{orderDetails.price}}" disabled="{{ (orderDetail.orderStatus > -1)}}" bindinput="onPriceInput" />
+          <input class="input-field" type="digit" placeholder="输入价格" value="{{orderDetails.price}}" disabled="{{ (orderDetails.order_status > -1)}}" bindinput="onPriceInput" />
         </view>
       </view>
 
@@ -53,7 +53,7 @@
       <view class="info-row" wx:if="{{isBanker}}">
         <view class="info-label">发货地址</view>
         <view class="info-value">
-          <input class="input-field" placeholder="输入发货地址" value="{{orderDetail.senderAddr}}" disabled="{{!isBanker}}" bindinput="onSenderAddrInput" maxlength="200" />
+          <input class="input-field" placeholder="输入发货地址" value="{{orderDetails.sender_addr}}" disabled="{{!isBanker}}" bindinput="onSenderAddrInput" maxlength="200" />
         </view>
       </view>
 
@@ -61,7 +61,7 @@
       <view class="info-row" wx:if="{{isBuyer}}">
         <view class="info-label">收货地址</view>
         <view class="info-value">
-          <input class="input-field" placeholder="输入收货地址" value="{{orderDetail.recverAddr}}" disabled="{{!isBuyer}}" bindinput="onRecverAddrInput" maxlength="200" />
+          <input class="input-field" placeholder="输入收货地址" value="{{orderDetails.recver_addr}}" disabled="{{!isBuyer}}" bindinput="onRecverAddrInput" maxlength="200" />
         </view>
       </view>
 
@@ -116,15 +116,15 @@
   </view>
 
   <!-- 订单记录 -->
-  <view class="section-block" wx:if="{{orderDetail.logs && orderDetail.logs.length > 0}}">
+  <view class="section-block" wx:if="{{orderDetails.logs && orderDetails.logs.length > 0}}">
     <view class="section-header">
       <view class="section-title">订单记录</view>
     </view>
     <view class="card timeline-card">
       <view class="timeline">
-        <view class="timeline-item" wx:for="{{orderDetail.logs}}" wx:key="id">
+        <view class="timeline-item" wx:for="{{orderDetails.logs}}" wx:key="id">
           <view class="timeline-dot"></view>
-          <view class="timeline-line" wx:if="{{index < orderDetail.logs.length - 1}}"></view>
+          <view class="timeline-line" wx:if="{{index < orderDetails.logs.length - 1}}"></view>
           <view class="timeline-content">
             <view class="log-operation">{{item.typeStr}}</view>
             <view class="log-time">{{item.dateAdd}}</view>

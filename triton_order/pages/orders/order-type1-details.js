@@ -209,12 +209,12 @@ Page({
     },
     onSenderAddrInput(e)  { 
       if (this.data.isBanker && this.data.orderDetails.order_status < ORDER_STATUS.ORDERSTATUS_ENUM1.CONFIRM) {
-        this.setData({ 'orderDetails.senderAddr': e.detail.value });
+        this.setData({ 'orderDetails.sender_addr': e.detail.value });
       }
     },
     onRecverAddrInput(e)  {
       if (this.data.isBuyer) {
-        this.setData({ 'orderDetails.recverAddr': e.detail.value });
+        this.setData({ 'orderDetails.recver_addr': e.detail.value });
       }
     },
     onPostIDInput(e)  {
