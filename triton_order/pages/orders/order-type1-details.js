@@ -12,6 +12,7 @@ Page({
       submitting: false,
       loading: true,
       updatingDisabled: true,
+      cancelingDisabled: true,
       orderCurrentStep: "",
       orderNextStep: "",
       orderPostID0Needed: false,
@@ -165,6 +166,7 @@ Page({
         //owner agree
         opEnabled = this.data.isOwner;
       } else if (curOrderStatus == ORDER_STATUS.ORDERSTATUS_ENUM1.CONFIRM) {
+        cancelingDisabled: true,
         //buyer can pay
         opEnabled = this.data.isBanker;
       } else if (curOrderStatus ==ORDER_STATUS.ORDERSTATUS_ENUM1.PAYED) {
