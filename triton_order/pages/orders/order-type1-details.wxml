@@ -66,18 +66,18 @@
       </view>
 
       <!-- 发货快递 -->
-      <view class="info-row" wx:if="{{isBanker && orderDetail.orderStatus >= 1}}">
+      <view class="info-row" wx:if="{{isBanker}}">
         <view class="info-label">发货快递</view>
         <view class="info-value">
-          <input class="input-field" placeholder="输入快递单号" value="{{orderDetail.postID0}}" disabled="{{!isBanker}}" bindinput="onPostIDInput" maxlength="50" />
+          <input class="input-field" placeholder="输入快递单号" value="{{orderDetails.postID0}}" disabled="{{!isBanker}}" bindinput="onPostIDInput" maxlength="50" />
         </view>
       </view>
 
       <!-- 收货快递 -->
-      <view class="info-row" wx:if="{{isBuyer && orderDetail.orderStatus >= 11}}">
+      <view class="info-row" wx:if="{{isBuyer}}">
         <view class="info-label">收货快递</view>
         <view class="info-value">
-          <input class="input-field" placeholder="输入快递单号" value="{{orderDetail.postID1}}" disabled="{{!isBuyer}}" bindinput="onPostIDInput" maxlength="50" />
+          <input class="input-field" placeholder="输入快递单号" value="{{orderDetails.postID1}}" disabled="{{!isBuyer}}" bindinput="onPostIDInput" maxlength="50" />
         </view>
       </view>
     </view>
