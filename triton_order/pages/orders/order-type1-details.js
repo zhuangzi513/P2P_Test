@@ -295,6 +295,25 @@ Page({
       }
     },
 
+    async addPaymentImage() {
+      const res = await wx.chooseMedia({ count: 1, mediaType: ['image'], sizeType: ['compressed'] });
+      wx.showLoading({ title: '上传中...' });
+      try {
+        const urls = await UPLOAD.uploadFiles(res.tempFiles.map(f => f.tempFilePath), 'image', CLOUDFUNC);
+        const url = urls[0];
+        this.setData({ 'orderDetails.payment': { url: url } });
+        wx.hideLoading();
+        wx.showToast({ title: '上传成功', icon: 'success' });
+      } catch (err) {
+        wx.hideLoading();
+        wx.showToast({ title: '上传失败', icon: 'none' });
+      }
+    },
+
+    deletePaymentImage() {
+      this.setData({ 'orderDetails.payment': null });
+    },
+
     deleteImage(e) {
       const list = [...this.data.goodInfo.imageList];
       list.splice(e.currentTarget.dataset.index, 1);

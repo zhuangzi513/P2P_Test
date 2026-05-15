@@ -87,13 +87,16 @@
   <view class="section-block" wx:if="{{isBanker||isBuyer}}">
     <view class="section-header">
       <view class="section-title">支付凭证</view>
-      <view class="section-subtitle" wx:if="{{orderDetail.orderStatus <= 1 && isBuyer}}">点击添加付款截图</view>
+      <view class="section-subtitle" wx:if="{{!orderDetails.payment && isBuyer}}">点击添加付款截图</view>
     </view>
     <view class="card">
       <view class="payment-area">
-        <view class="add-btn" wx:if="{{isBuyer && (orderDetail.orderStatus <= 1)}}" bindtap="addImage">+</view>
-        <view class="preview-container" wx:elif="{{payment.url}}">
-          <image class="preview-image" src="{{payment.url}}" mode="aspectFill" bindtap="previewImage" data-url="{{payment.url}}" />
+        <view class="add-btn" wx:if="{{!orderDetails.payment && isBuyer}}" bindtap="addPaymentImage">+</view>
+        <view class="preview-container" wx:elif="{{orderDetails.payment}}">
+          <image class="preview-image" src="{{orderDetails.payment.url}}" mode="aspectFill" bindtap="previewImage" data-url="{{orderDetails.payment.url}}" />
+          <view class="delete-btn" catchtap="deletePaymentImage">
+            <text class="delete-icon">×</text>
+          </view>
         </view>
         <view class="payment-placeholder" wx:else>
           <text class="placeholder-text">暂无支付凭证</text>
