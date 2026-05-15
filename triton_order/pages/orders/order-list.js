@@ -29,11 +29,12 @@ Page({
   onLoad: function(options) {
     if (options && options.type) {
         this.setData({
-          orderType: options.type,
+          orderType: Number(options.type),
           userID: wx.getStorageSync('userID'), 
           isBanker: wx.getStorageSync('isBanker')
         });
     }      
+    console.log(options);
     this.getOrderStatistics(options.type);
   },
     
@@ -42,7 +43,7 @@ Page({
   },
   getOrderStatistics(orderType) {
     if (!orderType)
-      orderType = this.data.orderType;	  i
+      orderType = this.data.orderType;
 
     CLOUDFUNC.callCloudFunction('orderStatics',
                                 {
@@ -127,9 +128,7 @@ Page({
     }
     
     // 根据 orderType 跳转，默认跳转到 type0
-    const url = orderType == 1 
-      ? '/pages/orders/order-type1-details?id=' + orderId
-      : '/pages/orders/order-type0-details?id=' + orderId;
+    const url = (orderType == 1) ? '/pages/orders/order-type1-details?id=' + orderId : '/pages/orders/order-type0-details?id=' + orderId;
     
     console.log('跳转URL:', url);
     wx.navigateTo({ url });

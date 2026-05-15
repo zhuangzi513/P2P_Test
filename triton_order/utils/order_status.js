@@ -45,7 +45,8 @@ CLOSE: 9
 };
 
 const statusMapType1 = [
-'AGREED',
+'Initialization',
+'AGREE',
 'CONFIRM',
 'PAYED',
 'SENDTORECVER',

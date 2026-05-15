@@ -31,8 +31,8 @@ Page({
     },
     onLoad:function(options){
       // URL 参数都是字符串，orderID 保持字符串以便云函数处理
-      const orderID = options.id ? String(options.id) : 0;
-      const bankerID = options.banker_id ? String(options.banker_id) : -1;
+      const orderID = options.id ? Number(options.id) : 0;
+      const bankerID = options.banker_id ? Number(options.banker_id) : -1;
       const isNewOrder = (options.is_new == undefined) ? false : options.is_new;
       
       console.log('onLoad options:', options);

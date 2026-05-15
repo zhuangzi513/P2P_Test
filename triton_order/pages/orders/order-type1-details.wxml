@@ -2,10 +2,10 @@
   <!-- 状态卡片 -->
   <view class="status-card">
     <view class="status-header">
-      <view class="status-badge {{orderDetail.orderStatus < 0 ? 'warning' : orderDetail.orderStatus >= 9 ? 'success' : 'active'}}">
-        {{orderDetail.orderStatus < 0 ? '待确认' : orderDetail.orderStatus >= 9 ? '已完成' : '进行中'}}
+      <view class="status-badge {{orderDetails.order_status < 0 ? 'warning' : orderDetails.order_status >= 9 ? 'success' : 'active'}}">
+        {{orderDetails.order_status < 0 ? '待确认' : orderDetail.orderStatus >= 9 ? '已完成' : '进行中'}}
       </view>
-      <view class="status-title">{{orderNextStep}}</view>
+      <view class="status-title">{{orderCurrentStep}}</view>
       <view class="order-number">订单ID: {{orderID || '加载中...'}}</view>
     </view>
   </view>
@@ -17,16 +17,16 @@
     </view>
     <view class="card goods-card">
       <wxs module="goodsDetailPage">
-      module.exports = {
-        url : function(goodsId) {
-          return '/pages/goods-details/index?id=' + goodsId
+        module.exports = {
+          url : function(goodsId) {
+            return '/pages/goods-details/index?id=' + goodsId
+          }
         }
-      }
       </wxs>
-      <view class="goods-content" bindtap="navigateToGoods" data-id="{{goodInfo.goodsID}}">
+      <view class="goods-content" bindtap="navigateToGoods" data-id="{{goodsID}}">
         <image class="goods-thumb" src="{{goodInfo.pic}}" mode="aspectFill" />
         <view class="goods-info">
-          <view class="goods-name">{{goodInfo.goodsName}}</view>
+          <view class="goods-name">{{goodInfo.name}}</view>
           <view class="goods-desc">{{goodInfo.description}}</view>
           <view class="goods-price">¥{{goodInfo.price}}</view>
         </view>
@@ -45,7 +45,7 @@
       <view class="info-row">
         <view class="info-label">出价金额</view>
         <view class="info-value">
-          <input class="input-field" type="digit" placeholder="输入价格" value="{{form.price}}" disabled="{{isBuyer && (orderDetail.orderStatus > -1)}}" bindinput="onPriceInput" />
+          <input class="input-field" type="digit" placeholder="输入价格" value="{{orderDetails.price}}" disabled="{{ (orderDetail.orderStatus > -1)}}" bindinput="onPriceInput" />
         </view>
       </view>
 

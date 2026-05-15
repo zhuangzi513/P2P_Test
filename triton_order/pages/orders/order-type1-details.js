@@ -12,6 +12,7 @@ Page({
       submitting: false,
       loading: true,
       updatingDisabled: true,
+      orderCurrentStep: "",
       orderNextStep: "",
       orderPostID0Needed: false,
       orderPostID1Needed: false,
@@ -28,9 +29,9 @@ Page({
       }
     },
     onLoad:function(options){
-      const orderID = options.id ? String(options.id) : -1;
+      const orderID = options.id ? Number(options.id) : -1;
       const isNewOrder = (options.is_new == undefined) ? false : options.is_new;
-      const goodsID = options.goods_id ? String(options.goods_id) : -1;
+      const goodsID = options.goods_id ? Number(options.goods_id) : -1;
       console.log(options)
 
       this.setData({
@@ -53,15 +54,16 @@ Page({
       if (this.data.isNewOrder) {
 	console.log('new order, nothing to be shown');
         this.setData({
+                orderCurrentStep: "NEW",
                 orderNextStep: ORDER_STATUS.getStatusText1(ORDER_STATUS.ORDERSTATUS_ENUM1.CREATED),
                 isBuyer: true,
                 canSee : true,
+		'orderDetails.order_status': ORDER_STATUS.ORDERSTATUS_ENUM1.CREATED
         });
-        const goodsInfo = await this.loadGoodsInfo(this.data.goodsID);
-        this.setData({
-                ownerID: goodsInfo.owner_id,
-                bankerID: goodsInfo.banker_id,
-        });
+        const goodsInfo = await this.updateGoodsInfo(this.data.goodsID);
+	if (!goodsInfo) {
+          wx.showToast({ title: 'FAILED TO GET goodsInfo:' + this.data.orderID, icon: 'none' });
+	}
 
 	return;
       }
@@ -76,25 +78,33 @@ Page({
         return
       }
 
-      this.setData({ orderDetails: res.orderInfo[0].order_details });
-      this.setData({ bankerID: res.orderInfo[0].banker_id });
-      this.setData({ goodsID: res.orderInfo[0].goods_id });
-      if (this.data.orderDetails.banker_id && !this.data.orderDetails.banker_id.toString().trim()) {
-          wx.showToast({ title: 'empty bankerID:', icon: 'none' });
+      const _orderInfo = res.orderInfo[0];
+      this.setData({ 
+                     orderDetails: _orderInfo.order_details,
+                     bankerID: res.orderInfo[0].banker_id,
+                     goodsID: res.orderInfo[0].goods_id,
+                     orderCurrentStep: ORDER_STATUS.getStatusText1(_orderInfo.order_details.order_status - 1),
+	             orderNextStep: ORDER_STATUS.getStatusText1(_orderInfo.order_details.order_status),
+		   });
+      const goodsInfo = await this.updateGoodsInfo(this.data.goodsID);
+      if (!goodsInfo) {
+        wx.showToast({ title: 'FAILED TO GET goodsInfo:' + this.data.orderID, icon: 'none' });
       }
-      let _isBanker = (this.data.userID == this.data.orderDetails.banker_id);
-      let _isBuyer  = (this.data.userID == this.data.orderDetails.buyer_id);
-      let _isOwner = (this.data.userID == this.data.orderDetails.owner_id);
+      let _isBanker = (this.data.userID == _orderInfo.banker_id);
+      let _isBuyer  = (this.data.userID == _orderInfo.buyer_id);
+      let _isOwner  = (this.data.userID == _orderInfo.owner_id);
       let _canSee   = (_isBanker || _isBuyer);
+      console.log('1111111111111owner, buyer, banker:', _isOwner, _isBuyer, _isBanker)
+      console.log('1111111111111 _orderDetails:', _orderInfo.order_details);
+      console.log('1111111111111 userID:', this.data.userID);
       this.setData({
-	      orderNextStep: ORDER_STATUS.getStatusText1(this.data.orderDetails.order_status),
 	      isBanker: _isBanker,
 	      isBuyer: _isBuyer, 
 	      isOwner: _isOwner, 
 	      canSee : _canSee
       });
     },
-    async loadGoodsInfo(goodsID) {
+    async updateGoodsInfo(goodsID) {
       if (!goodsID) {
         console.log('goodsID 为空，无法获取商品信息');
         return;
@@ -108,11 +118,29 @@ Page({
         // 处理返回数据结构 { code: 0, data: { goodsInfo: [...] } }
         const goodsList = res.data?.goodsInfo || res.goodsInfo;
         if (goodsList && goodsList.length > 0) {
-          const _goodsInfo = goodsList[0].goods_info;
+          const goodsInfo = goodsList[0].goods_info;
           // 映射字段名：goodsName -> name, pic -> 第一张图片
-          this.setData({goodInfo:_goodsInfo});
-          console.log('获取到商品数据:', _goodsInfo);
-          return _goodsInfo;
+          const mappedGoodsInfo = {
+            ...goodsInfo,
+            name: goodsInfo.goodsName || goodsInfo.name || '',
+            price: goodsInfo.price || '',
+            color: goodsInfo.color || '',
+            sizeX: goodsInfo.sizeX || '',
+            sizeY: goodsInfo.sizeY || '',
+            sizeZ: goodsInfo.sizeZ || '',
+            description: goodsInfo.description || '',
+            imageList  : goodsInfo.imageList || [],
+            videoList  : goodsInfo.videoList || [],
+            pic        : goodsInfo.pic ||
+	                (goodsInfo.imageList && goodsInfo.imageList[0]?.url) || ''
+          };
+          this.setData({
+                ownerID  : goodsInfo.owner_id,
+                bankerID : goodsInfo.banker_id,
+	  	goodInfo : mappedGoodsInfo 
+          });
+          console.log('获取到商品数据:', goodsInfo);
+          return goodsInfo;
         } else {
           console.log('goodsInfo 为空');
         }
@@ -122,10 +150,11 @@ Page({
     },
 
     updateButtonStatus() {
+      console.log('owner, buyer, banker:', this.data.isOwner, this.data.isBuyer, this.data.isBanker)
       let userID = this.data.userID; 
       let opEnabled = false;
       let isCanceler = (userID == this.data.orderDetails.canceler_id);
-      let curOrderStatus = this.data.orderDetails.order_status;
+      let curOrderStatus = this.data.isNewOrder ? ORDER_STATUS.ORDERSTATUS_ENUM1.CREATED : this.data.orderDetails.order_status;
       let needPostID0 = false;
       let needPostID1 = false;
       let needPayment = false;
@@ -140,8 +169,8 @@ Page({
         opEnabled = this.data.isBanker;
       } else if (curOrderStatus ==ORDER_STATUS.ORDERSTATUS_ENUM1.PAYED) {
         //buyer paied for it
-        opEnabled = this.data.isBuyer;
         needPayment = true;
+        opEnabled = this.data.isBuyer;
       } else if (curOrderStatus == ORDER_STATUS.ORDERSTATUS_ENUM1.SENDTORECVER) {
         //banker got paied and then send it to buyer
         opEnabled = this.data.isBanker;
@@ -154,6 +183,8 @@ Page({
       } else if (curOrderStatus == ORDER_STATUS.ORDERSTATUS_ENUM1.CANCELLED) {
         //any time, cancel should be confirmed by eachother
         opEnabled = !isCanceler && (this.data.isBanker || this.data.isBuyer);
+      //} else if (curOrderStatus == ORDER_STATUS.ORDERSTATUS_ENUM1.BACK_CONFIRM) {
+      //  opEnabled = this.data.isBanker;
       } else if (curOrderStatus == ORDER_STATUS.ORDERSTATUS_ENUM1.BACKING) {
         opEnabled = this.data.isBanker;
         needPostID1 = true;
@@ -172,12 +203,12 @@ Page({
       });
     },
     onPriceInput(e) {
-      if (this.data.isBuyer) {
+      if (this.data.isBuyer && this.data.isNewOrder) {
         this.setData({ 'orderDetails.price': e.detail.value });
       }
     },
     onSenderAddrInput(e)  { 
-      if (this.data.isBanker) {
+      if (this.data.isBanker && this.data.orderDetails.order_status < ORDER_STATUS.ORDERSTATUS_ENUM1.CONFIRM) {
         this.setData({ 'orderDetails.senderAddr': e.detail.value });
       }
     },
@@ -196,14 +227,15 @@ Page({
     async updateOrderData(newStatus) {
       try {
         console.log('updateOrderData, owner_id, goods_id, order_status', this.data.userID, this.data.goodsID, this.data.orderDetails.order_status)
+        console.log('updateOrderData, order_details:', this.data.orderDetails)
         const res = await CLOUDFUNC.callCloudFunction('updateOrderInfo',
                 {
 		  orderID: this.data.orderID,
 		  orderDetail: {
-                    owner_id: this.data.ownerID,
+                    owner_id:  this.data.ownerID,
                     banker_id: this.data.bankerID,
-                    buyer_id: this.data.userID,
-		    goods_id: this.data.goodsID,
+                    buyer_id:  this.data.userID,
+		    goods_id:  this.data.goodsID,
 		    order_status: newStatus,
 		    order_details : this.data.orderDetails
 		  }
@@ -216,14 +248,23 @@ Page({
       }
     },
     cancelOrder()  {
-      this.setData({ 'orderDetail.order_status': ORDER_STATUS.ORDERSTATUS_ENUM1.CANCELLED }); 
+      this.setData({ 'orderDetails.order_status': ORDER_STATUS.ORDERSTATUS_ENUM1.CANCELLED }); 
       this.updateOrderData(ORDER_STATUS.ORDERSTATUS_ENUM1.CANCELLED);
     },
     nextStep()  {
       if (this.data.canSee) {
-        const _newStatus = this.data.orderDetails.order_status + 1 ;
-        this.setData({ 'orderDetail.order_status': _newStatus });
-        this.updateOrderData(_newStatus);
+        const _newStatus = this.data.isNewOrder ?  (ORDER_STATUS.ORDERSTATUS_ENUM1.CREATED  + 1) : this.data.orderDetails.order_status + 1 ;
+        this.setData({ 'orderDetails.order_status': _newStatus });
+        this.updateOrderData(_newStatus).then(res => {
+          //wx.navigateTo({
+          //  url: '/pages/about/order_type1_success'
+          //});
+          setTimeout(() => {
+            wx.redirectTo({
+              url: '/pages/goods-details/index?id=' + this.data.goodsID,
+            });
+          }, 1000);
+	});
       }
     },
     navigateToGoods(e) {

@@ -127,6 +127,26 @@ Page({
         }
       }
     });
+  },
+  removeInputOrders() {
+    CLOUDFUNC.callCloudFunction('removeInputOrder', { userID: this.data.userID }).then(res => {
+          wx.showToast({
+            title: 'INPUTORDERS CLEAN',
+            icon: 'success',
+            duration: 1500
+          });
+
+    });
+  },
+  removeOutputOrders() {
+    CLOUDFUNC.callCloudFunction('removeOutputOrder', { userID: this.data.userID }).then(res => {
+          wx.showToast({
+            title: 'OUTPUTORDERS CLEAN',
+            icon: 'success',
+            duration: 1500
+          });
+
+    });
   }
 
 })

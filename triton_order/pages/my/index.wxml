@@ -42,6 +42,14 @@
       <view class="menu-label">MY PRO</view>
       <text class="arrow">MY PRO</text>
     </navigator>
+    <view bindtap="removeInputOrders" class="menu-item">
+      <view class="menu-label">remove INPUTORDERS</view>
+      <text class="arrow">remove INPUTORDERS</text>
+    </view>
+    <view bindtap="removeOutputOrders" class="menu-item">
+      <view class="menu-label">remove OUTPUTORDERS</view>
+      <text class="arrow">remove OUTPUTORDERS</text>
+    </view>
   </view>
 
   <view wx:if="{{ hasLogined }}" class="logout-section">
