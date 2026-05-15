@@ -1,7 +1,7 @@
 const ORDERSTATUS0 = {
   CREATED : -1,
   INIT: 0,
-  CONFRIM: 1,
+  CONFIRM: 1,
   SEND0: 2,
   RECVED0: 3,
   ONSALE: 4,

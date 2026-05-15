@@ -1,12 +1,12 @@
 <view class="page-container">
   <!-- 状态卡片 -->
   <view class="status-banner">
-    <view class="status-badge {{orderDetail.order_status >= 0 ? 'active' : 'pending'}}">
-      <text class="status-icon">{{orderDetail.order_status >= 5 ? '✓' : '⏳'}}</text>
+    <view class="status-badge {{orderDetails.order_status >= 0 ? 'active' : 'pending'}}">
+      <text class="status-icon">{{orderDetails.order_status >= 5 ? '✓' : '⏳'}}</text>
     </view>
     <view class="status-content">
       <text class="status-text">{{orderNextStep}}</text>
-      <text class="order-id">订单号: {{orderDetail.order_id || orderID }}</text>
+      <text class="order-id">订单号: {{orderDetails.order_id || orderID }}</text>
     </view>
   </view>
 
@@ -174,7 +174,7 @@
         <textarea class="form-textarea small" 
                   placeholder="请输入发货地址" 
                   disabled="{{!isOwner}}" 
-                  value="{{orderDetail.senderAddr}}" 
+                  value="{{orderDetails.sender_addr}}" 
                   bindinput="onSenderAddrInput" 
                   maxlength="200" />
       </view>
@@ -184,7 +184,7 @@
         <textarea class="form-textarea small" 
                   placeholder="请输入收货地址" 
                   disabled="{{!isBanker}}" 
-                  value="{{orderDetail.recverAddr}}" 
+                  value="{{orderDetails.recver_addr}}" 
                   bindinput="onRecverAddrInput" 
                   maxlength="200" />
       </view>
@@ -194,7 +194,7 @@
         <input class="form-input {{isOwner ? '' : 'disabled'}}" 
                placeholder="请输入快递单号" 
                disabled="{{!isOwner}}" 
-               value="{{orderDetail.postID0}}" 
+               value="{{orderDetails.postID0}}" 
                bindinput="onPostIDInput" />
       </view>
       
@@ -203,7 +203,7 @@
         <input class="form-input {{isBanker ? '' : 'disabled'}}" 
                placeholder="请输入快递单号" 
                disabled="{{!isBanker}}" 
-               value="{{orderDetail.postID1}}" 
+               value="{{orderDetails.postID1}}" 
                bindinput="onPostIDInput" />
       </view>
     </view>
@@ -222,14 +222,14 @@
     </view>
 
     <!-- 订单记录 -->
-    <view class="card log-card" wx:if="{{orderDetail.logs && orderDetail.logs.length > 0}}">
+    <view class="card log-card" wx:if="{{orderDetails.logs && orderDetails.logs.length > 0}}">
       <view class="card-header">
         <text class="card-title">订单记录</text>
       </view>
       <view class="timeline">
-        <view class="timeline-item" wx:for="{{orderDetail.logs}}" wx:key="id">
+        <view class="timeline-item" wx:for="{{orderDetails.logs}}" wx:key="id">
           <view class="timeline-dot"></view>
-          <view class="timeline-line" wx:if="{{index < orderDetail.logs.length - 1}}"></view>
+          <view class="timeline-line" wx:if="{{index < orderDetails.logs.length - 1}}"></view>
           <view class="timeline-content">
             <text class="log-operation">{{item.typeStr}}</text>
             <text class="log-time">{{item.dateAdd}}</text>
