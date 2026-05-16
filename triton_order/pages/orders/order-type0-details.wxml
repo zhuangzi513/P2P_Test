@@ -169,7 +169,7 @@
         <text class="card-title">物流信息</text>
       </view>
       
-      <view class="form-row">
+      <view class="form-row" wx:if="{{SENDER_ADDR_ENABLED}}">
         <view class="form-label">发货地址</view>
         <textarea class="form-textarea small" 
                   placeholder="请输入发货地址" 
@@ -179,7 +179,7 @@
                   maxlength="200" />
       </view>
       
-      <view class="form-row">
+      <view class="form-row" wx:if="{{RECVER_ADDR_ENABLED}}">
         <view class="form-label">收货地址</view>
         <textarea class="form-textarea small" 
                   placeholder="请输入收货地址" 
@@ -189,18 +189,18 @@
                   maxlength="200" />
       </view>
       
-      <view class="form-row">
+      <view class="form-row" wx:if="{{POST_ID0_ENABLED}}">
         <view class="form-label">发货快递</view>
-        <input class="form-input {{isOwner ? '' : 'disabled'}}" 
+        <input class="form-input " 
                placeholder="请输入快递单号" 
                disabled="{{!isOwner}}" 
                value="{{orderDetails.postID0}}" 
                bindinput="onPostIDInput" />
       </view>
       
-      <view class="form-row">
+      <view class="form-row" wx:if="{{POST_ID1_ENABLED}}">
         <view class="form-label">回寄快递</view>
-        <input class="form-input {{isBanker ? '' : 'disabled'}}" 
+        <input class="form-input" 
                placeholder="请输入快递单号" 
                disabled="{{!isBanker}}" 
                value="{{orderDetails.postID1}}" 

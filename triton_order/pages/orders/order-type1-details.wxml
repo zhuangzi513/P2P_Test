@@ -45,46 +45,46 @@
       <view class="info-row">
         <view class="info-label">出价金额</view>
         <view class="info-value">
-          <input class="input-field" type="digit" placeholder="输入价格" value="{{orderDetails.price}}" disabled="{{ (orderDetails.order_status > -1)}}" bindinput="onPriceInput" />
+          <input class="input-field" type="digit" placeholder="输入价格" value="{{orderDetails.price}}" disabled="{{(orderDetails.order_status > -1)}}" bindinput="onPriceInput" />
         </view>
       </view>
 
       <!-- 发件人地址 -->
-      <view class="info-row" wx:if="{{isBanker}}">
+      <view class="info-row" wx:if="{{senderAddrNeeded}}">
         <view class="info-label">发货地址</view>
         <view class="info-value">
-          <input class="input-field" placeholder="输入发货地址" value="{{orderDetails.sender_addr}}" disabled="{{!isBanker}}" bindinput="onSenderAddrInput" maxlength="200" />
+          <input class="input-field" placeholder="输入发货地址" value="{{orderDetails.sender_addr}}" bindinput="onSenderAddrInput" maxlength="200" />
         </view>
       </view>
 
       <!-- 收件人地址 -->
-      <view class="info-row" wx:if="{{isBuyer}}">
+      <view class="info-row" wx:if="{{recverAddrNeeded}}">
         <view class="info-label">收货地址</view>
         <view class="info-value">
-          <input class="input-field" placeholder="输入收货地址" value="{{orderDetails.recver_addr}}" disabled="{{!isBuyer}}" bindinput="onRecverAddrInput" maxlength="200" />
+          <input class="input-field" placeholder="输入收货地址" value="{{orderDetails.recver_addr}}" bindinput="onRecverAddrInput" maxlength="200" />
         </view>
       </view>
 
       <!-- 发货快递 -->
-      <view class="info-row" wx:if="{{isBanker}}">
+      <view class="info-row" wx:if="{{postID0Needed}}">
         <view class="info-label">发货快递</view>
         <view class="info-value">
-          <input class="input-field" placeholder="输入快递单号" value="{{orderDetails.postID0}}" disabled="{{!isBanker}}" bindinput="onPostIDInput" maxlength="50" />
+          <input class="input-field" placeholder="输入快递单号" value="{{orderDetails.postID0}}" bindinput="onPostIDInput" maxlength="50" />
         </view>
       </view>
 
       <!-- 收货快递 -->
-      <view class="info-row" wx:if="{{isBuyer}}">
+      <view class="info-row" wx:if="{{postID1Needed}}">
         <view class="info-label">收货快递</view>
         <view class="info-value">
-          <input class="input-field" placeholder="输入快递单号" value="{{orderDetails.postID1}}" disabled="{{!isBuyer}}" bindinput="onPostIDInput" maxlength="50" />
+          <input class="input-field" placeholder="输入快递单号" value="{{orderDetails.postID1}}" bindinput="onPostIDInput" maxlength="50" />
         </view>
       </view>
     </view>
   </view>
 
   <!-- 支付凭证 -->
-  <view class="section-block" wx:if="{{isBanker||isBuyer}}">
+  <view class="section-block" wx:if="{{(isBanker||isBuyer) && paymentNeeded}}">
     <view class="section-header">
       <view class="section-title">支付凭证</view>
       <view class="section-subtitle" wx:if="{{!orderDetails.payment && isBuyer}}">点击添加付款截图</view>

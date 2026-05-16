@@ -15,8 +15,10 @@ Page({
       cancelingDisabled: true,
       orderCurrentStep: "",
       orderNextStep: "",
-      orderPostID0Needed: false,
-      orderPostID1Needed: false,
+      senderAddrNeeded: false,
+      recvderAddrNeeded: false,
+      postID0Needed: false,
+      postID1Needed: false,
       paymentNeeded: false,
       isOwner: false,
       isBanker: false,
@@ -41,6 +43,8 @@ Page({
         goodsID: goodsID,
         userID: wx.getStorageSync('userID'),
       })
+
+
     },
     onShow() {
       this.orderDetail().then(res => {
@@ -123,6 +127,7 @@ Page({
           // 映射字段名：goodsName -> name, pic -> 第一张图片
           const mappedGoodsInfo = {
             ...goodsInfo,
+            banker_order_id: goodsInfo.banker_order_id,
             name: goodsInfo.goodsName || goodsInfo.name || '',
             price: goodsInfo.price || '',
             color: goodsInfo.color || '',
@@ -159,6 +164,8 @@ Page({
       let needPostID0 = false;
       let needPostID1 = false;
       let needPayment = false;
+      let needSenderAddr = false;
+      let needRecverAddr = false;
       if (curOrderStatus == ORDER_STATUS.ORDERSTATUS_ENUM1.CREATED) {
         //recver firstly see, and then confirm
         opEnabled = this.data.isBuyer;
@@ -167,11 +174,13 @@ Page({
         opEnabled = this.data.isOwner;
       } else if (curOrderStatus == ORDER_STATUS.ORDERSTATUS_ENUM1.CONFIRM) {
         cancelingDisabled: true,
+	needSenderAddr = true;
         //buyer can pay
         opEnabled = this.data.isBanker;
       } else if (curOrderStatus ==ORDER_STATUS.ORDERSTATUS_ENUM1.PAYED) {
         //buyer paied for it
         needPayment = true;
+	needRecverAddr = true;
         opEnabled = this.data.isBuyer;
       } else if (curOrderStatus == ORDER_STATUS.ORDERSTATUS_ENUM1.SENDTORECVER) {
         //banker got paied and then send it to buyer
@@ -199,8 +208,10 @@ Page({
       }
       this.setData({
         updatingDisabled: !opEnabled,
-        orderPostID0Needed: needPostID0,
-        orderPostID1Needed: needPostID1,
+	senderAddrNeeded:needSenderAddr,
+	recverAddrNeeded:needRecverAddr,
+        postID0Needed: needPostID0,
+        postID1Needed: needPostID1,
         paymentNeeded: needPayment
       });
     },
@@ -220,9 +231,9 @@ Page({
       }
     },
     onPostIDInput(e)  {
-      if (this.data.orderPostID0Needed && this.data.isBanker) {
+      if (this.data.postID0Needed && this.data.isBanker) {
         this.setData({ 'orderDetails.postID0': e.detail.value });
-      } else if (this.data.orderPostID1Needed && this.data.isBuyer) {
+      } else if (this.data.postID1Needed && this.data.isBuyer) {
         this.setData({ 'orderDetails.postID1': e.detail.value });
       }
     },
@@ -261,6 +272,17 @@ Page({
           //wx.navigateTo({
           //  url: '/pages/about/order_type1_success'
           //});
+	  if (_newStatus == ORDER_STATUS.ORDERSTATUS_ENUM1.DONE) {
+            console.log('banker_order_id:', this.data.goodInfo.banker_order_id);
+            CLOUDFUNC.callCloudFunction('updateOrderInfo', { orderID: this.data.goodInfo.banker_order_id,
+		  orderDetail: {
+		    order_status: ORDER_STATUS.ORDERSTATUS_ENUM0.SELLED,
+		    order_details : { order_status : ORDER_STATUS.ORDERSTATUS_ENUM0.SELLED}
+		  }
+            }).then(res=> {
+	      console.log('update banker_order_id res:', res);
+	    }) ;
+	  }
           setTimeout(() => {
             wx.redirectTo({
               url: '/pages/goods-details/index?id=' + this.data.goodsID,
@@ -300,10 +322,13 @@ Page({
     async addPaymentImage() {
       const res = await wx.chooseMedia({ count: 1, mediaType: ['image'], sizeType: ['compressed'] });
       wx.showLoading({ title: '上传中...' });
+      console.log('detals:', this.data.orderDetails)
       try {
         const urls = await UPLOAD.uploadFiles(res.tempFiles.map(f => f.tempFilePath), 'image', CLOUDFUNC);
         const url = urls[0];
+	console.log('detals:', this.data.orderDetails)
         this.setData({ 'orderDetails.payment': { url: url } });
+	console.log('detals:', this.data.orderDetails)
         wx.hideLoading();
         wx.showToast({ title: '上传成功', icon: 'success' });
       } catch (err) {

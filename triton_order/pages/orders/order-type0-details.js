@@ -14,6 +14,10 @@ Page({
       updatingDisabled: true,
       cancelingDisabled: true,
       orderNextStep: "",
+      SENDER_ADDR_ENABLED: false,
+      RECVER_ADDR_ENABLED: false,
+      POST_ID0_ENABLED: false,
+      POST_ID1_ENABLED: false,
       orderPostID0Needed: false,
       orderPostID1Needed: false,
       senderAddrNeeded: false,
@@ -130,6 +134,7 @@ Page({
           // 映射字段名：goodsName -> name, pic -> 第一张图片
           const mappedGoodsInfo = {
             ...goods,
+            banker_order_id: goods.banker_order_id,
             name: goods.goodsName || goods.name || '',
             price: goods.price || '',
             color: goods.color || '',
@@ -150,17 +155,6 @@ Page({
         console.error('获取商品信息失败:', err);
       }
     },
-    updateOrderViewStatus() {
-      let _isOwner  = (this.data.userID == this.data.orderDetails.owner_id)
-      let _isBanker = (this.data.userID == this.data.orderDetails.banker_id);
-      let _canSee   = (_isOwner || _isBanker);
-      this.setData({
-              orderNextStep: ORDER_STATUS.getStatusText0(this.data.orderDetails.order_status),
-              isOwner: _isOwner,
-              isBanker: _isBanker,
-              canSee : _canSee
-      });
-    },
     updateButtonStatus() {
       let opEnabled = false;
       let isCanceler = (this.data.userID == this.data.orderDetails.canceler_id);
@@ -170,6 +164,7 @@ Page({
       let needRecverAddr = false;
       let needPostID0 = false;
       let needPostID1 = false;
+
       if (curOrderStatus == ORDER_STATUS.ORDERSTATUS_ENUM0.CREATED) {
         //recver firstly see, and then confirm
         opEnabled = this.data.isOwner;
@@ -210,7 +205,11 @@ Page({
         senderAddrNeeded: needSenderAddr,
         recverAddrNeeded: needRecverAddr,
         orderPostID0Needed: needPostID0,
-        orderPostID1Needed: needPostID1
+        orderPostID1Needed: needPostID1,
+        SENDER_ADDR_ENABLED : needSenderAddr,
+        RECVER_ADDR_ENABLED : needRecverAddr,
+        POST_ID0_ENABLED    : needPostID0,
+        POST_ID1_ENABLED    : needPostID1,
       });
     },
     onNameInput(e) { this.setData({ 'goodInfo.name': e.detail.value }); },
@@ -314,6 +313,7 @@ Page({
       console.log('submitGood')
       this.data.goodInfo.ownerID = wx.getStorageSync("userID");
       this.data.goodInfo.bankID = this.data.bankerID;
+      this.data.goodInfo.banker_order_id = this.data.orderID;
       
       // 验证
       if (!this.data.goodInfo.name.trim()) {
