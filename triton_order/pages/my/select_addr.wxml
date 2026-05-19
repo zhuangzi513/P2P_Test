@@ -1,9 +1,56 @@
 <view class="address-container">
-  <van-empty wx:if="{{ !addressList }}" description="EMPTY" />
+  <!-- 暂无地址空状态 -->
+  <van-empty wx:if="{{ !addressList || addressList.length === 0 }}" description="EMPTY" />
 
+  <!-- 地址表单（动态显隐） -->
+  <view class="address-form" wx:if="{{ showForm }}">
+    <view class="form-header">
+      <text>{{ isEdit ? 'Edit Address' : 'New Address' }}</text>
+      <van-icon name="cross" bind:tap="hideForm" />
+    </view>
+    <view class="form-body">
+      <van-field
+        label="Name"
+        placeholder="Receiver"
+        value="{{ formData.linkMan }}"
+        bind:change="onFieldChange"
+        data-field="linkMan"
+        required
+      />
+      <van-field
+        label="Phone"
+        type="number"
+        placeholder="Mobile"
+        value="{{ formData.mobile }}"
+        bind:change="onFieldChange"
+        data-field="mobile"
+        required
+      />
+      <van-field
+        label="Address"
+        placeholder="Detailed address"
+        value="{{ formData.address }}"
+        bind:change="onFieldChange"
+        data-field="address"
+        required
+      />
+      <view class="default-row">
+        <text>Set as default</text>
+        <van-switch checked="{{ formData.isDefault }}" bind:change="onDefaultChange" />
+      </view>
+      <van-button type="info" block round bind:tap="submitAddress" loading="{{ submitting }}">
+        {{ isEdit ? 'Update' : 'Add' }}
+      </van-button>
+      <van-button block round plain bind:tap="hideForm" style="margin-top: 20rpx;">
+        Cancel
+      </van-button>
+    </view>
+  </view>
+
+  <!-- 地址列表 -->
   <view class="address-list">
     <view class="address-item" wx:for="{{addressList}}" wx:key="id">
-      <view class="address-content" bind:tap="selectTap" data-id="{{item.id}}">
+      <view class="address-content" bind:tap="onAddressTap" data-id="{{item.id}}">
         <view class="address-header">
           <view class="user-info">
             <text class="user-name">{{item.linkMan}}</text>
@@ -15,9 +62,8 @@
           <text class="address-text">{{item.address}}</text>
         </view>
       </view>
-      
-      <view class="address-actions">
-        <view class="action-btn edit-btn" bind:tap="editAddess" data-id="{{item.id}}">
+      <view class="address-actions" wx:if="{{!selectMode}}">
+        <view class="action-btn edit-btn" bind:tap="openEditInline" data-id="{{item.id}}">
           <van-icon name="edit" size="32rpx" />
           <text>EDIT</text>
         </view>
@@ -30,8 +76,9 @@
     </view>
   </view>
 
+  <!-- 底部添加按钮 -->
   <view class="safe-bottom-box">
-    <view class="add-btn" bind:tap="addAddess">
+    <view class="add-btn" bind:tap="openAddInline">
       <van-icon name="add-o" size="36rpx" color="#fff" />
       <text>NEW</text>
     </view>

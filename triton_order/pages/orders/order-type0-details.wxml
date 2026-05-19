@@ -168,26 +168,42 @@
       <view class="card-header">
         <text class="card-title">物流信息</text>
       </view>
-      
+
+      <!-- 发货地址 -->
       <view class="form-row" wx:if="{{SENDER_ADDR_ENABLED}}">
         <view class="form-label">发货地址</view>
-        <textarea class="form-textarea small" 
-                  placeholder="请输入发货地址" 
-                  disabled="{{!isOwner}}" 
-                  value="{{orderDetails.sender_addr}}" 
-                  bindinput="onSenderAddrInput" 
-                  maxlength="200" />
+        <view class="address-selector">
+          <view class="address-text {{!isOwner ? 'disabled' : ''}}">
+            {{orderDetails.sender_addr || '请选择发货地址'}}
+          </view>
+          <button 
+            class="select-btn" 
+            size="mini" 
+            type="default" 
+            disabled="{{!isOwner}}"
+            bindtap="onSelectAddress"
+            data-type="sender"
+          >选择</button>
+        </view>
       </view>
       
+      <!-- 收货地址 -->
       <view class="form-row" wx:if="{{RECVER_ADDR_ENABLED}}">
         <view class="form-label">收货地址</view>
-        <textarea class="form-textarea small" 
-                  placeholder="请输入收货地址" 
-                  disabled="{{!isBanker}}" 
-                  value="{{orderDetails.recver_addr}}" 
-                  bindinput="onRecverAddrInput" 
-                  maxlength="200" />
-      </view>
+        <view class="address-selector">
+          <view class="address-text {{!isBanker ? 'disabled' : ''}}">
+            {{orderDetails.recver_addr || '请选择收货地址'}}
+          </view>
+          <button 
+            class="select-btn" 
+            size="mini" 
+            type="default" 
+            disabled="{{!isBanker}}"
+            bindtap="onSelectAddress"
+            data-type="recver"
+          >选择</button>
+        </view>
+      </view>      
       
       <view class="form-row" wx:if="{{POST_ID0_ENABLED}}">
         <view class="form-label">发货快递</view>

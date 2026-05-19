@@ -1,50 +1,168 @@
 const CLOUDFUNC = require('../../utils/cloud.js')
 
-const app = getApp()
 Page({
   data: {
-    page: 1
-  },
-  selectTap: function(e) {
-    console.log(e);
-    var id = e.currentTarget.dataset.id;
-    CLOUDFUNC.callCloudFunction('updateAddress', {
-      token: wx.getStorageSync('token'),
-      id: id,
-      isDefault: 'true'
-    }).then(function(res) {
-      wx.navigateBack({})
-    })
-  },
-
-  addAddess: function() {
-    wx.navigateTo({
-      url: "/pages/address-add/index"
-    })
+    page: 1,
+    addressList: null,          // 地址列表
+    showForm: false,            // 是否显示表单
+    selectMode: false,
+    isEdit: false,              // 是否为编辑模式
+    editId: null,               // 编辑时的地址ID
+    formData: {
+      linkMan: '',
+      mobile: '',
+      address: '',
+      isDefault: false
+    },
+    submitting: false           // 提交状态
   },
 
-  editAddess: function(e) {
-    console.log(e);
-    
-    wx.navigateTo({
-      url: "/pages/address-add/index?id=" + e.currentTarget.dataset.id
-    })
+  // 显示新增表单
+  openAddInline() {
+    this.setData({
+      showForm: true,
+      isEdit: false,
+      editId: null,
+      formData: {
+        linkMan: '',
+        mobile: '',
+        address: '',
+        isDefault: false
+      }
+    });
   },
 
-  onLoad() {
-    
+  // 显示编辑表单（内联）
+  openEditInline(e) {
+    const id = e.currentTarget.dataset.id;
+    const address = this.data.addressList.find(item => item.id == id);
+    if (address) {
+      this.setData({
+        showForm: true,
+        isEdit: true,
+        editId: id,
+        formData: {
+          linkMan: address.linkMan,
+          mobile: address.mobile,
+          address: address.address,
+          isDefault: address.isDefault || false
+        }
+      });
+    }
   },
+
+  // 隐藏表单
+  hideForm() {
+    this.setData({ showForm: false });
+  },
+
+  // 表单字段变化
+  onFieldChange(e) {
+    const field = e.currentTarget.dataset.field;
+    this.setData({
+      [`formData.${field}`]: e.detail
+    });
+  },
+
+  // 默认地址开关变化
+  onDefaultChange(e) {
+    this.setData({
+      'formData.isDefault': e.detail
+    });
+  },
+
+  // 提交地址（新增或编辑）
+  async submitAddress() {
+    const { linkMan, mobile, address, isDefault } = this.data.formData;
+    if (!linkMan || !mobile || !address) {
+      wx.showToast({ title: 'Please fill in all fields', icon: 'none' });
+      return;
+    }
+    if (!/^1[3-9]\d{9}$/.test(mobile)) {
+      wx.showToast({ title: 'Invalid phone number', icon: 'none' });
+      return;
+    }
+
+    this.setData({ submitting: true });
+    wx.showLoading({ title: 'Saving...' });
+
+    try {
+      let res;
+      if (this.data.isEdit) {
+        // 编辑地址
+        res = await CLOUDFUNC.callCloudFunction('updateAddress', {
+          token: wx.getStorageSync('token'),
+          id: this.data.editId,
+          linkMan,
+          mobile,
+          address,
+          isDefault: isDefault ? 'true' : 'false'
+        });
+      } else {
+        // 新增地址
+        res = await CLOUDFUNC.callCloudFunction('addAddress', {
+          token: wx.getStorageSync('token'),
+          linkMan,
+          mobile,
+          address,
+          isDefault: isDefault ? 'true' : 'false'
+        });
+      }
+
+      wx.hideLoading();
+      this.setData({ submitting: false });
+
+      if (res.code === 0) {
+        wx.showToast({ title: this.data.isEdit ? 'Updated' : 'Added', icon: 'success' });
+        this.hideForm();                 // 关闭表单
+        this.initShippingAddress();      // 刷新列表
+      } else {
+        wx.showToast({ title: res.msg || 'Failed', icon: 'none' });
+      }
+    } catch (err) {
+      wx.hideLoading();
+      this.setData({ submitting: false });
+      wx.showToast({ title: 'Network error', icon: 'none' });
+    }
+  },
+
+  // 原有的选择地址（设为默认）
+  onAddressTap(e) {
+   const id = e.currentTarget.dataset.id;
+    const address = this.data.addressList.find(item => item.id == id);
+    if (this.data.selectMode) {
+      // 选择模式：将选中的地址返回上一页
+      const eventChannel = this.getOpenerEventChannel();
+      eventChannel.emit('selectAddress', address);
+      wx.navigateBack();
+    } else {
+      // 原有逻辑：设为默认地址
+      CLOUDFUNC.callCloudFunction('updateAddress', {
+        token: wx.getStorageSync('token'),
+        id: id,
+        isDefault: 'true'
+      }).then(res => {
+        wx.navigateBack({});
+      });
+    }
+  },
+
+  onLoad(options) {
+    if (options.selectMode === 'true') {
+      this.setData({ selectMode: true });
+    }
+  },
+
   onShow: function() {
     this.initShippingAddress();
   },
+
   async initShippingAddress() {
-    wx.showLoading({
-      title: '',
-    })
+    wx.showLoading({ title: '' });
     const res = await CLOUDFUNC.callCloudFunction('queryAddress', {
       token: wx.getStorageSync('token')
-    })
-    wx.hideLoading()
+    });
+    wx.hideLoading();
     if (res.code == 0) {
       this.setData({
         addressList: res.data.result
@@ -57,43 +175,40 @@ Page({
       wx.showToast({
         title: res.msg,
         icon: 'none'
-      })
+      });
     }
   },
+
   onPullDownRefresh() {
-    this.data.page = 1
-    this.initShippingAddress()
-    wx.stopPullDownRefresh()
+    this.data.page = 1;
+    this.initShippingAddress();
+    wx.stopPullDownRefresh();
   },
+
   deleteAddress(e) {
-    const id = e.currentTarget.dataset.id
-    const index = e.currentTarget.dataset.index
+    const id = e.currentTarget.dataset.id;
+    const index = e.currentTarget.dataset.index;
     wx.showModal({
       content: 'SURE ?',
       success: async (res) => {
         if (res.confirm) {
-          wx.showLoading({
-            title: '',
-          })
-          const delRes = await CLOUDFUNC.callCloudFunction('deleteAddress', { token: wx.getStorageSync('token'), id: id })
-          wx.hideLoading()
+          wx.showLoading({ title: '' });
+          const delRes = await CLOUDFUNC.callCloudFunction('deleteAddress', { token: wx.getStorageSync('token'), id: id });
+          wx.hideLoading();
           if (delRes.code != 0) {
             wx.showToast({
               title: delRes.msg,
               icon: 'none'
-            })
+            });
           } else {
             wx.showToast({
               title: 'DELETED',
               icon: 'none'
-            })
-            this.data.addressList.splice(index, 1)
-            this.setData({
-              addressList: this.data.addressList
-            })
+            });
+            this.initShippingAddress();  // 刷新列表
           }
         }
       }
-    })
-  },
-})
+    });
+  }
+});

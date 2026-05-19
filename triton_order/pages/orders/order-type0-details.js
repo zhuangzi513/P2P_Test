@@ -51,6 +51,53 @@ Page({
         ownerID: wx.getStorageSync('userID'),
       })
     },
+    
+    async fillDefaultAddress() {
+      try {
+        const res = await CLOUDFUNC.callCloudFunction('queryAddress', {
+          token: wx.getStorageSync('token')
+        });
+        if (res.code === 0 && res.data.result && res.data.result.length) {
+          const defaultAddr = res.data.result.find(item => item.isDefault === true);
+          if (defaultAddr) {
+            const fullAddress = `${defaultAddr.linkMan} ${defaultAddr.mobile} ${defaultAddr.address}`;
+            if (!this.data.orderDetails.sender_addr) {
+              this.setData({
+                'orderDetails.sender_addr': fullAddress
+              });
+            }
+            if (!this.data.orderDetails.recver_addr) {
+              this.setData({
+                'orderDetails.recver_addr': fullAddress
+              });
+            }
+          }
+        }
+      } catch (err) {
+        console.error('获取默认地址失败', err);
+      }
+    },
+    
+    onSelectAddress(e) {
+      const type = e.currentTarget.dataset.type;
+      wx.navigateTo({
+        url: '/pages/my/select_address?selectMode=true',
+        events: {
+          selectAddress: (address) => {
+            const fullAddress = `${address.linkMan} ${address.mobile} ${address.address}`;
+            if (type === 'sender') {
+              this.setData({
+                'orderDetails.sender_addr': fullAddress
+              });
+            } else {
+              this.setData({
+                'orderDetails.recver_addr': fullAddress
+              });
+            }
+          }
+        }
+      });
+    }
     onShow() {
       this.orderDetail().then(res => {
            this.updateButtonStatus()
@@ -211,6 +258,12 @@ Page({
         POST_ID0_ENABLED    : needPostID0,
         POST_ID1_ENABLED    : needPostID1,
       });
+      if (SENDER_ADDR_ENABLED) {
+         fillDefaultAddress().then();
+      }
+      if (RECVER_ADDR_ENABLED) {
+         fillDefaultAddress().then();
+      }
     },
     onNameInput(e) { this.setData({ 'goodInfo.name': e.detail.value }); },
     onColorInput(e) { this.setData({ 'goodInfo.color': e.detail.value }); },
@@ -497,4 +550,5 @@ Page({
         });
       }
     }
+
 })
