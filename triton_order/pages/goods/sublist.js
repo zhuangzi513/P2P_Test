@@ -6,25 +6,14 @@ const CLOUDFUNC = require('../../utils/cloud.js');
 
 Page({
   data: {
-    inputVal: "",
+    userName:'',
+    userID:-1,
     goodsRecommend: [],
-    loadingHidden: false,
-    selectCurrent: 0,
     bankers: [],
     goods: [],
     loadingMoreHidden: true,
     curPage: 1,
     pageSize: 20
-  },
-  tabClick(e) {
-    const _banker = this.data.bankers.find(ele => {
-      return ele.id == e.currentTarget.dataset.id
-    })
-    if (_banker.name || _banker.user_id) {
-      wx.navigateTo({
-        url: '/pages/goods/sublist?banker_id=' + _banker.user_id,
-      })
-    }
   },
   toDetailsTap: function(e) {
     const id = e.currentTarget.dataset.id
@@ -32,78 +21,22 @@ Page({
       url: `/pages/goods-details/index?id=${id}`,
     })
   },
-  tapBanner(e) {
-    const item = e.currentTarget.dataset.item
-    if (item.linkType == 1) {
-      // 跳小程序
-      wx.navigateToMiniProgram({
-        appId: item.appid,
-        path: item.linkUrl || '',
-      })
-    } else {
-      if (item.linkUrl) {
-        wx.navigateTo({
-          url: item.linkUrl
-        })
-      }
-    }
-  },
-  adClick: function(e) {
-    const url = e.currentTarget.dataset.url
-    if (url) {
-      wx.navigateTo({
-        url
-      })
-    }
-  },
-  bindTypeTap: function(e) {
-    this.setData({
-      selectCurrent: e.index
-    })
-  },
   onLoad: function(e) {
     wx.showShareMenu({
       withShareTicket: true,
     })
-    const that = this
-    AUTH.checkHasLogined().then(isLogined => {
-      if (isLogined) {
-        TOOLS.showTabBarBadge()
-      } else {
-        getApp().loginOK = () => {
-          TOOLS.showTabBarBadge()
-        }
-      }
-    })
-
-    this.readConfigVal();
-    this.initBanners();
-    this.bankers();
-
-    //that.getNotice()
+    this.getGoodsList()
   },
   readConfigVal() {
     const userName = wx.getStorageSync('userName')
+    const userID = wx.getStorageSync('userName')
     wx.setNavigationBarTitle({
       title: userName
     })
     this.setData({
+      userID  : userID   ? userID   : -1,
       userName: userName ? userName : 'who are you',
     })
-  },
-  async initBanners(){
-    const _data = {}
-    //const res1 = await CLOUDFUNC.callCloudFunction('banners', { type: 'index' });
-    //if (res1.code == 700) {
-    //  wx.showModal({
-    //    title: 'NOTE',
-    //    content: 'PLS add pic backend',
-    //    showCancel: false
-    //  })
-    //} else {
-    //  _data.banners = res1.data
-    //}
-    this.setData(_data)
   },
   onShow: function(e){
     this.setData({
@@ -117,28 +50,11 @@ Page({
     this.getGoodsList(0)
   },
 
-  async bankers() {
-    const res = await CLOUDFUNC.callCloudFunction('bankersList', {});
-    let bankers = [];
-    if (res.code == 0) {
-      const _bankers = res.data.filter(ele => {
-        return ele.level == 1
-      })
-      bankers = bankers.concat(_bankers)
-    }
-    this.setData({
-      bankers: bankers,
-      curPage: 1
-    });
-  },
-  async getGoodsList(categoryId, append) {
-    if (categoryId == 0) {
-      categoryId = "";
-    }
+  async getGoodsList(append) {
     wx.showLoading({
       title: ''
     })
-    const res = await CLOUDFUNC.callCloudFunction('goodsStatics', { pageNo: this.data.curPage, pageSize: this.data.pageSize });
+    const res = await CLOUDFUNC.callCloudFunction('goodsStatics', { bankerID: userID, pageNo: this.data.curPage, pageSize: this.data.pageSize });
     wx.hideLoading()
     if (res.code != 0) {
       let newData = {
@@ -154,7 +70,6 @@ Page({
     if (append) {
       goods = this.data.goods
     }
-    console.log('res.goods', res.goods)
     for (var i = 0; i < res.goods.length; i++) {
       const item = res.goods[i];
       // 转换数据结构以适配前端显示
@@ -187,16 +102,6 @@ Page({
       imageUrl: wx.getStorageSync('share_pic')
     }
   },
-  getNotice: function() {
-    var that = this;
-    //CLOUDFUNC.callCloudFunction('noticeList', {userID: wx.getStorageSync("userID"), pageSize: 5}).then(function (res) {
-    //  if (res.code == 0) {
-    //    that.setData({
-    //      noticeList: res.data
-    //    });
-    //  }
-    //});
-  },
   onReachBottom: function() {
     this.setData({
       curPage: this.data.curPage + 1
@@ -209,16 +114,5 @@ Page({
     });
     this.getGoodsList(0)
     wx.stopPullDownRefresh()
-  },
-  goSearch(){
-    wx.navigateTo({
-      url: '/pages/search/index'
-    })
-  },
-  goNotice(e) {
-    const id = e.currentTarget.dataset.id
-    wx.navigateTo({
-      url: '/pages/notice/show?id=' + id,
-    })
   }
 })
