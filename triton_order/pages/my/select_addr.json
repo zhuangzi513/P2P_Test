@@ -1,13 +1,11 @@
 {
    "navigationBarTitleText": "选择收货地址",
    "enablePullDownRefresh": true,
-   {
-     "usingComponents": {
-       "van-empty": "@vant/weapp/empty/index",
-       "van-icon": "@vant/weapp/icon/index",
-       "van-field": "@vant/weapp/field/index",
-       "van-button": "@vant/weapp/button/index",
-       "van-switch": "@vant/weapp/switch/index"
-     }
+   "usingComponents": {
+     "van-empty": "@vant/weapp/empty/index",
+     "van-icon": "@vant/weapp/icon/index",
+     "van-field": "@vant/weapp/field/index",
+     "van-button": "@vant/weapp/button/index",
+     "van-switch": "@vant/weapp/switch/index"
    }
 }

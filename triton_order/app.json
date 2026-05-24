@@ -4,6 +4,7 @@
     "pages/login/index",
     "pages/start/start",
     "pages/goods-details/index",
+    "pages/goods/sublist",
     "pages/my/index",
     "pages/my/edit_product",
     "pages/my/edit_products",

@@ -21,12 +21,13 @@ module.exports = {
 
 <view class="jd-category-container">
   <view class="jd-category-grid">
-    <view class="jd-category-item" wx:for="{{bankers}}" wx:key="id" bindtap="tabClick" data-id="{{item.id}}"
+    <view class="jd-category-item" wx:for="{{bankers}}" wx:for-index="idx" bindtap="tabClick" data-id="{{item.id}}" data-userid="{{item.user_id}}" data-index="{{idx}}"
           hover-class="button-hover" hover-start-time="50" hover-stay-time="150" hover-stop-propagation="true">
       <view class="jd-category-icon-wrap">
         <image mode="aspectFill" src="{{item.avatar}}"></image>
       </view>
-      <text class="jd-category-name">{{item.name}}</text>
+      <text class="jd-category-name">{{item.data.nick}}</text>
+      <text class="jd-category-name">{{item.data.score}}</text>
     </view>
   </view>
 </view>

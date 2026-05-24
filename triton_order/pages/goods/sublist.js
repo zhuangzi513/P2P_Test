@@ -8,6 +8,7 @@ Page({
   data: {
     userName:'',
     userID:-1,
+    bankerID:-1,
     goodsRecommend: [],
     bankers: [],
     goods: [],
@@ -21,11 +22,14 @@ Page({
       url: `/pages/goods-details/index?id=${id}`,
     })
   },
-  onLoad: function(e) {
+  onLoad: function(options) {
+    const bankerID = options.banker_id ? Number(options.banker_id) : -1;
+    console.log(options)
+    this.setData({bankerID:bankerID})
     wx.showShareMenu({
       withShareTicket: true,
     })
-    this.getGoodsList()
+    this.getGoodsList(false, bankerID)
   },
   readConfigVal() {
     const userName = wx.getStorageSync('userName')
@@ -34,7 +38,7 @@ Page({
       title: userName
     })
     this.setData({
-      userID  : userID   ? userID   : -1,
+      userID  : this.userID   ? this.userID   : -1,
       userName: userName ? userName : 'who are you',
     })
   },
@@ -47,14 +51,14 @@ Page({
     })
     TOOLS.showTabBarBadge()
     this.setData({ curPage: 1 })
-    this.getGoodsList(0)
+    this.getGoodsList(false, this.data.bankerID)
   },
 
-  async getGoodsList(append) {
+  async getGoodsList(append, bankerID) {
     wx.showLoading({
       title: ''
     })
-    const res = await CLOUDFUNC.callCloudFunction('goodsStatics', { bankerID: userID, pageNo: this.data.curPage, pageSize: this.data.pageSize });
+    const res = await CLOUDFUNC.callCloudFunction('goodsStatics', { bankerID: this.data.bankerID, pageNo: this.data.curPage, pageSize: this.data.pageSize });
     wx.hideLoading()
     if (res.code != 0) {
       let newData = {
@@ -106,13 +110,13 @@ Page({
     this.setData({
       curPage: this.data.curPage + 1
     });
-    this.getGoodsList(0, true)
+    this.getGoodsList(true, this.data.bankerID)
   },
   onPullDownRefresh: function() {
     this.setData({
       curPage: 1
     });
-    this.getGoodsList(0)
+    this.getGoodsList(true, this.data.bankerID)
     wx.stopPullDownRefresh()
   }
 })

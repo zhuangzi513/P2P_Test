@@ -17,12 +17,12 @@ Page({
     pageSize: 20
   },
   tabClick(e) {
-    const _banker = this.data.bankers.find(ele => {
-      return ele.id == e.currentTarget.dataset.id
-    })
-    if (_banker.name || _banker.user_id) {
+    const userId = e.currentTarget.dataset.userid
+    const index = e.currentTarget.dataset.index
+    console.log('tabClick, user_id:', userId, 'index:', index)
+    if (userId) {
       wx.navigateTo({
-        url: '/pages/goods/sublist?banker_id=' + _banker.user_id,
+        url: '/pages/goods/sublist?banker_id=' + userId,
       })
     }
   },
@@ -118,14 +118,15 @@ Page({
   },
 
   async bankers() {
-    const res = await CLOUDFUNC.callCloudFunction('bankersList', {});
+    const res = await CLOUDFUNC.callCloudFunction('bankersList', {userID:wx.getStorageSync('userID')});
     let bankers = [];
     if (res.code == 0) {
-      const _bankers = res.data.filter(ele => {
-        return ele.level == 1
-      })
+      const _bankers = res.bankers
       bankers = bankers.concat(_bankers)
+    } else {
+      console.log('empty bankers')
     }
+    console.log('bankers:', bankers)
     this.setData({
       bankers: bankers,
       curPage: 1
