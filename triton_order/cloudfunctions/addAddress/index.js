@@ -48,6 +48,7 @@ exports.main = async (event, context) => {
     return {
       code: 0,
       data: {
+        code: 0,
         id: res._id,
         message: '添加成功'
       }

@@ -22,7 +22,7 @@ exports.main = async (event, context) => {
 
   try {
     const { data } = await addrCollection
-      .where({ user_id: userID })
+      .where({ user_id: Number(userID) })
       .orderBy('isDefault', 'desc')
       .orderBy('updateTime', 'desc')
       .get();
@@ -30,6 +30,7 @@ exports.main = async (event, context) => {
     return {
       code: 0,
       data: {
+        code: 0,
         result: data,
         message: 'success'
       }

@@ -34,7 +34,7 @@
       <view class="menu-label">OUTPUT ORDERS</view>
       <text class="arrow">OUTPUT ORDERS</text>
     </view>
-    <navigator url="/pages/my/address" class="menu-item">
+    <navigator url="/pages/my/select_addr" class="menu-item">
       <view class="menu-label">MY ADDR</view>
       <text class="arrow">MY ADDR</text>
     </navigator>

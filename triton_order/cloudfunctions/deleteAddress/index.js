@@ -6,8 +6,10 @@ const db = cloud.database();
 const _ = db.command;
 
 exports.main = async (event, context) => {
-  console.log('event', event);
-  const { userID, id } = event;
+  const userID = event.userID;
+  const id  = event.id;
+  console.log('userID:' + userID);
+  console.log('id:' + id);
 
   if (!userID) {
     return {

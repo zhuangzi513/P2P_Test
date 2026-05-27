@@ -82,7 +82,7 @@ Page({
     onSelectAddress(e) {
       const type = e.currentTarget.dataset.type;
       wx.navigateTo({
-        url: '/pages/my/select_address?selectMode=true',
+        url: '/pages/my/select_addr?selectMode=true',
         events: {
           selectAddress: (address) => {
             const fullAddress = `${address.linkMan} ${address.mobile} ${address.address}`;

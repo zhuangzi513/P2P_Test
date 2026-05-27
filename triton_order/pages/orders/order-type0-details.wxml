@@ -183,36 +183,22 @@
       <!-- 发货地址 -->
       <view class="form-row" wx:if="{{SENDER_ADDR_ENABLED}}">
         <view class="form-label">发货地址</view>
-        <view class="address-selector">
+        <view class="address-selector {{!isOwner ? 'disabled' : ''}}" bindtap="{{isOwner ? 'onSelectAddress' : ''}}" data-type="sender">
           <view class="address-text {{!isOwner ? 'disabled' : ''}}">
             {{orderDetails.sender_addr || '请选择发货地址'}}
           </view>
-          <button 
-            class="select-btn" 
-            size="mini" 
-            type="default" 
-            disabled="{{!isOwner}}"
-            bindtap="onSelectAddress"
-            data-type="sender"
-          >选择</button>
+          <view class="select-arrow">›</view>
         </view>
       </view>
       
       <!-- 收货地址 -->
       <view class="form-row" wx:if="{{RECVER_ADDR_ENABLED}}">
         <view class="form-label">收货地址</view>
-        <view class="address-selector">
+        <view class="address-selector {{!isBanker ? 'disabled' : ''}}" bindtap="{{isBanker ? 'onSelectAddress' : ''}}" data-type="recver">
           <view class="address-text {{!isBanker ? 'disabled' : ''}}">
             {{orderDetails.recver_addr || '请选择收货地址'}}
           </view>
-          <button 
-            class="select-btn" 
-            size="mini" 
-            type="default" 
-            disabled="{{!isBanker}}"
-            bindtap="onSelectAddress"
-            data-type="recver"
-          >选择</button>
+          <view class="select-arrow">›</view>
         </view>
       </view>      
       
