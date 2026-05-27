@@ -62,8 +62,9 @@ Page({
       if (this.data.isNewOrder) {
 	console.log('new order, nothing to be shown');
 	let curOrderStatus = ORDER_STATUS.ORDERSTATUS_ENUM1.CREATED;
-	if (this.data.fixedPrice)
+	if (this.data.fixedPrice) {
 	  curOrderStatus = ORDER_STATUS.ORDERSTATUS_ENUM1.PAYED;
+	}
         this.setData({
                 orderCurrentStep: "NEW",
                 orderNextStep: ORDER_STATUS.getStatusText1(curOrderStatus),
@@ -75,7 +76,10 @@ Page({
 	if (!goodsInfo) {
           wx.showToast({ title: 'FAILED TO GET goodsInfo:' + this.data.orderID, icon: 'none' });
 	}
-
+	if (goodsInfo) {
+          this.setData({ 'orderDetails.price': goodsInfo.price});
+	}
+  
 	return;
       }
 
@@ -197,12 +201,15 @@ Page({
       } else if (curOrderStatus == ORDER_STATUS.ORDERSTATUS_ENUM1.SENDTORECVER) {
         //banker got paied and then send it to buyer
         opEnabled = this.data.isBanker;
+        needPayment = true;
         needPostID0 = true;
       } else if (curOrderStatus == ORDER_STATUS.ORDERSTATUS_ENUM1.RECVED) {
         //buyer confirm get it
+        needPayment = true;
         opEnabled = this.data.isBuyer;
       } else if (curOrderStatus == ORDER_STATUS.ORDERSTATUS_ENUM1.DONE) {
         opEnabled = false;
+        needPayment = true;
       } else if (curOrderStatus == ORDER_STATUS.ORDERSTATUS_ENUM1.CANCELLED) {
         //any time, cancel should be confirmed by eachother
         opEnabled = !isCanceler && (this.data.isBanker || this.data.isBuyer);
@@ -278,7 +285,7 @@ Page({
     },
     nextStep()  {
       if (this.data.canSee) {
-        const _newStatus = this.data.isNewOrder ?  (ORDER_STATUS.ORDERSTATUS_ENUM1.CREATED  + 1) : this.data.orderDetails.order_status + 1 ;
+        const _newStatus = this.data.orderDetails.order_status + 1 ;
         this.setData({ 'orderDetails.order_status': _newStatus });
         this.updateOrderData(_newStatus).then(res => {
           //wx.navigateTo({

@@ -78,6 +78,6 @@
   
   <van-goods-action>
     <van-goods-action-icon icon="{{faved?'like':'like-o'}}" text="收藏" bind:click="addFav" />
-    <van-goods-action-button text="立即购买" type="warning" bind:click="tobuy" />
+    <van-goods-action-button text="{{goodsInfo.fixedprice ? '立即购买' : '出价'}}" type="warning" bind:click="tobuy" />
   </van-goods-action>
 </view>
