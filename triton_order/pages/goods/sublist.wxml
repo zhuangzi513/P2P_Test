@@ -1,54 +1,26 @@
 <wxs module="goodsDetailPage">
 module.exports = {
   url : function(item) {
-    return '/pages/goods-details/index?id=' + item.goodsId
+    return '/pages/goods-details/index?id=' + item.id
   }
 }
 </wxs>
 
 <view class="jd-main-container">
-  <block wx:if="{{goodsRecommend.length > 0}}">
-    <view class="jd-section-header">
-      <view class="jd-section-title">
-        <text class="jd-section-name">recommand</text>
-      </view>
-      <view class="jd-section-more"></view>
-    </view>
-
-    <view class="jd-goods-grid">
-      <view class="jd-goods-card" wx:for="{{goodsRecommend}}" wx:key="id" bindtap="toDetailsTap" data-id="{{item.id}}">
-        <view class="jd-goods-img-wrap">
-          <image src="{{item.pic}}" mode="aspectFill" lazy-load="true" data-url="{{ item.pic }}" />
-        </view>
-        <view class="jd-goods-info">
-          <view class="jd-goods-name">{{item.name}}</view>
-          <view wx:if="{{item.characteristic}}" class="jd-goods-desc">{{item.characteristic}}</view>
-          <view class="jd-goods-price-box">
-            <view class="jd-goods-price">
-              <text class="jd-price-symbol">¥</text>
-              <text class="jd-price-num">{{item.price}}</text>
-            </view>
-          </view>
-        </view>
-      </view>
-
-    </view>
-  </block>
-  
   <view class="jd-section-header">
     <view class="jd-section-title">
-      <text class="jd-section-name">goodslist</text>
+      <text class="jd-section-name">{{bankerName}}'s goods</text>
     </view>
   </view>
 
   <view class="jd-goods-grid">
     <view class="jd-goods-card" wx:for="{{goods}}" wx:key="id" bindtap="toDetailsTap" data-id="{{item.id}}">
       <view class="jd-goods-img-wrap">
-        <image src="{{item.pic}}" mode="aspectFill" lazy-load="true" data-url="{{ item.pic }}" />
+        <image src="{{item.pic}}" mode="aspectFill" lazy-load="true" />
       </view>
-
       <view class="jd-goods-info">
         <view class="jd-goods-name">{{item.name}}</view>
+        <view wx:if="{{item.characteristic}}" class="jd-goods-desc">{{item.characteristic}}</view>
         <view class="jd-goods-price-box">
           <view class="jd-goods-price">
             <text class="jd-price-symbol">¥</text>
@@ -56,7 +28,6 @@ module.exports = {
           </view>
         </view>
       </view>
-
     </view>
   </view>
   <van-divider wx:if="{{ !loadingMoreHidden }}" custom-class="jd-end-divider" contentPosition="center">already to the bottom</van-divider>
