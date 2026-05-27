@@ -7,14 +7,28 @@ module.exports = {
 </wxs>
 
 <view class="jd-main-container">
-  <view class="jd-section-header">
-    <view class="jd-section-title">
-      <text class="jd-section-name">{{bankerName}}'s goods</text>
+  <!-- Banker Info -->
+  <view class="banker-info-card">
+    <view class="banker-avatar-wrap">
+      <image class="banker-avatar" src="{{bankerInfo.avatar}}" mode="aspectFill" />
+    </view>
+    <view class="banker-info-content">
+      <view class="banker-nick">{{bankerInfo.nick || 'Unknown'}}</view>
+      <view class="banker-score">Score: {{bankerInfo.score || '--'}}</view>
+      <view class="banker-id">ID: {{bankerID}}</view>
     </view>
   </view>
 
+  <!-- Tab Bar -->
+  <view class="tab-bar">
+    <view class="tab-item {{activeTab === 'recommend' ? 'tab-active' : ''}}" bindtap="switchTab" data-tab="recommend">Recommend</view>
+    <view class="tab-item {{activeTab === 'fixed' ? 'tab-active' : ''}}" bindtap="switchTab" data-tab="fixed">Fixed Price</view>
+    <view class="tab-item {{activeTab === 'negotiable' ? 'tab-active' : ''}}" bindtap="switchTab" data-tab="negotiable">Negotiable</view>
+  </view>
+
+  <!-- Goods Grid -->
   <view class="jd-goods-grid">
-    <view class="jd-goods-card" wx:for="{{goods}}" wx:key="id" bindtap="toDetailsTap" data-id="{{item.id}}">
+    <view class="jd-goods-card" wx:for="{{displayGoods}}" wx:key="id" bindtap="toDetailsTap" data-id="{{item.id}}">
       <view class="jd-goods-img-wrap">
         <image src="{{item.pic}}" mode="aspectFill" lazy-load="true" />
       </view>

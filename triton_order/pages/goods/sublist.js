@@ -5,9 +5,15 @@ const CLOUDFUNC = require('../../utils/cloud.js');
 
 Page({
   data: {
-    bankerName: '',
+    bankerInfo: {
+      nick: '',
+      score: '',
+      avatar: ''
+    },
     bankerID: -1,
-    goods: [],
+    activeTab: 'recommend',
+    allGoods: [],
+    displayGoods: [],
     loadingMoreHidden: true,
     curPage: 1,
     pageSize: 20
@@ -18,12 +24,32 @@ Page({
       url: `/pages/goods-details/index?id=${id}`,
     })
   },
+  switchTab(e) {
+    const tab = e.currentTarget.dataset.tab
+    this.setData({ activeTab: tab, curPage: 1 })
+    if (tab === 'recommend') {
+      this.getGoodsList(false)
+    } else {
+      this.filterGoods()
+    }
+  },
+  filterGoods() {
+    const tab = this.data.activeTab
+    let filtered = this.data.allGoods
+    if (tab === 'fixed') {
+      filtered = this.data.allGoods.filter(g => g.fixedprice === true)
+    } else if (tab === 'negotiable') {
+      filtered = this.data.allGoods.filter(g => !g.fixedprice || g.fixedprice !== true)
+    }
+    this.setData({ displayGoods: filtered })
+  },
   onLoad: function(options) {
     const bankerID = options.banker_id ? Number(options.banker_id) : -1;
     this.setData({ bankerID: bankerID })
     wx.showShareMenu({
       withShareTicket: true,
     })
+    this.getBankerInfo(bankerID)
     this.getGoodsList(false)
   },
   onShow: function(e){
@@ -38,32 +64,51 @@ Page({
     this.getGoodsList(false)
   },
 
+  async getBankerInfo(bankerID) {
+    try {
+      const res = await CLOUDFUNC.callCloudFunction('getUserInfo', { userID: bankerID });
+      if (res && res.userInfo) {
+        this.setData({
+          bankerInfo: {
+            nick: res.userInfo.nick || '',
+            score: res.userInfo.score || '',
+            avatar: res.userInfo.avatar || ''
+          }
+        })
+      }
+    } catch (err) {
+      console.log('getBankerInfo failed:', err)
+    }
+  },
+
   async getGoodsList(append) {
     wx.showLoading({ title: '' })
-    const res = await CLOUDFUNC.callCloudFunction('goodsStatics', { userID: this.data.bankerID, pageNo: this.data.curPage, pageSize: this.data.pageSize });
+    const res = await CLOUDFUNC.callCloudFunction('goodsStatics', { userID: this.data.userID, bankerID: this.data.bankerID, pageNo: this.data.curPage, pageSize: this.data.pageSize });
     wx.hideLoading()
     if (res.code != 0) {
       let newData = { loadingMoreHidden: false }
-      if (!append) { newData.goods = [] }
+      if (!append) { newData.allGoods = [] }
       this.setData(newData);
       return
     }
     let goods = [];
-    if (append) { goods = this.data.goods }
+    if (append) { goods = this.data.allGoods }
     for (var i = 0; i < res.goods.length; i++) {
       const item = res.goods[i];
       goods.push({
         id: item.goods_id,
         name: item.goods_info?.name || '',
         price: item.goods_info?.price || '0',
+        fixedprice: item.goods_info?.fixedprice || false,
         characteristic: item.goods_info?.characteristic || '',
         pic: (item.goods_info?.imageList && item.goods_info.imageList[0]) ? item.goods_info.imageList[0].url : ''
       });
     }
     this.setData({
       loadingMoreHidden: true,
-      goods: goods,
+      allGoods: goods,
     });
+    this.filterGoods()
   },
   onShareAppMessage: function() {
     return {

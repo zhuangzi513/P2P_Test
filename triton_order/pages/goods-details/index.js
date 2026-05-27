@@ -170,6 +170,7 @@ Page({
     const _buyerID = this.data.userID;
     const _goodsID = this.data.goodsID;
     const _bankerID = this.data.bankerID;
+    const _fixedprice = this.data.goodsInfo.fixedprice;
     CLOUDFUNC.callCloudFunction('newOrder', {
       orderType: 1,
       ownerID:  _ownerID, 
@@ -178,8 +179,12 @@ Page({
       goodsID:  _goodsID
     }).then(res => {
       if (res && res.orderId) {
+        let url = "/pages/orders/order-type1-details?goods_id=" + this.data.goodsID + "&id=" + res.orderId + "&is_new=true";
+        if (_fixedprice) {
+          url += "&fixed_price=1";
+        }
         wx.navigateTo({
-          url: "/pages/orders/order-type1-details?goods_id=" + this.data.goodsID + "&id=" + res.orderId + "&is_new=true"
+          url: url
         })
       } else {
         wx.showToast({

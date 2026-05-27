@@ -103,6 +103,17 @@
         </view>
         
         <view class="form-row">
+          <view class="form-label">一口价</view>
+          <view class="toggle-wrapper {{!isOwner ? 'disabled' : ''}}">
+            <view class="toggle-switch {{goodInfo.fixedprice ? 'active' : ''}}" 
+                  bindtap="{{isOwner ? 'onFixedPriceToggle' : ''}}">
+              <view class="toggle-knob {{goodInfo.fixedprice ? 'active' : ''}}"></view>
+            </view>
+            <text class="toggle-text">{{goodInfo.fixedprice ? '已开启' : '已关闭'}}</text>
+          </view>
+        </view>
+        
+        <view class="form-row">
           <view class="form-label">描述</view>
           <textarea class="form-textarea" 
                     placeholder="请输入商品描述..." 

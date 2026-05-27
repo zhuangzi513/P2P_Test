@@ -30,6 +30,7 @@ Page({
         name: '',
         imageList: [],
         videoList: [],
+        fixedprice: false,
       },
       orderDetails: {
       }
@@ -97,7 +98,7 @@ Page({
           }
         }
       });
-    }
+    },
     onShow() {
       this.orderDetail().then(res => {
            this.updateButtonStatus()
@@ -184,6 +185,7 @@ Page({
             banker_order_id: goods.banker_order_id,
             name: goods.goodsName || goods.name || '',
             price: goods.price || '',
+            fixedprice: goods.fixedprice || false,
             color: goods.color || '',
             sizeX: goods.sizeX || '',
             sizeY: goods.sizeY || '',
@@ -271,6 +273,9 @@ Page({
     onSizeInputY(e) { this.setData({ 'goodInfo.sizeY': e.detail.value }); },
     onSizeInputZ(e) { this.setData({ 'goodInfo.sizeZ': e.detail.value }); },
     onPriceInput(e) { this.setData({ 'goodInfo.price': e.detail.value }); },
+    onFixedPriceToggle() {
+      this.setData({ 'goodInfo.fixedprice': !this.data.goodInfo.fixedprice });
+    },
     onDescInput(e)  { this.setData({ 'goodInfo.description': e.detail.value }); },
     onSenderAddrInput(e)  { this.setData({ 'orderDetails.sender_addr': e.detail.value }); },
     onRecverAddrInput(e)  { this.setData({ 'orderDetails.recver_addr': e.detail.value }); },

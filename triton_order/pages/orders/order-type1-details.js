@@ -9,6 +9,7 @@ Page({
       goodsID:0,
       ownerID:0,
       userID:0,
+      fixedPrice: false,
       submitting: false,
       loading: true,
       updatingDisabled: true,
@@ -35,6 +36,7 @@ Page({
       const orderID = options.id ? Number(options.id) : -1;
       const isNewOrder = (options.is_new == undefined) ? false : options.is_new;
       const goodsID = options.goods_id ? Number(options.goods_id) : -1;
+      const fixedPrice = options.fixed_price == '1';
       console.log(options)
 
       this.setData({
@@ -42,6 +44,7 @@ Page({
         isNewOrder: isNewOrder,
         goodsID: goodsID,
         userID: wx.getStorageSync('userID'),
+        fixedPrice: fixedPrice,
       })
 
 
@@ -58,12 +61,15 @@ Page({
 
       if (this.data.isNewOrder) {
 	console.log('new order, nothing to be shown');
+	let curOrderStatus = ORDER_STATUS.ORDERSTATUS_ENUM1.CREATED;
+	if (this.data.fixedPrice)
+	  curOrderStatus = ORDER_STATUS.ORDERSTATUS_ENUM1.PAYED;
         this.setData({
                 orderCurrentStep: "NEW",
-                orderNextStep: ORDER_STATUS.getStatusText1(ORDER_STATUS.ORDERSTATUS_ENUM1.CREATED),
+                orderNextStep: ORDER_STATUS.getStatusText1(curOrderStatus),
                 isBuyer: true,
                 canSee : true,
-		'orderDetails.order_status': ORDER_STATUS.ORDERSTATUS_ENUM1.CREATED
+		'orderDetails.order_status': curOrderStatus 
         });
         const goodsInfo = await this.updateGoodsInfo(this.data.goodsID);
 	if (!goodsInfo) {
@@ -161,6 +167,11 @@ Page({
       let opEnabled = false;
       let isCanceler = (userID == this.data.orderDetails.canceler_id);
       let curOrderStatus = this.data.isNewOrder ? ORDER_STATUS.ORDERSTATUS_ENUM1.CREATED : this.data.orderDetails.order_status;
+      // 一口价商品：跳过出价协商流程，直接进入确认发货阶段
+      if (this.data.fixedPrice) {
+        curOrderStatus = ORDER_STATUS.ORDERSTATUS_ENUM1.PAYED;
+        this.setData({'orderDetails.order_status': curOrderStatus});
+      }
       let needPostID0 = false;
       let needPostID1 = false;
       let needPayment = false;
@@ -179,6 +190,7 @@ Page({
         opEnabled = this.data.isBanker;
       } else if (curOrderStatus ==ORDER_STATUS.ORDERSTATUS_ENUM1.PAYED) {
         //buyer paied for it
+        cancelingDisabled: true,
         needPayment = true;
 	needRecverAddr = true;
         opEnabled = this.data.isBuyer;
