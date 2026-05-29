@@ -260,10 +260,10 @@ Page({
         POST_ID0_ENABLED    : needPostID0,
         POST_ID1_ENABLED    : needPostID1,
       });
-      if (SENDER_ADDR_ENABLED) {
+      if (this.data.SENDER_ADDR_ENABLED) {
          fillDefaultAddress().then();
       }
-      if (RECVER_ADDR_ENABLED) {
+      if (this.data.RECVER_ADDR_ENABLED) {
          fillDefaultAddress().then();
       }
     },

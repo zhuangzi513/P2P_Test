@@ -32,6 +32,7 @@ exports.main = async (event, context) => {
 
   if (orderType == 0) {
     bankerId = event.bankerID;
+    ownerId = event.ownerID;
     if (bankerId == undefined) {
       return {
         code: -1,

@@ -1,0 +1,54 @@
+<view class="sale-page">
+  <view class="sale-header">
+    <text class="sale-title">Choose Your Banker</text>
+    <text class="sale-subtitle">Select a banker to start trading</text>
+  </view>
+
+  <view class="cards-container">
+    <view
+      class="banker-card {{item.data && item.data.score >= 90 ? 'top-rated' : ''}}"
+      wx:for="{{bankers}}"
+      wx:key="_id"
+      wx:for-index="idx"
+      bindtap="onCardTap"
+      data-bankerid="{{item._id}}"
+      data-userid="{{item.user_id}}"
+      data-index="{{idx}}"
+      hover-class="card-hover"
+    >
+      <!-- CD 光盘效果背景 -->
+      <view class="cd-disc">
+        <view class="cd-ring"></view>
+        <view class="cd-inner">
+          <image
+            class="banker-avatar"
+            src="{{item.avatar || '/images/default-avatar.png'}}"
+            mode="aspectFill"
+          />
+        </view>
+        <view class="cd-shine"></view>
+      </view>
+
+      <!-- Banker 信息 -->
+      <view class="card-info">
+        <text class="banker-nick">{{item.data.nick || 'Unknown'}}</text>
+        <view class="banker-score-wrap">
+          <text class="score-icon">★</text>
+          <text class="banker-score">{{item.data.score || 0}}</text>
+        </view>
+        <view class="card-rank">#{{idx + 1}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view wx:if="{{loading}}" class="loading-wrap">
+    <van-loading size="40rpx" color="#1989fa" />
+    <text class="loading-text">Loading bankers...</text>
+  </view>
+
+  <!-- 空状态 -->
+  <view wx:if="{{!loading && bankers.length === 0}}" class="empty-wrap">
+    <text class="empty-text">No bankers available</text>
+  </view>
+</view>

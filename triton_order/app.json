@@ -13,7 +13,8 @@
     "pages/orders/index",
     "pages/orders/order-type0-details",
     "pages/orders/order-type1-details",
-    "pages/orders/order-list"
+    "pages/orders/order-list",
+    "pages/sale/index"
   ],
   "requiredPrivateInfos": [
     "getLocation",
@@ -56,6 +57,12 @@
         "iconPath": "images/nav/my-off.png",
         "selectedIconPath": "images/nav/my-on.png",
         "text": "fifth"
+      },
+      {
+        "pagePath": "pages/sale/index",
+        "iconPath": "images/nav/order-off.png",
+        "selectedIconPath": "images/nav/order-on.png",
+        "text": "sale"
       }
     ]
   },

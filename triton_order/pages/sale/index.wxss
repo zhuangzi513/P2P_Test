@@ -1,0 +1,222 @@
+/* ===== 页面整体 ===== */
+page {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  min-height: 100vh;
+}
+
+.sale-page {
+  padding: 40rpx 30rpx;
+  min-height: 100vh;
+}
+
+/* ===== 头部 ===== */
+.sale-header {
+  text-align: center;
+  margin-bottom: 50rpx;
+  padding-top: 20rpx;
+}
+
+.sale-title {
+  display: block;
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #e94560;
+  letter-spacing: 4rpx;
+  text-shadow: 0 0 20rpx rgba(233, 69, 96, 0.5);
+}
+
+.sale-subtitle {
+  display: block;
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: 12rpx;
+}
+
+/* ===== 卡片网格布局 ===== */
+.cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 30rpx;
+  padding: 0 10rpx;
+}
+
+/* ===== 单张卡片 ===== */
+.banker-card {
+  width: calc(50% - 20rpx);
+  background: linear-gradient(145deg, #1e2a4a 0%, #162032 100%);
+  border-radius: 24rpx;
+  padding: 36rpx 20rpx 28rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  border: 2rpx solid rgba(233, 69, 96, 0.2);
+  box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.4);
+  transition: all 0.35s ease;
+}
+
+.banker-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(233, 69, 96, 0.05) 0%, transparent 50%);
+  border-radius: 24rpx;
+  pointer-events: none;
+}
+
+.banker-card.top-rated {
+  border-color: rgba(255, 215, 0, 0.5);
+  box-shadow: 0 8rpx 40rpx rgba(255, 215, 0, 0.15);
+}
+
+.banker-card.top-rated::before {
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.08) 0%, transparent 50%);
+}
+
+.card-hover {
+  transform: translateY(-6rpx) scale(1.02);
+  box-shadow: 0 16rpx 48rpx rgba(233, 69, 96, 0.3);
+  border-color: rgba(233, 69, 96, 0.5);
+}
+
+/* ===== CD 光盘效果 ===== */
+.cd-disc {
+  width: 180rpx;
+  height: 180rpx;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24rpx;
+}
+
+.cd-ring {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    rgba(233, 69, 96, 0.1) 0deg,
+    rgba(233, 69, 96, 0.3) 45deg,
+    rgba(255, 215, 0, 0.2) 90deg,
+    rgba(233, 69, 96, 0.1) 135deg,
+    rgba(233, 69, 96, 0.3) 180deg,
+    rgba(255, 215, 0, 0.2) 225deg,
+    rgba(233, 69, 96, 0.1) 270deg,
+    rgba(233, 69, 96, 0.3) 315deg,
+    rgba(233, 69, 96, 0.1) 360deg
+  );
+  border: 4rpx solid rgba(255, 255, 255, 0.15);
+  box-shadow:
+    0 0 30rpx rgba(233, 69, 96, 0.2),
+    inset 0 0 20rpx rgba(255, 255, 255, 0.05);
+}
+
+.cd-inner {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4rpx solid rgba(255, 255, 255, 0.3);
+  z-index: 2;
+  background: #1a1a2e;
+}
+
+.banker-avatar {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.cd-shine {
+  position: absolute;
+  top: 8rpx;
+  left: 20rpx;
+  width: 40rpx;
+  height: 80rpx;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.25) 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  border-radius: 50%;
+  transform: rotate(-30deg);
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* ===== 卡片信息 ===== */
+.card-info {
+  text-align: center;
+  width: 100%;
+}
+
+.banker-nick {
+  display: block;
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 10rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.banker-score-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6rpx;
+}
+
+.score-icon {
+  font-size: 28rpx;
+  color: #ffd700;
+}
+
+.banker-score {
+  font-size: 28rpx;
+  color: #ffd700;
+  font-weight: bold;
+}
+
+.card-rank {
+  margin-top: 14rpx;
+  font-size: 22rpx;
+  color: rgba(255, 255, 255, 0.35);
+  letter-spacing: 2rpx;
+}
+
+/* ===== 加载状态 ===== */
+.loading-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 200rpx;
+  gap: 20rpx;
+}
+
+.loading-text {
+  font-size: 26rpx;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* ===== 空状态 ===== */
+.empty-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 200rpx;
+}
+
+.empty-text {
+  font-size: 28rpx;
+  color: rgba(255, 255, 255, 0.4);
+}
