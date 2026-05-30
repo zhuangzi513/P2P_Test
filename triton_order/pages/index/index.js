@@ -12,6 +12,7 @@ Page({
     selectCurrent: 0,
     bankers: [],
     goods: [],
+    adGoods: [],
     loadingMoreHidden: true,
     curPage: 1,
     pageSize: 20
@@ -173,6 +174,7 @@ Page({
     this.setData({
       loadingMoreHidden: true,
       goods: goods,
+      adGoods: goods.slice(0, 6)
     });
   },
   onShareAppMessage: function() {

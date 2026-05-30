@@ -47,7 +47,7 @@
         <view class="form-row">
           <view class="form-label">名称</view>
           <input class="form-input {{isOwner ? '' : 'disabled'}}" 
-                 placeholder="请输入商品名称" 
+                 placeholder="请输入商品名称（例：佛公吊坠）" 
                  disabled="{{!isOwner}}" 
                  value="{{goodInfo.name}}" 
                  bindinput="onNameInput" />

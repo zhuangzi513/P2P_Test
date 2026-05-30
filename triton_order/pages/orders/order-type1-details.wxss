@@ -1,6 +1,6 @@
 page {
   min-height: 100%;
-  background: linear-gradient(180deg, #f0f2f5 0%, #e8ecf1 100%);
+  background: #E4FFED;
 }
 
 .page-container {
@@ -11,11 +11,11 @@ page {
 
 /* 状态卡片 */
 .status-card {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #026302 0%, #047504 100%);
   border-radius: 24rpx;
   padding: 40rpx 32rpx;
   margin-bottom: 32rpx;
-  box-shadow: 0 8rpx 32rpx rgba(102, 126, 234, 0.3);
+  box-shadow: 0 8rpx 32rpx rgba(0, 115, 0, 0.3);
 }
 
 .status-header {
@@ -75,7 +75,7 @@ page {
 .section-title {
   font-size: 30rpx;
   font-weight: 600;
-  color: #333;
+  color: #026302;
 }
 
 .section-subtitle {
@@ -105,7 +105,7 @@ page {
 }
 
 .goods-content:active {
-  background-color: #f8f9fa;
+  background-color: #E4FFED;
 }
 
 .goods-thumb {
@@ -127,14 +127,14 @@ page {
 .goods-name {
   font-size: 30rpx;
   font-weight: 600;
-  color: #1a1a1a;
+  color: #026302;
   margin-bottom: 12rpx;
   line-height: 1.4;
 }
 
 .goods-desc {
   font-size: 24rpx;
-  color: #888;
+  color: #047504;
   margin-bottom: 16rpx;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -145,7 +145,7 @@ page {
 .goods-price {
   font-size: 34rpx;
   font-weight: 700;
-  color: #ff6b6b;
+  color: #026302;
 }
 
 .goods-arrow {
@@ -163,7 +163,7 @@ page {
   display: flex;
   align-items: center;
   padding: 28rpx;
-  border-bottom: 1rpx solid #f0f0f0;
+  border-bottom: 1rpx solid #C8E6C9;
 }
 
 .info-row:last-child {
@@ -173,7 +173,7 @@ page {
 .info-label {
   width: 160rpx;
   font-size: 28rpx;
-  color: #666;
+  color: #026302;
   flex-shrink: 0;
 }
 
@@ -184,7 +184,7 @@ page {
 .input-field {
   width: 100%;
   font-size: 28rpx;
-  color: #333;
+  color: #026302;
   text-align: right;
   background: transparent;
 }
@@ -194,8 +194,8 @@ page {
 }
 
 .input-field[disabled] {
-  color: #999;
-  background-color: #f5f7fa;
+  color: #047504;
+  background-color: #E4FFED;
   opacity: 0.7;
 }
 
@@ -221,8 +221,8 @@ page {
 }
 
 .add-btn:active {
-  border-color: #667eea;
-  color: #667eea;
+  border-color: #026302;
+  color: #026302;
   transform: scale(0.98);
 }
 
@@ -322,10 +322,10 @@ page {
   top: 8rpx;
   width: 24rpx;
   height: 24rpx;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #026302 0%, #047504 100%);
   border-radius: 50%;
   border: 4rpx solid #ffffff;
-  box-shadow: 0 0 0 4rpx #e8ecf1;
+  box-shadow: 0 0 0 4rpx #C8E6C9;
   z-index: 2;
 }
 
@@ -335,27 +335,27 @@ page {
   top: 40rpx;
   bottom: -32rpx;
   width: 2rpx;
-  background: linear-gradient(to bottom, #e0e4e8 0%, #f0f2f5 100%);
+  background: linear-gradient(to bottom, #C8E6C9 0%, #E4FFED 100%);
   z-index: 1;
 }
 
 .timeline-content {
-  background: linear-gradient(135deg, #f8f9fc 0%, #ffffff 100%);
+  background: linear-gradient(135deg, #E4FFED 0%, #ffffff 100%);
   border-radius: 12rpx;
   padding: 24rpx;
-  border: 1rpx solid #e8ecf1;
+  border: 1rpx solid #C8E6C9;
 }
 
 .log-operation {
   font-size: 28rpx;
   font-weight: 600;
-  color: #2c3e50;
+  color: #026302;
   margin-bottom: 12rpx;
 }
 
 .log-time {
   font-size: 24rpx;
-  color: #95a5a6;
+  color: #047504;
   display: flex;
   align-items: center;
 }

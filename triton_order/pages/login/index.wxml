@@ -1,20 +1,9 @@
 <view class="page-container">
-  <!-- 背景装饰 -->
-  <view class="bg-decoration">
-    <view class="circle circle-1"></view>
-    <view class="circle circle-2"></view>
-    <view class="circle circle-3"></view>
-  </view>
-
   <!-- 主内容区 -->
   <view class="content-area">
-    <!-- Logo/图标区域 -->
+    <!-- 标题区域 -->
     <view class="logo-section">
-      <view class="logo-wrapper">
-        <text class="logo-icon">📦</text>
-      </view>
-      <text class="app-name">P2P 订单</text>
-      <text class="app-tagline">欢迎来到 P2P 交易平台</text>
+      <text class="app-name">翡翠鉴赏订单管理</text>
     </view>
 
     <!-- 登录卡片 -->
@@ -25,7 +14,7 @@
       <view class="role-option" bindtap="loginAsCustomer">
         <view class="role-icon customer-icon">👤</view>
         <view class="role-info">
-          <text class="role-title">客户</text>
+          <text class="role-title">玩家</text>
           <text class="role-desc">浏览和购买商品</text>
         </view>
         <view class="role-arrow">›</view>
@@ -41,7 +30,7 @@
       <view class="role-option banker" bindtap="loginAsBanker">
         <view class="role-icon banker-icon">🏦</view>
         <view class="role-info">
-          <text class="role-title">托管方</text>
+          <text class="role-title">寄售平台</text>
           <text class="role-desc">管理和出售商品</text>
         </view>
         <view class="role-arrow">›</view>

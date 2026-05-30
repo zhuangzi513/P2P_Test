@@ -22,25 +22,41 @@
 
   <view class="other-section">
     <view class="section-title">订单</view>
-    <view wx:if="{{isBanker}}" bindtap="createInputOrder" class="menu-item">
-      <view class="menu-label">创建入库订单</view>
-      <text class="arrow">入库</text>
-    </view>
-    <view bindtap="switchToInputOrders" class="menu-item">
-      <view class="menu-label">入库订单</view>
-      <text class="arrow">入库订单</text>
-    </view>
-    <view bindtap="switchToOutputOrders" class="menu-item">
-      <view class="menu-label">出库订单</view>
-      <text class="arrow">出库订单</text>
-    </view>
+    <block wx:if="{{isBanker}}">
+      <view bindtap="createInputOrder" class="menu-item">
+        <view class="menu-label">创建入库订单</view>
+        <text class="arrow">入库</text>
+      </view>
+      <view bindtap="switchToInputOrders" class="menu-item">
+        <view class="menu-label">入库订单</view>
+        <text class="arrow">入库订单</text>
+      </view>
+      <view bindtap="switchToOutputOrders" class="menu-item">
+        <view class="menu-label">出库订单</view>
+        <text class="arrow">出库订单</text>
+      </view>
+    </block>
+    <block wx:else>
+      <view bindtap="switchToOutputOrders" class="menu-item">
+        <view class="menu-label">寄售订单</view>
+        <text class="arrow">寄售订单</text>
+      </view>
+      <view bindtap="switchToInputOrders" class="menu-item">
+        <view class="menu-label">购入订单</view>
+        <text class="arrow">购入订单</text>
+      </view>
+    </block>
     <navigator url="/pages/my/select_addr" class="menu-item">
       <view class="menu-label">我的地址</view>
       <text class="arrow">我的地址</text>
     </navigator>
     <navigator url="/pages/my/my_products" class="menu-item">
-      <view class="menu-label">我的商品</view>
-      <text class="arrow">我的商品</text>
+      <view class="menu-label">我的购入/寄售</view>
+      <text class="arrow">翡翠</text>
+    </navigator>
+    <navigator url="/pages/my/money" class="menu-item">
+      <view class="menu-label">我的账单</view>
+      <text class="arrow">账单</text>
     </navigator>
     <view bindtap="removeInputOrders" class="menu-item">
       <view class="menu-label">清空入库订单</view>

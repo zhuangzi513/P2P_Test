@@ -53,16 +53,16 @@
         "text": "首页"
       },
       {
-        "pagePath": "pages/my/index",
-        "iconPath": "images/nav/my-off.png",
-        "selectedIconPath": "images/nav/my-on.png",
-        "text": "我的"
-      },
-      {
         "pagePath": "pages/sale/index",
         "iconPath": "images/nav/home-off.png",
         "selectedIconPath": "images/nav/home-on.png",
         "text": "出售"
+      },
+      {
+        "pagePath": "pages/my/index",
+        "iconPath": "images/nav/my-off.png",
+        "selectedIconPath": "images/nav/my-on.png",
+        "text": "我的"
       }
     ]
   },

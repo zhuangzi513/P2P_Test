@@ -9,14 +9,40 @@ module.exports = {
   }
 }
 </wxs>
-<view class="jd-banner-container">
-  <swiper class="jd-banner-swiper" indicator-dots="true" indicator-color="rgba(255,255,255,0.5)" indicator-active-color="#E4393C" autoplay circular>
-    <swiper-item wx:for="{{banners}}" wx:key="id">
-      <view class="jd-banner-item">
-        <image mode="aspectFill" bindtap="tapBanner" data-item="{{ item }}" src="{{item.picUrl}}" />
+<view class="ad-container">
+  <swiper class="ad-swiper" indicator-dots="true" indicator-color="rgba(255,255,255,0.5)" indicator-active-color="#026302" autoplay circular interval="3000">
+    <swiper-item wx:for="{{adGoods}}" wx:key="id">
+      <view class="ad-item" bindtap="toDetailsTap" data-id="{{item.id}}">
+        <image mode="aspectFill" src="{{item.pic}}" />
+        <view class="ad-item-info">
+          <text class="ad-item-name">{{item.name}}</text>
+          <view class="ad-item-price">
+            <text class="ad-price-symbol">¥</text>
+            <text class="ad-price-num">{{item.price}}</text>
+          </view>
+        </view>
+      </view>
+    </swiper-item>
+    <swiper-item>
+      <view class="ad-contact">
+        <view class="ad-contact-content">
+          <text class="ad-contact-title">广告招租</text>
+          <text class="ad-contact-icon">📢</text>
+          <text class="ad-contact-desc">您的商品可在此展示</text>
+          <view class="ad-contact-divider"></view>
+          <text class="ad-contact-phone">招租热线：400-888-8888</text>
+          <text class="ad-contact-tip">优质广告位，超高曝光量</text>
+        </view>
       </view>
     </swiper-item>
   </swiper>
+  <block wx:if="{{adGoods.length === 0}}">
+    <view class="ad-placeholder">
+      <text class="ad-placeholder-icon">📢</text>
+      <text class="ad-placeholder-text">广告位招租中</text>
+      <text class="ad-placeholder-desc">您的商品可在此展示</text>
+    </view>
+  </block>
 </view>
 
 <view class="jd-category-container">
@@ -27,7 +53,7 @@ module.exports = {
         <image mode="aspectFill" src="{{item.avatar}}"></image>
       </view>
       <text class="jd-category-name">{{item.data.nick}}</text>
-      <text class="jd-category-name">{{item.data.score}}</text>
+      <text class="jd-category-level">Lv.{{item.data.score}}</text>
     </view>
   </view>
 </view>
@@ -64,11 +90,12 @@ module.exports = {
     </view>
   </block>
   
-  <view class="jd-section-header">
-    <view class="jd-section-title">
-      <text class="jd-section-name">goodslist</text>
+  <view class="jd-section-header jd-section-header--center">
+    <view class="jd-section-title jd-section-title--center">
+      <text class="jd-section-name">平台优选top8</text>
     </view>
   </view>
+  <view class="jd-section-divider"></view>
 
   <view class="jd-goods-grid">
     <view class="jd-goods-card" wx:for="{{goods}}" wx:key="id" bindtap="toDetailsTap" data-id="{{item.id}}" data-supplytype="{{item.supplyType}}" data-yyid="{{item.yyId}}">

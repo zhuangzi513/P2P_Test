@@ -1,6 +1,6 @@
 page {
   min-height: 100%;
-  background: #f8f9fc;
+  background: #E4FFED;
 }
 
 .page-container {
@@ -14,10 +14,10 @@ page {
   display: flex;
   align-items: center;
   padding: 32rpx 32rpx;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #026302 0%, #047504 100%);
   margin: 24rpx;
   border-radius: 20rpx;
-  box-shadow: 0 8rpx 24rpx rgba(102, 126, 234, 0.3);
+  box-shadow: 0 8rpx 24rpx rgba(0, 115, 0, 0.3);
 }
 
 .status-badge {
@@ -76,26 +76,26 @@ page {
   justify-content: space-between;
   margin-bottom: 24rpx;
   padding-bottom: 20rpx;
-  border-bottom: 1rpx solid #f0f2f5;
+  border-bottom: 1rpx solid #C8E6C9;
 }
 
 .card-title {
   font-size: 32rpx;
   font-weight: 600;
-  color: #1a1a1a;
+  color: #026302;
 }
 
 /* 角色标签 */
 .role-tag {
   font-size: 22rpx;
   padding: 6rpx 16rpx;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #026302 0%, #047504 100%);
   color: #fff;
   border-radius: 20rpx;
 }
 
 .role-tag.banker {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  background: linear-gradient(135deg, #C8E6C9 0%, #047504 100%);
 }
 
 /* 商品卡片 */
@@ -103,7 +103,7 @@ page {
   display: flex;
   align-items: center;
   padding: 16rpx;
-  background: #fafbfc;
+  background: #E4FFED;
   border-radius: 16rpx;
   transition: all 0.3s ease;
 }
@@ -125,7 +125,7 @@ page {
 .goods-name {
   font-size: 30rpx;
   font-weight: 600;
-  color: #1a1a1a;
+  color: #026302;
   margin-bottom: 8rpx;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -134,7 +134,7 @@ page {
 
 .goods-desc {
   font-size: 24rpx;
-  color: #666;
+  color: #047504;
   margin-bottom: 12rpx;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -145,7 +145,7 @@ page {
 .goods-price {
   font-size: 34rpx;
   font-weight: 700;
-  color: #ff6b6b;
+  color: #026302;
 }
 
 .goods-arrow {
@@ -186,7 +186,7 @@ page {
 
 .form-label {
   font-size: 26rpx;
-  color: #666;
+  color: #026302;
   margin-bottom: 12rpx;
   font-weight: 500;
 }
@@ -194,16 +194,16 @@ page {
 .form-input {
   height: 80rpx;
   padding: 0 24rpx;
-  background: #f8f9fc;
+  background: #E4FFED;
   border-radius: 12rpx;
   font-size: 28rpx;
-  color: #1a1a1a;
+  color: #026302;
   border: 2rpx solid transparent;
   transition: all 0.3s ease;
 }
 
 .form-input:focus {
-  border-color: #667eea;
+  border-color: #026302;
   background: #fff;
 }
 
@@ -214,10 +214,10 @@ page {
 
 .form-textarea {
   padding: 20rpx 24rpx;
-  background: #f8f9fc;
+  background: #E4FFED;
   border-radius: 12rpx;
   font-size: 28rpx;
-  color: #1a1a1a;
+  color: #026302;
   min-height: 160rpx;
   border: 2rpx solid transparent;
   box-sizing: border-box;
@@ -236,7 +236,7 @@ page {
 .price-input-wrapper {
   display: flex;
   align-items: center;
-  background: #f8f9fc;
+  background: #E4FFED;
   border-radius: 12rpx;
   padding-left: 24rpx;
   border: 2rpx solid transparent;
@@ -245,7 +245,7 @@ page {
 .price-symbol {
   font-size: 32rpx;
   font-weight: 600;
-  color: #ff6b6b;
+  color: #026302;
 }
 
 .price-input {
@@ -260,7 +260,7 @@ page {
   display: flex;
   align-items: center;
   padding: 16rpx 24rpx;
-  background: #f8f9fc;
+  background: #E4FFED;
   border-radius: 12rpx;
   min-height: 80rpx;
 }
@@ -301,7 +301,7 @@ page {
 
 .toggle-text {
   font-size: 26rpx;
-  color: #666;
+  color: #026302;
 }
 
 /* 图片网格 */
@@ -363,13 +363,13 @@ page {
   display: flex;
   align-items: center;
   padding: 24rpx;
-  background: #f8f9fc;
+  background: #E4FFED;
   border-radius: 16rpx;
   transition: all 0.3s ease;
 }
 
 .upload-btn:active {
-  background: #f0f2f5;
+  background: #C8E6C9;
   transform: scale(0.98);
 }
 
@@ -398,7 +398,7 @@ page {
 .upload-title {
   font-size: 30rpx;
   font-weight: 600;
-  color: #333;
+  color: #026302;
   margin-bottom: 6rpx;
 }
 
@@ -420,12 +420,12 @@ page {
 }
 
 .image-upload-btn:active {
-  border-color: #667eea;
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+  border-color: #026302;
+  background: linear-gradient(135deg, rgba(0, 115, 0, 0.05) 0%, rgba(4, 117, 4, 0.05) 100%);
 }
 
 .image-upload-btn .upload-icon-wrapper {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #026302 0%, #047504 100%);
 }
 
 .image-upload-btn .upload-icon {
@@ -558,10 +558,10 @@ page {
   top: 8rpx;
   width: 20rpx;
   height: 20rpx;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #026302 0%, #047504 100%);
   border-radius: 50%;
   border: 4rpx solid #fff;
-  box-shadow: 0 0 0 4rpx #f0f2f5;
+  box-shadow: 0 0 0 4rpx #C8E6C9;
   z-index: 2;
 }
 
@@ -571,23 +571,23 @@ page {
   top: 28rpx;
   bottom: -28rpx;
   width: 2rpx;
-  background: linear-gradient(to bottom, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(to bottom, #026302 0%, #047504 100%);
   z-index: 1;
   opacity: 0.3;
 }
 
 .timeline-content {
-  background: #fafbfc;
+  background: #E4FFED;
   border-radius: 12rpx;
   padding: 20rpx 24rpx;
-  border: 1rpx solid #f0f2f5;
+  border: 1rpx solid #C8E6C9;
 }
 
 .log-operation {
   display: block;
   font-size: 28rpx;
   font-weight: 600;
-  color: #1a1a1a;
+  color: #026302;
   margin-bottom: 8rpx;
 }
 
@@ -626,7 +626,7 @@ button::after {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: #f8f9fc;
+  background-color: #E4FFED;
   border-radius: 12rpx;
   padding: 16rpx 24rpx;
   min-height: 80rpx;
@@ -635,7 +635,7 @@ button::after {
 }
 
 .address-selector:active {
-  background: #f0f2f5;
+  background: #C8E6C9;
 }
 
 .address-selector.disabled {
@@ -645,7 +645,7 @@ button::after {
 .address-text {
   flex: 1;
   font-size: 28rpx;
-  color: #333;
+  color: #026302;
   word-break: break-all;
 }
 

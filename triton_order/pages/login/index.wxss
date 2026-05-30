@@ -6,96 +6,30 @@ page {
 
 .page-container {
   min-height: 100vh;
-  position: relative;
-  overflow: hidden;
-}
-
-/* 背景装饰 */
-.bg-decoration {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  pointer-events: none;
-}
-
-.circle {
-  position: absolute;
-  border-radius: 50%;
-  opacity: 0.12;
-  background: #026302;
-}
-
-.circle-1 {
-  width: 400rpx;
-  height: 400rpx;
-  top: -100rpx;
-  right: -100rpx;
-}
-
-.circle-2 {
-  width: 300rpx;
-  height: 300rpx;
-  bottom: 20%;
-  left: -150rpx;
-}
-
-.circle-3 {
-  width: 200rpx;
-  height: 200rpx;
-  bottom: -50rpx;
-  right: 50rpx;
+  background: #E4FFED;
 }
 
 /* 内容区 */
 .content-area {
-  position: relative;
-  z-index: 1;
-  padding: 120rpx 48rpx 60rpx;
+  padding: 80rpx 48rpx 60rpx;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-/* Logo 区域 */
+/* 标题区域 */
 .logo-section {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 80rpx;
-}
-
-.logo-wrapper {
-  width: 160rpx;
-  height: 160rpx;
-  background: rgba(2, 99, 2, 0.1);
-  border-radius: 40rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 32rpx;
-  box-shadow: 0 16rpx 48rpx rgba(0, 115, 0, 0.12);
-}
-
-.logo-icon {
-  font-size: 80rpx;
+  margin-bottom: 40rpx;
 }
 
 .app-name {
-  font-size: 48rpx;
+  font-size: 40rpx;
   font-weight: 700;
   color: #026302;
   letter-spacing: 2rpx;
-  margin-bottom: 16rpx;
-  text-shadow: 4rpx 4rpx 6rpx rgba(0, 255, 0, 0.3);
-}
-
-.app-tagline {
-  font-size: 26rpx;
-  color: #047504;
-  opacity: 0.8;
-  letter-spacing: 1rpx;
 }
 
 /* 登录卡片 */
@@ -203,14 +137,14 @@ page {
 
 .divider-line {
   flex: 1;
-  height: 1rpx;
-  background: #d4f5dd;
+  height: 2rpx;
+  background: linear-gradient(90deg, transparent, #b7e4b7, #026302, #b7e4b7, transparent);
 }
 
 .divider-text {
   font-size: 24rpx;
   color: #026302;
-  opacity: 0.6;
+  font-weight: 500;
   padding: 0 24rpx;
   letter-spacing: 2rpx;
 }

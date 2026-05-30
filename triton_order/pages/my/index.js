@@ -103,6 +103,11 @@ Page({
       url: '/pages/orders/order-list?type=1',
     });
   },
+  switchToMoney() {
+    wx.navigateTo({
+      url: '/pages/my/money',
+    });
+  },
   logout() {
     wx.showModal({
       title: 'LOGOUT',
