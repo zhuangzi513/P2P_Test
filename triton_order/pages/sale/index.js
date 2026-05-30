@@ -65,7 +65,7 @@ Page({
 
   onShareAppMessage() {
     return {
-      title: 'sale - ' + wx.getStorageSync('userName'),
+      title: '出售 - ' + wx.getStorageSync('userName'),
       path: '/pages/sale/index'
     };
   }

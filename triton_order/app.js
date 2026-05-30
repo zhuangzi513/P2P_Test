@@ -47,7 +47,7 @@ App({
       if (!res.isConnected) {
         that.globalData.isConnected = false
         wx.showToast({
-          title: 'toast network status change',
+          title: '网络已断开',
           icon: 'loading',
           duration: 2000
         })

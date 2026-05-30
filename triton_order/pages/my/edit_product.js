@@ -149,7 +149,7 @@ Page({
       }
     } catch (err) {
       wx.hideLoading();
-      wx.showToast({ title: 'INTERNET ERROR', icon: 'none' });
+      wx.showToast({ title: '网络错误', icon: 'none' });
       console.error(err);
     } finally {
       this.setData({ submitting: false });

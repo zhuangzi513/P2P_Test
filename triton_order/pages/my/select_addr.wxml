@@ -1,48 +1,48 @@
 <view class="address-container">
   <!-- 暂无地址空状态 -->
-  <van-empty wx:if="{{ !addressList || addressList.length === 0 }}" description="EMPTY" />
+  <van-empty wx:if="{{ !addressList || addressList.length === 0 }}" description="暂无地址" />
 
   <!-- 地址表单（动态显隐） -->
   <view class="address-form" wx:if="{{ showForm }}">
     <view class="form-header">
-      <text>{{ isEdit ? 'Edit Address' : 'New Address' }}</text>
+      <text>{{ isEdit ? '编辑地址' : '新增地址' }}</text>
       <van-icon name="cross" bind:tap="hideForm" />
     </view>
     <view class="form-body">
       <van-field
-        label="Name"
-        placeholder="Receiver"
+        label="姓名"
+        placeholder="收货人"
         value="{{ formData.linkMan }}"
         bind:change="onFieldChange"
         data-field="linkMan"
         required
       />
       <van-field
-        label="Phone"
+        label="电话"
         type="number"
-        placeholder="Mobile"
+        placeholder="手机号"
         value="{{ formData.mobile }}"
         bind:change="onFieldChange"
         data-field="mobile"
         required
       />
       <van-field
-        label="Address"
-        placeholder="Detailed address"
+        label="地址"
+        placeholder="详细地址"
         value="{{ formData.address }}"
         bind:change="onFieldChange"
         data-field="address"
         required
       />
       <view class="default-row">
-        <text>Set as default</text>
+        <text>设为默认地址</text>
         <van-switch checked="{{ formData.isDefault }}" bind:change="onDefaultChange" />
       </view>
       <van-button type="info" block round bind:tap="submitAddress" loading="{{ submitting }}">
-        {{ isEdit ? 'Update' : 'Add' }}
+        {{ isEdit ? '更新' : '添加' }}
       </van-button>
       <van-button block round plain bind:tap="hideForm" style="margin-top: 20rpx;">
-        Cancel
+        取消
       </van-button>
     </view>
   </view>
@@ -56,7 +56,7 @@
             <text class="user-name">{{item.linkMan}}</text>
             <text class="user-phone">{{item.mobile}}</text>
           </view>
-          <view class="default-tag" wx:if="{{item.isDefault}}">DEFAULT</view>
+          <view class="default-tag" wx:if="{{item.isDefault}}">默认</view>
         </view>
         <view class="address-detail">
           <text class="address-text">{{item.address}}</text>
@@ -65,12 +65,12 @@
       <view class="address-actions" wx:if="{{!selectMode}}">
         <view class="action-btn edit-btn" bind:tap="openEditInline" data-id="{{item._id}}">
           <van-icon name="edit" size="32rpx" />
-          <text>EDIT</text>
+          <text>编辑</text>
         </view>
         <view class="action-divider"></view>
         <view class="action-btn delete-btn" bind:tap="deleteAddress" data-index="{{ index }}" data-id="{{item._id}}">
           <van-icon name="delete-o" size="32rpx" />
-          <text>DELETE</text>
+          <text>删除</text>
         </view>
       </view>
     </view>
@@ -80,7 +80,7 @@
   <view class="safe-bottom-box">
     <view class="add-btn" bind:tap="openAddInline">
       <van-icon name="add-o" size="36rpx" color="#fff" />
-      <text>NEW</text>
+      <text>新增</text>
     </view>
   </view>
 </view>

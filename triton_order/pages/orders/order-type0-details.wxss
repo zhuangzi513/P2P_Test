@@ -482,8 +482,8 @@ page {
 
 .btn-primary {
   height: 96rpx;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: #fff;
+  background: #b7e4b7;
+  color: #026302;
   border: none;
   border-radius: 48rpx;
   font-size: 32rpx;
@@ -491,7 +491,12 @@ page {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8rpx 24rpx rgba(102, 126, 234, 0.4);
+  box-shadow: 0 8rpx 24rpx rgba(0, 115, 0, 0.15);
+}
+
+.btn-primary:active {
+  background: #026302;
+  color: #ffffff;
 }
 
 .btn-primary.disabled {
@@ -513,8 +518,19 @@ page {
   font-size: 28rpx;
 }
 
+.btn-secondary {
+  height: 88rpx;
+  background: #fff;
+  color: #666;
+  border: 2rpx solid #e8e8e8;
+  border-radius: 48rpx;
+  font-size: 28rpx;
+}
+
 .btn-secondary:active {
-  background: #f5f5f5;
+  background: #026302;
+  color: #ffffff;
+  border-color: #026302;
 }
 
 /* 时间线 */

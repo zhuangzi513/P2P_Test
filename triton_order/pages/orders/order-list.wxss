@@ -233,14 +233,15 @@
 }
 
 .btn-primary {
-  background: #E4393C;
-  color: #ffffff;
-  border: 1px solid #E4393C;
+  background: #b7e4b7;
+  color: #026302;
+  border: 1px solid #b7e4b7;
 }
 
 .btn-primary:active {
-  background: #c7302f;
-  border-color: #c7302f;
+  background: #026302;
+  color: #ffffff;
+  border-color: #026302;
 }
 
 

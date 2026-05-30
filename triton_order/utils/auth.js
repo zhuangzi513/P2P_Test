@@ -29,7 +29,7 @@ async function wxaCode(){
       },
       fail() {
         wx.showToast({
-          title: 'wxaCode failed',
+          title: '微信登录失败',
           icon: 'none'
         })
         return resolve('')
@@ -124,14 +124,14 @@ async function loginAsCustomer_() {
       return res
     } else {
       wx.showModal({
-        content: 'login failed',
+        content: '登录失败',
         showCancel: false
       })
       return null
     }
   } catch (err) {
     wx.showModal({
-      content: err.message || 'login failed',
+      content: err.message || '登录失败',
       showCancel: false
     })
     return null
@@ -160,10 +160,10 @@ async function checkAndAuthorize (scope) {
             fail(e){
               console.error(e)
               wx.showModal({
-                title: 'FAILED auth',
-                content: 'failed auth and check',
+                title: '授权失败',
+                content: '需要您授权后才能使用该功能',
                 showCancel: false,
-                confirmText: 'CONFIRM',
+                confirmText: '去授权',
                 confirmColor: '#e64340',
                 success(res) {
                   wx.openSetting();

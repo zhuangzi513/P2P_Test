@@ -103,7 +103,7 @@ Page({
 		   });
       const goodsInfo = await this.updateGoodsInfo(this.data.goodsID);
       if (!goodsInfo) {
-        wx.showToast({ title: 'FAILED TO GET goodsInfo:' + this.data.orderID, icon: 'none' });
+        wx.showToast({ title: '获取商品信息失败:' + this.data.orderID, icon: 'none' });
       }
       let _isBanker = (this.data.userID == _orderInfo.banker_id);
       let _isBuyer  = (this.data.userID == _orderInfo.buyer_id);
@@ -367,7 +367,7 @@ Page({
     },
     onShareAppMessage: function() {
       return {
-          title: `SHARED FROM ${this.data.userName} `,
+          title: `${this.data.userName} 分享的订单`,
           path: '/pages/orders/order-type1-details?id=' + this.data.orderID
       };
     },

@@ -13,17 +13,17 @@ module.exports = {
       <image class="banker-avatar" src="{{bankerInfo.avatar}}" mode="aspectFill" />
     </view>
     <view class="banker-info-content">
-      <view class="banker-nick">{{bankerInfo.nick || 'Unknown'}}</view>
-      <view class="banker-score">Score: {{bankerInfo.score || '--'}}</view>
+      <view class="banker-nick">{{bankerInfo.nick || '未知'}}</view>
+      <view class="banker-score">评分: {{bankerInfo.score || '--'}}</view>
       <view class="banker-id">ID: {{bankerID}}</view>
     </view>
   </view>
 
   <!-- Tab Bar -->
   <view class="tab-bar">
-    <view class="tab-item {{activeTab === 'recommend' ? 'tab-active' : ''}}" bindtap="switchTab" data-tab="recommend">Recommend</view>
-    <view class="tab-item {{activeTab === 'fixed' ? 'tab-active' : ''}}" bindtap="switchTab" data-tab="fixed">Fixed Price</view>
-    <view class="tab-item {{activeTab === 'negotiable' ? 'tab-active' : ''}}" bindtap="switchTab" data-tab="negotiable">Negotiable</view>
+    <view class="tab-item {{activeTab === 'recommend' ? 'tab-active' : ''}}" bindtap="switchTab" data-tab="recommend">推荐</view>
+    <view class="tab-item {{activeTab === 'fixed' ? 'tab-active' : ''}}" bindtap="switchTab" data-tab="fixed">一口价</view>
+    <view class="tab-item {{activeTab === 'negotiable' ? 'tab-active' : ''}}" bindtap="switchTab" data-tab="negotiable">可议价</view>
   </view>
 
   <!-- Goods Grid -->
@@ -44,5 +44,5 @@ module.exports = {
       </view>
     </view>
   </view>
-  <van-divider wx:if="{{ !loadingMoreHidden }}" custom-class="jd-end-divider" contentPosition="center">already to the bottom</van-divider>
+  <van-divider wx:if="{{ !loadingMoreHidden }}" custom-class="jd-end-divider" contentPosition="center">已经到底了</van-divider>
 </view>

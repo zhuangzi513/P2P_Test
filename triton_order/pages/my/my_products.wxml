@@ -30,5 +30,5 @@ module.exports = {
       </view>
     </view>
   </view>
-  <van-divider wx:if="{{ !loadingMoreHidden }}" custom-class="jd-end-divider" contentPosition="center">NO MORE</van-divider>
+  <van-divider wx:if="{{ !loadingMoreHidden }}" custom-class="jd-end-divider" contentPosition="center">没有更多了</van-divider>
 </view>

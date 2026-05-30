@@ -410,9 +410,9 @@ Page({
 
     async addImage() {
       const remain = 9 - this.data.goodInfo.imageList.length;
-      if (remain <= 0) return wx.showToast({ title: 'MAX 9', icon: 'none' });
+      if (remain <= 0) return wx.showToast({ title: '最多9张', icon: 'none' });
       const res = await wx.chooseMedia({ count: remain, mediaType: ['image'], sizeType: ['compressed'] });
-      wx.showLoading({ title: 'uploading...' });
+      wx.showLoading({ title: '上传中...' });
       try {
         const urls = await UPLOAD.uploadFiles(res.tempFiles.map(f => f.tempFilePath), 'image', CLOUDFUNC);
         this.setData({ 'goodInfo.imageList': [...this.data.goodInfo.imageList, ...urls.map(url => ({ url }))] });
@@ -420,7 +420,7 @@ Page({
       } catch (err) {
         wx.hideLoading();
 	console.log(err);
-        wx.showToast({ title: 'FAILED to upload', icon: 'none' });
+        wx.showToast({ title: '上传失败', icon: 'none' });
       }
     },
 
@@ -537,7 +537,7 @@ Page({
     },
     onShareAppMessage: function() {
       return {
-          title: `SHARED FROM ${this.data.userName} `,
+          title: `${this.data.userName} 分享的订单`,
           path: '/pages/orders/order-type0-details?id=' + this.data.orderID
       };
     },

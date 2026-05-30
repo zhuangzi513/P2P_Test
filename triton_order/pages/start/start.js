@@ -113,7 +113,7 @@ Page({
       }
     } else {
       wx.showToast({
-        title: 'cannot connect to internet',
+        title: '无法连接网络',
         icon: 'none',
       })
     }
@@ -121,7 +121,7 @@ Page({
   async goSelectPage() {
     if (!this.data.userId) {
       wx.showToast({
-        title: 'NOT IMPLEMENT YET, goSelectPage',
+        title: '功能尚未实现',
         icon: 'none',
       })
       return
@@ -134,7 +134,7 @@ Page({
       }
     } catch (err) {
       wx.showToast({
-        title: 'NOT IMPLEMENT YET, goSelectPage',
+        title: '功能尚未实现',
         icon: 'none',
       })
     }

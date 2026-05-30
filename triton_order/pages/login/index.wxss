@@ -1,6 +1,6 @@
 page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background-color: #E4FFED;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
 }
 
@@ -23,8 +23,8 @@ page {
 .circle {
   position: absolute;
   border-radius: 50%;
-  opacity: 0.1;
-  background: #fff;
+  opacity: 0.12;
+  background: #026302;
 }
 
 .circle-1 {
@@ -69,13 +69,13 @@ page {
 .logo-wrapper {
   width: 160rpx;
   height: 160rpx;
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(2, 99, 2, 0.1);
   border-radius: 40rpx;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 32rpx;
-  box-shadow: 0 16rpx 48rpx rgba(0, 0, 0, 0.15);
+  box-shadow: 0 16rpx 48rpx rgba(0, 115, 0, 0.12);
 }
 
 .logo-icon {
@@ -85,31 +85,33 @@ page {
 .app-name {
   font-size: 48rpx;
   font-weight: 700;
-  color: #fff;
+  color: #026302;
   letter-spacing: 2rpx;
   margin-bottom: 16rpx;
+  text-shadow: 4rpx 4rpx 6rpx rgba(0, 255, 0, 0.3);
 }
 
 .app-tagline {
   font-size: 26rpx;
-  color: rgba(255, 255, 255, 0.8);
+  color: #047504;
+  opacity: 0.8;
   letter-spacing: 1rpx;
 }
 
 /* 登录卡片 */
 .login-card {
   width: 100%;
-  background: #fff;
+  background: #FFFFFF;
   border-radius: 32rpx;
   padding: 48rpx 40rpx;
-  box-shadow: 0 24rpx 64rpx rgba(0, 0, 0, 0.15);
+  box-shadow: 0 16rpx 48rpx rgba(0, 115, 0, 0.12);
 }
 
 .card-title {
   display: block;
   font-size: 32rpx;
   font-weight: 600;
-  color: #333;
+  color: #026302;
   text-align: center;
   margin-bottom: 40rpx;
 }
@@ -119,22 +121,22 @@ page {
   display: flex;
   align-items: center;
   padding: 32rpx;
-  background: #f8f9fa;
+  background: #E4FFED;
   border-radius: 20rpx;
   transition: all 0.3s ease;
 }
 
 .role-option:active {
   transform: scale(0.98);
-  background: #f0f1f2;
+  background: #d4f5dd;
 }
 
 .role-option.banker {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #026302 0%, #047504 100%);
 }
 
 .role-option.banker:active {
-  background: linear-gradient(135deg, #5a6fd6 0%, #6a4190 100%);
+  background: linear-gradient(135deg, #015001 0%, #036303 100%);
 }
 
 .role-icon {
@@ -149,7 +151,7 @@ page {
 }
 
 .customer-icon {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  background: linear-gradient(135deg, #E4393C 0%, #ff6b6b 100%);
 }
 
 .banker-icon {
@@ -165,7 +167,7 @@ page {
 .role-title {
   font-size: 32rpx;
   font-weight: 600;
-  color: #333;
+  color: #026302;
   margin-bottom: 8rpx;
 }
 
@@ -175,7 +177,7 @@ page {
 
 .role-desc {
   font-size: 24rpx;
-  color: #999;
+  color: #666;
 }
 
 .role-option.banker .role-desc {
@@ -184,7 +186,7 @@ page {
 
 .role-arrow {
   font-size: 48rpx;
-  color: #ccc;
+  color: #aaa;
   font-weight: 300;
 }
 
@@ -202,12 +204,13 @@ page {
 .divider-line {
   flex: 1;
   height: 1rpx;
-  background: #eee;
+  background: #d4f5dd;
 }
 
 .divider-text {
   font-size: 24rpx;
-  color: #999;
+  color: #026302;
+  opacity: 0.6;
   padding: 0 24rpx;
   letter-spacing: 2rpx;
 }
@@ -220,5 +223,6 @@ page {
 
 .tip-text {
   font-size: 22rpx;
-  color: rgba(255, 255, 255, 0.6);
+  color: #047504;
+  opacity: 0.5;
 }

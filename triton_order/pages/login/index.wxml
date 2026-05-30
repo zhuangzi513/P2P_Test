@@ -13,27 +13,27 @@
       <view class="logo-wrapper">
         <text class="logo-icon">📦</text>
       </view>
-      <text class="app-name">P2P Order</text>
-      <text class="app-tagline">Welcome to P2P Trading Platform</text>
+      <text class="app-name">P2P 订单</text>
+      <text class="app-tagline">欢迎来到 P2P 交易平台</text>
     </view>
 
     <!-- 登录卡片 -->
     <view class="login-card">
-      <text class="card-title">Select Your Role</text>
+      <text class="card-title">选择您的角色</text>
       
       <!-- Customer 登录 -->
       <view class="role-option" bindtap="loginAsCustomer">
         <view class="role-icon customer-icon">👤</view>
         <view class="role-info">
-          <text class="role-title">Customer</text>
-          <text class="role-desc">Browse and purchase items</text>
+          <text class="role-title">客户</text>
+          <text class="role-desc">浏览和购买商品</text>
         </view>
         <view class="role-arrow">›</view>
       </view>
 
       <view class="divider">
         <view class="divider-line"></view>
-        <text class="divider-text">OR</text>
+        <text class="divider-text">或</text>
         <view class="divider-line"></view>
       </view>
 
@@ -41,8 +41,8 @@
       <view class="role-option banker" bindtap="loginAsBanker">
         <view class="role-icon banker-icon">🏦</view>
         <view class="role-info">
-          <text class="role-title">Banker</text>
-          <text class="role-desc">Manage and sell items</text>
+          <text class="role-title">托管方</text>
+          <text class="role-desc">管理和出售商品</text>
         </view>
         <view class="role-arrow">›</view>
       </view>
@@ -50,7 +50,7 @@
 
     <!-- 底部说明 -->
     <view class="footer-tips">
-      <text class="tip-text">By logging in, you agree to our Terms of Service</text>
+      <text class="tip-text">登录即表示同意我们的服务条款</text>
     </view>
   </view>
 </view>

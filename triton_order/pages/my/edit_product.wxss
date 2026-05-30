@@ -69,6 +69,12 @@
 }
 .submit-btn {
   border-radius: 48rpx;
-  background-color: #07c160;
+  background-color: #b7e4b7;
+  color: #026302;
   margin: 20rpx 0 60rpx;
+}
+
+.submit-btn:active {
+  background-color: #026302;
+  color: #ffffff;
 }

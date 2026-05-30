@@ -1,6 +1,6 @@
-
+/* ===== 页面整体 ===== */
 page {
-  background: #f5f5f5;
+  background: #E4FFED;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
 }
 
@@ -9,44 +9,50 @@ page {
   padding-bottom: 40rpx;
 }
 
-
+/* ===== 头部区域 ===== */
 .header-section {
-  background: #fff;
+  background: linear-gradient(180deg, #026302 0%, #047504 60%, #E4FFED 100%);
   padding: 0rpx 32rpx 32rpx;
   margin-bottom: 20rpx;
 }
 
-
+/* ===== 未登录 ===== */
 .login-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 60rpx 0;
+  padding: 80rpx 0;
 }
 
 .login-tips {
   font-size: 32rpx;
   margin-bottom: 32rpx;
-  color: #333;
+  color: #ffffff;
   font-weight: 500;
+  text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.15);
 }
 
 .login-btn {
-  background: linear-gradient(135deg, #E4393C 0%, #C81623 100%);
-  color: #fff;
+  background: rgba(255, 255, 255, 0.9);
+  color: #026302;
   padding: 28rpx 88rpx;
   border-radius: 48rpx;
   font-size: 32rpx;
   font-weight: 600;
-  box-shadow: 0 8rpx 24rpx rgba(228, 57, 60, 0.3);
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.1);
 }
 
+.login-btn:active {
+  background: #026302;
+  color: #ffffff;
+}
 
+/* ===== 用户信息 ===== */
 .user-info-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 24rpx 0;
+  padding: 40rpx 0 24rpx;
 }
 
 .user-main {
@@ -69,7 +75,8 @@ page {
   height: 128rpx;
   border-radius: 50%;
   display: block;
-  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.08);
+  border: 4rpx solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.12);
 }
 
 .avatar-border {
@@ -101,62 +108,36 @@ page {
 .nickname {
   font-size: 36rpx;
   font-weight: 700;
-  color: #333;
+  color: #ffffff;
   letter-spacing: 0.5rpx;
+  text-shadow: 0 2rpx 6rpx rgba(0, 0, 0, 0.2);
 }
 
 .user-id {
   font-size: 24rpx;
-  color: #999;
+  color: rgba(255, 255, 255, 0.8);
   margin-bottom: 8rpx;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/* ===== 区块标题 ===== */
 .section-title {
   font-size: 32rpx;
   font-weight: 700;
-  color: #333;
+  color: #026302;
   margin-bottom: 24rpx;
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-
-
+/* ===== 箭头 ===== */
 .arrow {
-  font-size: 40rpx;
-  color: #ccc;
-  font-weight: 300;
+  font-size: 28rpx;
+  color: #047504;
+  font-weight: 400;
 }
 
-
-
+/* ===== 菜单项 ===== */
 .menu-item {
   background: #fff;
   margin: 0;
@@ -165,40 +146,46 @@ page {
   justify-content: space-between;
   align-items: center;
   border-radius: 0;
-  border-bottom: 1rpx solid #f5f5f5;
+  border-bottom: 1rpx solid #e8f5e8;
 }
 
 .menu-item:last-child {
   border-bottom: none;
 }
 
-.menu-label {
-  font-size: 28rpx;
-  color: #333;
+.menu-item:active {
+  background: #026302;
 }
 
+.menu-item:active .menu-label,
+.menu-item:active .arrow {
+  color: #ffffff;
+}
 
+.menu-label {
+  font-size: 28rpx;
+  color: #026302;
+}
 
-
-
+/* ===== 功能区 ===== */
 .other-section {
   margin: 0 32rpx 24rpx;
   background: #fff;
   border-radius: 24rpx;
-  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.04);
+  box-shadow: 0 4rpx 16rpx rgba(0, 115, 0, 0.08);
   overflow: hidden;
 }
 
 .other-section .section-title {
   font-size: 32rpx;
   font-weight: 600;
-  color: #333;
-  background: #fff;
+  color: #026302;
+  background: #E4FFED;
   margin: 0;
   padding: 32rpx;
-  border-bottom: 1rpx solid #f5f5f5;
+  border-bottom: 1rpx solid #d4f0d4;
   padding-left: 52rpx;
-  border-left: 6rpx solid #E4393C;
+  border-left: 6rpx solid #026302;
   display: block;
 }
 
@@ -207,7 +194,7 @@ page {
   border-radius: 0;
 }
 
-
+/* ===== 弹窗 ===== */
 .modal-content {
   width: 600rpx;
   background: #fff;
@@ -219,9 +206,9 @@ page {
   padding: 48rpx 32rpx 32rpx;
   font-size: 32rpx;
   font-weight: 600;
-  color: #333;
+  color: #026302;
   text-align: center;
-  border-bottom: 1rpx solid #f5f5f5;
+  border-bottom: 1rpx solid #e8f5e8;
 }
 
 .modal-body {
@@ -231,19 +218,20 @@ page {
 .nick-input {
   width: 100%;
   padding: 24rpx;
-  border: 2rpx solid #eee;
+  border: 2rpx solid #d4f0d4;
   border-radius: 12rpx;
   font-size: 28rpx;
-  background: #f8f8f8;
+  background: #f0faf0;
+  color: #026302;
 }
 
 .input-placeholder {
-  color: #ccc;
+  color: #a0c8a0;
 }
 
 .modal-footer {
   display: flex;
-  border-top: 1rpx solid #f5f5f5;
+  border-top: 1rpx solid #e8f5e8;
 }
 
 .modal-btn {
@@ -254,40 +242,55 @@ page {
 }
 
 .cancel-btn {
-  color: #666;
-  border-right: 1rpx solid #f5f5f5;
+  color: #999;
+  border-right: 1rpx solid #e8f5e8;
+}
+
+.cancel-btn:active {
+  background: #f0f0f0;
 }
 
 .confirm-btn {
-  color: #E4393C;
+  color: #026302;
   font-weight: 600;
 }
 
+.confirm-btn:active {
+  background: #026302;
+  color: #ffffff;
+}
 
+/* ===== Navigator ===== */
 navigator {
   display: block;
   color: inherit;
   text-decoration: none;
 }
 
+navigator.menu-item {
+  display: flex;
+}
+
+/* ===== 原生按钮 ===== */
 button {
-  background: transparent;
+  background: #b7e4b7;
+  color: #026302;
   border: none;
   padding: 0;
   margin: 0;
   line-height: inherit;
 }
 
+button:active {
+  background: #026302;
+  color: #ffffff;
+}
+
 button::after {
   border: none;
 }
 
-
-navigator.menu-item {
-  display: flex;
-}
-
-/* LOGOUT */
+/* ===== 退出登录 ===== */
 .logout-section {
   margin: 40rpx 32rpx;
 }
@@ -299,18 +302,28 @@ navigator.menu-item {
   background: #fff;
   border-radius: 24rpx;
   padding: 32rpx;
-  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.04);
+  box-shadow: 0 4rpx 16rpx rgba(0, 115, 0, 0.08);
+  border: 2rpx solid rgba(0, 115, 0, 0.1);
+}
+
+.logout-btn:active {
+  background: #026302;
+}
+
+.logout-btn:active .logout-icon,
+.logout-btn:active .logout-text {
+  color: #ffffff;
 }
 
 .logout-icon {
   font-size: 36rpx;
-  color: #666;
+  color: #047504;
   margin-right: 16rpx;
 }
 
 .logout-text {
   font-size: 28rpx;
-  color: #666;
+  color: #047504;
   font-weight: 500;
   letter-spacing: 2rpx;
 }

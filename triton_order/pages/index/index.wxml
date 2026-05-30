@@ -90,5 +90,5 @@ module.exports = {
   </view>
 
 
-  <van-divider wx:if="{{ !loadingMoreHidden }}" custom-class="jd-end-divider" contentPosition="center">already to the bottom</van-divider>
+  <van-divider wx:if="{{ !loadingMoreHidden }}" custom-class="jd-end-divider" contentPosition="center">已经到底了</van-divider>
 </view>

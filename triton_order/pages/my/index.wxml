@@ -1,9 +1,9 @@
 <view class="page-container">
   <view class="header-section">
     <view wx:if="{{ !hasLogined }}" class="login-container">
-      <view class="login-tips">WELCOME</view>
+      <view class="login-tips">欢迎</view>
       <view class="login-btn" bindtap="login">
-        <text>LOGIN</text>
+        <text>登录</text>
       </view>
     </view>
     
@@ -11,7 +11,7 @@
       <view class="user-main">
         <view class="user-detail">
           <view class="nickname-row">
-            <text class="nickname">{{ userInfoMap.nick ? userInfoMap.nick : 'to reset nickname' }}</text>
+            <text class="nickname">{{ userInfoMap.nick ? userInfoMap.nick : '点击设置昵称' }}</text>
           </view>
           <view class="user-id">ID: {{ userInfoMap.user_id }}</view>
         </view>
@@ -21,41 +21,41 @@
   </view>
 
   <view class="other-section">
-    <view class="section-title">ORDERS</view>
+    <view class="section-title">订单</view>
     <view wx:if="{{isBanker}}" bindtap="createInputOrder" class="menu-item">
-      <view class="menu-label">CREATE INPUT ORDER</view>
-      <text class="arrow">INPUT</text>
+      <view class="menu-label">创建入库订单</view>
+      <text class="arrow">入库</text>
     </view>
     <view bindtap="switchToInputOrders" class="menu-item">
-      <view class="menu-label">INPUT ORDERS</view>
-      <text class="arrow">INPUT ORDERS</text>
+      <view class="menu-label">入库订单</view>
+      <text class="arrow">入库订单</text>
     </view>
     <view bindtap="switchToOutputOrders" class="menu-item">
-      <view class="menu-label">OUTPUT ORDERS</view>
-      <text class="arrow">OUTPUT ORDERS</text>
+      <view class="menu-label">出库订单</view>
+      <text class="arrow">出库订单</text>
     </view>
     <navigator url="/pages/my/select_addr" class="menu-item">
-      <view class="menu-label">MY ADDR</view>
-      <text class="arrow">MY ADDR</text>
+      <view class="menu-label">我的地址</view>
+      <text class="arrow">我的地址</text>
     </navigator>
     <navigator url="/pages/my/my_products" class="menu-item">
-      <view class="menu-label">MY PRO</view>
-      <text class="arrow">MY PRO</text>
+      <view class="menu-label">我的商品</view>
+      <text class="arrow">我的商品</text>
     </navigator>
     <view bindtap="removeInputOrders" class="menu-item">
-      <view class="menu-label">remove INPUTORDERS</view>
-      <text class="arrow">remove INPUTORDERS</text>
+      <view class="menu-label">清空入库订单</view>
+      <text class="arrow">清空入库订单</text>
     </view>
     <view bindtap="removeOutputOrders" class="menu-item">
-      <view class="menu-label">remove OUTPUTORDERS</view>
-      <text class="arrow">remove OUTPUTORDERS</text>
+      <view class="menu-label">清空出库订单</view>
+      <text class="arrow">清空出库订单</text>
     </view>
   </view>
 
   <view wx:if="{{ hasLogined }}" class="logout-section">
     <view bindtap="logout" class="logout-btn">
       <text class="logout-icon">⏻</text>
-      <text class="logout-text">LOGOUT</text>
+      <text class="logout-text">退出登录</text>
     </view>
   </view>
 </view>

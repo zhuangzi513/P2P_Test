@@ -87,9 +87,18 @@ page {
   text-shadow: 4rpx 4rpx 6rpx rgba(0,115,0,0.3);
 }
 
+/* ===== 全局按钮样式 ===== */
+button {
+  background-color: #b7e4b7;
+  color: #026302;
+  border: none;
+}
+
+button:active,
 .button-hover {
-  background-color: #048242;
-  opacity: 0.8;
+  background-color: #026302;
+  color: #ffffff;
+  opacity: 1;
 }
 
 .divider-icon-center {

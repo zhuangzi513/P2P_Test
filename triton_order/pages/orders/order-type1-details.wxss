@@ -270,13 +270,19 @@ page {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #b7e4b7;
+  color: #026302;
+  box-shadow: 0 8rpx 24rpx rgba(0, 115, 0, 0.15);
+}
+
+.btn-primary:active {
+  background: #026302;
   color: #ffffff;
-  box-shadow: 0 8rpx 24rpx rgba(102, 126, 234, 0.4);
 }
 
 .btn-primary[disabled] {
-  background: linear-gradient(135deg, #c4c4c4 0%, #d0d0d0 100%);
+  background: #c4c4c4;
+  color: #999;
   box-shadow: none;
 }
 

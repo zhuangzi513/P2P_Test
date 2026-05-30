@@ -148,29 +148,33 @@ swiper-item {
 .jump-btn {
   position: relative;
   padding: 28rpx 120rpx;
-  background: linear-gradient(135deg, #E93B3D 0%, #E61717 100%);
+  background: linear-gradient(135deg, #b7e4b7 0%, #8fd18f 100%);
   border-radius: 60rpx;
-  box-shadow: 0 12rpx 40rpx rgba(233, 59, 61, 0.45), 
-              0 4rpx 12rpx rgba(0, 0, 0, 0.2);
+  box-shadow: 0 12rpx 40rpx rgba(0, 115, 0, 0.2), 
+              0 4rpx 12rpx rgba(0, 0, 0, 0.1);
   overflow: hidden;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .jump-btn:active {
   transform: scale(0.96);
-  box-shadow: 0 8rpx 28rpx rgba(233, 59, 61, 0.4), 
-              0 2rpx 8rpx rgba(0, 0, 0, 0.2);
+  background: linear-gradient(135deg, #026302 0%, #047504 100%);
+  box-shadow: 0 8rpx 28rpx rgba(0, 115, 0, 0.35), 
+              0 2rpx 8rpx rgba(0, 0, 0, 0.15);
 }
 
 
 .btn-text {
   position: relative;
-  color: #FFFFFF;
+  color: #026302;
   font-size: 32rpx;
   font-weight: 600;
   letter-spacing: 2rpx;
   z-index: 2;
-  text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.2);
+}
+
+.jump-btn:active .btn-text {
+  color: #FFFFFF;
 }
 
 

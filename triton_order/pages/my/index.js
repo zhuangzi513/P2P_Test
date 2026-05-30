@@ -141,7 +141,7 @@ Page({
   removeOutputOrders() {
     CLOUDFUNC.callCloudFunction('removeOutputOrder', { userID: this.data.userID }).then(res => {
           wx.showToast({
-            title: 'OUTPUTORDERS CLEAN',
+            title: '出库订单已清空',
             icon: 'success',
             duration: 1500
           });

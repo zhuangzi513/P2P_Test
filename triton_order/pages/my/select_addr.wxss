@@ -89,15 +89,20 @@
 }
 
 .add-btn {
-  background: linear-gradient(135deg, #1989fa, #0a62c9);
+  background: #b7e4b7;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 12rpx;
   height: 88rpx;
   border-radius: 44rpx;
-  color: #fff;
+  color: #026302;
   font-size: 32rpx;
   font-weight: bold;
-  box-shadow: 0 4rpx 12rpx rgba(25, 137, 250, 0.3);
+  box-shadow: 0 4rpx 12rpx rgba(0, 115, 0, 0.15);
+}
+
+.add-btn:active {
+  background: #026302;
+  color: #ffffff;
 }

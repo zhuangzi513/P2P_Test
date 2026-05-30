@@ -123,7 +123,7 @@ Page({
     console.log('orderId:', orderId, 'orderType:', orderType);
     
     if (!orderId) {
-      wx.showToast({ title: 'ORDER ID EMPTY', icon: 'none' });
+      wx.showToast({ title: '订单ID为空', icon: 'none' });
       return;
     }
     

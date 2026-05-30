@@ -42,7 +42,7 @@
     </view>
 
     <view class="section">
-      <view class="section-title">VIDEO</view>
+      <view class="section-title">视频</view>
       <view class="media-list">
         <block wx:for="{{videoList}}" wx:key="index">
           <view class="media-item video-item">

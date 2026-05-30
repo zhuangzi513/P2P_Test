@@ -228,7 +228,7 @@ Page({
           } catch (err) {
             wx.hideLoading();
             wx.showToast({
-              title: err.message || err.msg || 'Failed',
+              title: err.message || err.msg || '操作失败',
               icon: 'none'
             });
           }
