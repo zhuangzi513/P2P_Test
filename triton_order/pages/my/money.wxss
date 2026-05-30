@@ -1,0 +1,104 @@
+page {
+  background: #E4FFED;
+}
+
+.page-container {
+  min-height: 100vh;
+  padding-bottom: 40rpx;
+}
+
+.total-section {
+  padding: 24rpx 32rpx;
+}
+
+.total-card {
+  background: linear-gradient(135deg, #026302 0%, #047504 100%);
+  border-radius: 16rpx;
+  padding: 40rpx 32rpx;
+  box-shadow: 0 8rpx 24rpx rgba(0, 80, 0, 0.15);
+}
+
+.total-label {
+  font-size: 26rpx;
+  color: rgba(255, 255, 255, 0.7);
+  display: block;
+  margin-bottom: 12rpx;
+}
+
+.total-amount {
+  display: flex;
+  align-items: baseline;
+}
+
+.total-symbol {
+  font-size: 36rpx;
+  color: #FFD700;
+  font-weight: bold;
+  margin-right: 6rpx;
+}
+
+.total-num {
+  font-size: 56rpx;
+  color: #FFD700;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.bill-list {
+  margin: 0 32rpx;
+  background: #fff;
+  border-radius: 16rpx;
+  overflow: hidden;
+  box-shadow: 0 4rpx 16rpx rgba(0, 115, 0, 0.08);
+}
+
+.section-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #026302;
+  padding: 28rpx 32rpx;
+  background: #E4FFED;
+  border-bottom: 1rpx solid #d4f0d4;
+}
+
+.bill-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 28rpx 32rpx;
+  border-bottom: 1rpx solid #e8f5e8;
+}
+
+.bill-item:last-child {
+  border-bottom: none;
+}
+
+.bill-info {
+  flex: 1;
+}
+
+.bill-name {
+  font-size: 28rpx;
+  color: #026302;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.bill-time {
+  font-size: 22rpx;
+  color: #999;
+}
+
+.bill-amount-text {
+  font-size: 30rpx;
+  color: #026302;
+  font-weight: 600;
+}
+
+.empty-tip {
+  padding: 80rpx 0;
+  text-align: center;
+  font-size: 26rpx;
+  color: #999;
+}

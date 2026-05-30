@@ -1,0 +1,29 @@
+<view class="page-container">
+  <view class="total-section">
+    <view class="total-card">
+      <text class="total-label">账单总额</text>
+      <view class="total-amount">
+        <text class="total-symbol">¥</text>
+        <text class="total-num">{{totalAmount}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="bill-list">
+    <view class="section-title">账单明细</view>
+    <block wx:if="{{bills.length > 0}}">
+      <view class="bill-item" wx:for="{{bills}}" wx:key="id">
+        <view class="bill-info">
+          <text class="bill-name">{{item.name || item.description}}</text>
+          <text class="bill-time">{{item.time || item.createTime}}</text>
+        </view>
+        <view class="bill-amount">
+          <text class="bill-amount-text">{{item.amount > 0 ? '+' : ''}}{{item.amount}}</text>
+        </view>
+      </view>
+    </block>
+    <block wx:else>
+      <view class="empty-tip">暂无账单记录</view>
+    </block>
+  </view>
+</view>
