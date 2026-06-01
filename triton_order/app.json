@@ -10,6 +10,7 @@
     "pages/my/edit_products",
     "pages/my/my_products",
     "pages/my/select_addr",
+    "pages/bankers/index",
     "pages/orders/index",
     "pages/orders/order-type0-details",
     "pages/orders/order-type1-details",

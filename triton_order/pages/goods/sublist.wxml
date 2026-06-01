@@ -14,8 +14,7 @@ module.exports = {
     </view>
     <view class="banker-info-content">
       <view class="banker-nick">{{bankerInfo.nick || '未知'}}</view>
-      <view class="banker-score">评分: {{bankerInfo.score || '--'}}</view>
-      <view class="banker-id">ID: {{bankerID}}</view>
+      <view class="banker-score">等级：{{bankerInfo.score || '--'}}</view>
     </view>
   </view>
 

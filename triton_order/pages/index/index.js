@@ -115,6 +115,7 @@ Page({
     })
     TOOLS.showTabBarBadge()
     this.setData({ curPage: 1 })
+    this.bankers()
     this.getGoodsList(0)
   },
 
@@ -216,6 +217,11 @@ Page({
   goSearch(){
     wx.navigateTo({
       url: '/pages/search/index'
+    })
+  },
+  goBankers(){
+    wx.navigateTo({
+      url: '/pages/bankers/index'
     })
   },
   goNotice(e) {

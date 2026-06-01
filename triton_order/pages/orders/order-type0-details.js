@@ -378,21 +378,24 @@ Page({
         wx.showToast({ title: 'NAME NEEDED', icon: 'none' });
         throw new Error('NAME NEEDED');
       }
-      if (!this.data.goodInfo.color.trim()) {
-        wx.showToast({ title: 'COLOR NEEDED', icon: 'none' });
-        throw new Error('COLOR NEEDED');
-      }
-      if (!this.data.goodInfo.sizeX.trim()) {
-        wx.showToast({ title: 'SHAPEX NEEDED', icon: 'none' });
-        throw new Error('SHAPEX NEEDED');
-      }
-      if (!this.data.goodInfo.sizeY.trim()) {
-        wx.showToast({ title: 'SHAPEY NEEDED', icon: 'none' });
-        throw new Error('SHAPEY NEEDED');
-      }
-      if (!this.data.goodInfo.sizeZ.trim()) {
-        wx.showToast({ title: 'SHAPEZ NEEDED', icon: 'none' });
-        throw new Error('SHAPEZ NEEDED');
+
+      if (this.data.isBanker) {
+        if (!this.data.goodInfo.color.trim()) {
+          wx.showToast({ title: 'COLOR NEEDED', icon: 'none' });
+          throw new Error('COLOR NEEDED');
+        }
+        if (!this.data.goodInfo.sizeX.trim()) {
+          wx.showToast({ title: 'SHAPEX NEEDED', icon: 'none' });
+          throw new Error('SHAPEX NEEDED');
+        }
+        if (!this.data.goodInfo.sizeY.trim()) {
+          wx.showToast({ title: 'SHAPEY NEEDED', icon: 'none' });
+          throw new Error('SHAPEY NEEDED');
+        }
+        if (!this.data.goodInfo.sizeZ.trim()) {
+          wx.showToast({ title: 'SHAPEZ NEEDED', icon: 'none' });
+          throw new Error('SHAPEZ NEEDED');
+        }
       }
       const priceNum = parseFloat(this.data.goodInfo.price);
       if (isNaN(priceNum)) {

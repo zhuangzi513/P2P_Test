@@ -11,7 +11,10 @@ Page({
       isCustomer:false,
       order_list_input : [],
       order_list_output: [],
-      userInfoMap: {}
+      userInfoMap: {},
+      showEditModal: false,
+      editNick: '',
+      editAvatar: ''
   },
   onLoad() {
     this.readConfigVal()
@@ -107,6 +110,93 @@ Page({
     wx.navigateTo({
       url: '/pages/my/money',
     });
+  },
+  showEditProfile() {
+    const userInfoMap = this.data.userInfoMap;
+    this.setData({
+      showEditModal: true,
+      editNick: userInfoMap.nick || '',
+      editAvatar: ''
+    });
+  },
+  hideEditModal() {
+    this.setData({
+      showEditModal: false,
+      editNick: '',
+      editAvatar: ''
+    });
+  },
+  onNickInput(e) {
+    this.setData({ editNick: e.detail.value });
+  },
+  chooseAvatar() {
+    const that = this;
+    wx.chooseImage({
+      count: 1,
+      sizeType: ['compressed'],
+      sourceType: ['album', 'camera'],
+      success(res) {
+        const tempFilePath = res.tempFilePaths[0];
+        that.setData({ editAvatar: tempFilePath });
+      }
+    });
+  },
+  saveProfile() {
+    const that = this;
+    const { editNick, editAvatar, userInfoMap } = this.data;
+
+    if (!editNick.trim()) {
+      wx.showToast({ title: '请输入昵称', icon: 'none' });
+      return;
+    }
+
+    wx.showLoading({ title: '保存中...' });
+
+    const doSave = (avatarUrl) => {
+      const updatedUserInfo = {
+        ...userInfoMap,
+	data : {
+          nick: editNick.trim(),
+          avatar: avatarUrl || userInfoMap.avatar || ''
+	}
+      };
+      console.log(updatedUserInfo)
+      // 只传递需要更新的字段，移除 user_id 避免污染 data 字段
+      const { user_id, ...userDetail } = updatedUserInfo;
+      console.log(userDetail)
+      CLOUDFUNC.callCloudFunction('updateUserInfo', {
+        userID: wx.getStorageSync('userID'),
+        userDetail: userDetail
+      }).then(() => {
+        wx.hideLoading();
+        wx.showToast({ title: '保存成功', icon: 'success' });
+        that.setData({
+          userInfoMap: updatedUserInfo,
+          showEditModal: false,
+          editNick: '',
+          editAvatar: ''
+        });
+      }).catch(err => {
+        wx.hideLoading();
+        wx.showToast({ title: '保存失败', icon: 'none' });
+        console.log('saveProfile FAILED', err);
+      });
+    };
+
+    if (editAvatar) {
+      const cloudPath = 'avatars/' + wx.getStorageSync('userID') + '_' + Date.now() + '.jpg';
+      wx.cloud.uploadFile({
+        cloudPath: cloudPath,
+        filePath: editAvatar
+      }).then(uploadRes => {
+        doSave(uploadRes.fileID);
+      }).catch(() => {
+        wx.hideLoading();
+        wx.showToast({ title: '头像上传失败', icon: 'none' });
+      });
+    } else {
+      doSave();
+    }
   },
   logout() {
     wx.showModal({

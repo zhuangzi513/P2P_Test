@@ -2,6 +2,7 @@ const TOOLS = require('../../utils/tools.js')
 const AUTH = require('../../utils/auth')
 const CONFIG = require('../../config.js')
 const CLOUDFUNC = require('../../utils/cloud.js');
+const ORDERSTATUS = require('../../utils/order_status.js');
 
 import Poster from 'wxa-plugin-canvas/poster/poster'
 
@@ -27,7 +28,9 @@ Page({
     selectSizePrice: 0,
     selectSizeOPrice: 0,
     goodsStatus: 0,
-    faved: false
+    faved: false,
+    orderList: [],
+    orderLoading: true
   },
   onLoad(e) {
     console.log('goods-details onLoad params:', e);
@@ -46,6 +49,7 @@ Page({
     const goodsID = e.id || e.goodsId || e.goods_id || '';
     console.log('goods-details will fetch goodsID:', goodsID);
     this.getGoodsDetail(goodsID)
+    this.getOrderList(goodsID)
   },
   onShow() {
   },
@@ -119,6 +123,44 @@ Page({
         icon: 'none',
       })
       console.error(err);
+    }
+  },
+  async getOrderList(goodsID) {
+    if (!goodsID) return;
+    this.setData({ orderLoading: true });
+    try {
+      const res = await CLOUDFUNC.callCloudFunction('queryOrdersByGoods', { goodsID: goodsID });
+      if (res && res.orders) {
+        const orders = res.orders.map(order => {
+          const statusText = order.order_type === 0
+            ? ORDERSTATUS.getStatusText0(order.status)
+            : ORDERSTATUS.getStatusText1(order.status);
+          return {
+            ...order,
+            statusText: statusText || '未知',
+            orderTypeLabel: order.order_type === 0 ? '入库' : '出库'
+          };
+        });
+        this.setData({ orderList: orders, orderLoading: false });
+      } else {
+        this.setData({ orderList: [], orderLoading: false });
+      }
+    } catch (err) {
+      console.log('getOrderList failed:', err);
+      this.setData({ orderList: [], orderLoading: false });
+    }
+  },
+  goOrderDetail(e) {
+    const orderId = e.currentTarget.dataset.orderid;
+    const orderType = e.currentTarget.dataset.ordertype;
+    if (orderType === 0) {
+      wx.navigateTo({
+        url: '/pages/orders/order-type0-details?id=' + orderId,
+      });
+    } else {
+      wx.navigateTo({
+        url: '/pages/orders/order-type1-details?id=' + orderId,
+      });
     }
   },
   onShareAppMessage() {

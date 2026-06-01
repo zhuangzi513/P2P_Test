@@ -7,43 +7,72 @@
       </view>
     </view>
     
-    <view wx:else class="user-info-container">
+    <view wx:else class="user-info-container" bindtap="showEditProfile">
       <view class="user-main">
+        <view class="avatar-wrap">
+          <image class="avatar" src="{{userInfoMap.avatar || '/images/default-avatar.png'}}" mode="aspectFill" />
+        </view>
         <view class="user-detail">
           <view class="nickname-row">
             <text class="nickname">{{ userInfoMap.nick ? userInfoMap.nick : '点击设置昵称' }}</text>
           </view>
           <view class="user-id">ID: {{ userInfoMap.user_id }}</view>
+          <view class="user-level">等级：{{ userInfoMap.level || '普通用户' }}</view>
         </view>
       </view>
     </view>
     
   </view>
 
+  <!-- 编辑用户信息弹窗 -->
+  <view class="modal-mask" wx:if="{{showEditModal}}" bindtap="hideEditModal"></view>
+  <view class="modal-container" wx:if="{{showEditModal}}">
+    <view class="modal-header">编辑个人资料</view>
+    <view class="modal-body">
+      <!-- 头像编辑 -->
+      <view class="edit-avatar-section">
+        <text class="edit-label">头像</text>
+        <view class="edit-avatar-wrap" bindtap="chooseAvatar">
+          <image class="edit-avatar" src="{{editAvatar || userInfoMap.avatar || '/images/default-avatar.png'}}" mode="aspectFill" />
+          <view class="edit-avatar-tip">点击更换</view>
+        </view>
+      </view>
+      <!-- 昵称编辑 -->
+      <view class="edit-nick-section">
+        <text class="edit-label">名称</text>
+        <input class="edit-nick-input" value="{{editNick}}" placeholder="请输入昵称" bindinput="onNickInput" maxlength="20" />
+      </view>
+    </view>
+    <view class="modal-footer">
+      <view class="modal-btn cancel-btn" bindtap="hideEditModal">取消</view>
+      <view class="modal-btn confirm-btn" bindtap="saveProfile">保存</view>
+    </view>
+  </view>
+
   <view class="other-section">
     <view class="section-title">订单</view>
     <block wx:if="{{isBanker}}">
       <view bindtap="createInputOrder" class="menu-item">
-        <view class="menu-label">创建入库订单</view>
-        <text class="arrow">入库</text>
+        <view class="menu-label">新建入库单</view>
+        <text class="arrow">给货主的填写的寄售单</text>
       </view>
       <view bindtap="switchToInputOrders" class="menu-item">
-        <view class="menu-label">入库订单</view>
-        <text class="arrow">入库订单</text>
+        <view class="menu-label">入库记录</view>
+        <text class="arrow"></text>
       </view>
       <view bindtap="switchToOutputOrders" class="menu-item">
-        <view class="menu-label">出库订单</view>
-        <text class="arrow">出库订单</text>
+        <view class="menu-label">出库记录</view>
+        <text class="arrow"></text>
       </view>
     </block>
     <block wx:else>
       <view bindtap="switchToOutputOrders" class="menu-item">
-        <view class="menu-label">寄售订单</view>
-        <text class="arrow">寄售订单</text>
+        <view class="menu-label">寄售单</view>
+        <text class="arrow"></text>
       </view>
       <view bindtap="switchToInputOrders" class="menu-item">
         <view class="menu-label">购入订单</view>
-        <text class="arrow">购入订单</text>
+        <text class="arrow"></text>
       </view>
     </block>
     <navigator url="/pages/my/select_addr" class="menu-item">
@@ -51,21 +80,14 @@
       <text class="arrow">我的地址</text>
     </navigator>
     <navigator url="/pages/my/my_products" class="menu-item">
-      <view class="menu-label">我的购入/寄售</view>
-      <text class="arrow">翡翠</text>
+      <view class="menu-label">{{isBanker ? '我的库存' : '我的购入/寄售'}}</view>
+      <text class="arrow"></text>
     </navigator>
     <navigator url="/pages/my/money" class="menu-item">
       <view class="menu-label">我的账单</view>
       <text class="arrow">账单</text>
     </navigator>
-    <view bindtap="removeInputOrders" class="menu-item">
-      <view class="menu-label">清空入库订单</view>
-      <text class="arrow">清空入库订单</text>
-    </view>
-    <view bindtap="removeOutputOrders" class="menu-item">
-      <view class="menu-label">清空出库订单</view>
-      <text class="arrow">清空出库订单</text>
-    </view>
+
   </view>
 
   <view wx:if="{{ hasLogined }}" class="logout-section">

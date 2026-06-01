@@ -145,7 +145,7 @@ page {
 .goods-price {
   font-size: 34rpx;
   font-weight: 700;
-  color: #026302;
+  color: #E4393C;
 }
 
 .goods-arrow {
@@ -218,7 +218,7 @@ page {
   border-radius: 12rpx;
   font-size: 28rpx;
   color: #026302;
-  min-height: 160rpx;
+  min-height: 100rpx;
   border: 2rpx solid transparent;
   box-sizing: border-box;
 }
@@ -245,7 +245,7 @@ page {
 .price-symbol {
   font-size: 32rpx;
   font-weight: 600;
-  color: #026302;
+  color: #E4393C;
 }
 
 .price-input {
@@ -255,8 +255,8 @@ page {
   padding-left: 8rpx;
 }
 
-/* 一口价 Toggle */
-.toggle-wrapper {
+/* 一口价 Checkbox */
+.checkbox-wrapper {
   display: flex;
   align-items: center;
   padding: 16rpx 24rpx;
@@ -265,41 +265,34 @@ page {
   min-height: 80rpx;
 }
 
-.toggle-wrapper.disabled {
+.checkbox-wrapper.disabled {
   opacity: 0.5;
 }
 
-.toggle-switch {
-  width: 100rpx;
-  height: 56rpx;
-  border-radius: 28rpx;
-  background: #e0e0e0;
-  position: relative;
-  transition: background 0.3s ease;
-  margin-right: 20rpx;
+.checkbox-box {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 8rpx;
+  border: 3rpx solid #026302;
+  margin-right: 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
 }
 
-.toggle-switch.active {
-  background: linear-gradient(135deg, #52c41a 0%, #36b374 100%);
+.checkbox-box.checked {
+  background: #026302;
+  border-color: #026302;
 }
 
-.toggle-knob {
-  width: 48rpx;
-  height: 48rpx;
-  border-radius: 50%;
-  background: #fff;
-  position: absolute;
-  top: 4rpx;
-  left: 4rpx;
-  transition: left 0.3s ease;
-  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.15);
+.checkbox-icon {
+  font-size: 26rpx;
+  color: #fff;
+  font-weight: bold;
 }
 
-.toggle-knob.active {
-  left: 48rpx;
-}
-
-.toggle-text {
+.checkbox-text {
   font-size: 26rpx;
   color: #026302;
 }
@@ -476,11 +469,12 @@ page {
 .action-section {
   padding: 24rpx;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 20rpx;
 }
 
 .btn-primary {
+  flex: 1;
   height: 96rpx;
   background: #b7e4b7;
   color: #026302;
@@ -510,15 +504,7 @@ page {
 }
 
 .btn-secondary {
-  height: 88rpx;
-  background: #fff;
-  color: #666;
-  border: 2rpx solid #e8e8e8;
-  border-radius: 48rpx;
-  font-size: 28rpx;
-}
-
-.btn-secondary {
+  flex: 1;
   height: 88rpx;
   background: #fff;
   color: #666;

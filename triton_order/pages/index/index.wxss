@@ -227,6 +227,23 @@ page {
   text-align: center;
 }
 
+/* "更多" 按钮 */
+.jd-category-more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 50%;
+  background: rgba(2, 99, 2, 0.08);
+  flex-shrink: 0;
+}
+
+.jd-category-more-icon {
+  font-size: 24rpx;
+  color: #026302;
+}
+
 
 
 .jd-main-container {

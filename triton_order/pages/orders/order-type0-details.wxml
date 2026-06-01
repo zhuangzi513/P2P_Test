@@ -5,7 +5,7 @@
       <text class="status-icon">{{orderDetails.order_status >= 5 ? '✓' : '⏳'}}</text>
     </view>
     <view class="status-content">
-      <text class="status-text">{{orderNextStep}}</text>
+      <text class="status-text">当前状态：{{orderNextStep}}</text>
       <text class="order-id">订单号: {{orderDetails.order_id || orderID }}</text>
     </view>
   </view>
@@ -53,44 +53,57 @@
                  bindinput="onNameInput" />
         </view>
         
-        <view class="form-row">
-          <view class="form-label">颜色</view>
-          <input class="form-input {{isOwner ? '' : 'disabled'}}" 
-                 placeholder="请输入颜色" 
-                 disabled="{{!isOwner}}" 
-                 value="{{goodInfo.color}}" 
-                 bindinput="onColorInput" />
-        </view>
-        
         <view class="form-row triple">
           <view class="form-item">
             <view class="form-label">尺寸-X</view>
-            <input class="form-input {{isOwner ? '' : 'disabled'}}" 
+            <input class="form-input {{isBanker ? '' : 'disabled'}}" 
                    placeholder="X" 
-                   disabled="{{!isOwner}}" 
+                   disabled="{{!isBanker}}" 
                    value="{{goodInfo.sizeX}}" 
                    bindinput="onSizeInputX" />
           </view>
           <view class="form-item">
             <view class="form-label">尺寸-Y</view>
-            <input class="form-input {{isOwner ? '' : 'disabled'}}" 
+            <input class="form-input {{isBanker ? '' : 'disabled'}}" 
                    placeholder="Y" 
-                   disabled="{{!isOwner}}" 
+                   disabled="{{!isBanker}}" 
                    value="{{goodInfo.sizeY}}" 
                    bindinput="onSizeInputY" />
           </view>
           <view class="form-item">
             <view class="form-label">尺寸-Z</view>
-            <input class="form-input {{isOwner ? '' : 'disabled'}}" 
+            <input class="form-input {{isBanker ? '' : 'disabled'}}" 
                    placeholder="Z" 
-                   disabled="{{!isOwner}}" 
+                   disabled="{{!isBanker}}" 
                    value="{{goodInfo.sizeZ}}" 
                    bindinput="onSizeInputZ" />
           </view>
         </view>
         
         <view class="form-row">
-          <view class="form-label">价格</view>
+          <view class="form-label">购入渠道（选填）</view>
+          <input class="form-input {{isOwner ? '' : 'disabled'}}" 
+                 placeholder="例：六舒闲置" 
+                 disabled="{{!isOwner}}" 
+                 value="{{goodInfo.channel}}" 
+                 bindinput="onChannelInput" />
+        </view>
+        
+        <view class="form-row">
+          <view class="form-label">购入价格（选填）</view>
+          <view class="price-input-wrapper">
+            <text class="price-symbol">¥</text>
+            <input class="form-input price-input {{isOwner ? '' : 'disabled'}}" 
+                   type="digit" 
+                   placeholder="0.00" 
+                   disabled="{{!isOwner}}" 
+                   value="{{goodInfo.purchasePrice}}" 
+                   bindinput="onPurchasePriceInput" />
+          </view>
+        </view>
+        
+        <view class="form-row">
+          <view class="form-label">期望售价</view>
           <view class="price-input-wrapper">
             <text class="price-symbol">¥</text>
             <input class="form-input price-input {{isOwner ? '' : 'disabled'}}" 
@@ -103,20 +116,18 @@
         </view>
         
         <view class="form-row">
-          <view class="form-label">一口价</view>
-          <view class="toggle-wrapper {{!isOwner ? 'disabled' : ''}}">
-            <view class="toggle-switch {{goodInfo.fixedprice ? 'active' : ''}}" 
-                  bindtap="{{isOwner ? 'onFixedPriceToggle' : ''}}">
-              <view class="toggle-knob {{goodInfo.fixedprice ? 'active' : ''}}"></view>
+          <view class="checkbox-wrapper {{!isOwner ? 'disabled' : ''}}" bindtap="{{isOwner ? 'onFixedPriceToggle' : ''}}">
+            <view class="checkbox-box {{goodInfo.fixedprice ? 'checked' : ''}}">
+              <text class="checkbox-icon" wx:if="{{goodInfo.fixedprice}}">✓</text>
             </view>
-            <text class="toggle-text">{{goodInfo.fixedprice ? '已开启' : '已关闭'}}</text>
+            <text class="checkbox-text">一口价（不议价）</text>
           </view>
         </view>
         
         <view class="form-row">
-          <view class="form-label">描述</view>
+          <view class="form-label">补充描述（选填）</view>
           <textarea class="form-textarea" 
-                    placeholder="请输入商品描述..." 
+                    placeholder="例：有证书，天然钻石镶嵌/培育钻石镶嵌" 
                     disabled="{{!isOwner}}" 
                     value="{{goodInfo.description}}" 
                     bindinput="onDescInput" 
@@ -129,7 +140,7 @@
     <view class="card form-card media-card">
       <view class="card-header">
         <text class="card-title">商品图片</text>
-        <text class="img-count">{{goodInfo.imageList.length}}/9</text>
+        <text class="img-count">{{goodInfo.imageList.length}}/1</text>
       </view>
       
       <!-- 已上传图片 -->
@@ -143,25 +154,14 @@
       </view>
       
       <!-- 上传按钮组 -->
-      <view class="upload-actions" wx:if="{{isOwner}}">
+      <view class="upload-actions" wx:if="{{isOwner && goodInfo.imageList.length < 1}}">
         <view class="upload-btn image-upload-btn" bindtap="addImage">
           <view class="upload-icon-wrapper">
             <text class="upload-icon">🖼️</text>
           </view>
           <view class="upload-info">
             <text class="upload-title">上传图片</text>
-            <text class="upload-hint">最多9张</text>
-          </view>
-          <view class="upload-arrow">›</view>
-        </view>
-        
-        <view class="upload-btn video-upload-btn" bindtap="addVideo">
-          <view class="upload-icon-wrapper">
-            <text class="upload-icon">🎬</text>
-          </view>
-          <view class="upload-info">
-            <text class="upload-title">上传视频</text>
-            <text class="upload-hint">最多3个</text>
+            <text class="upload-hint">最多1张</text>
           </view>
           <view class="upload-arrow">›</view>
         </view>
@@ -175,9 +175,9 @@
     </view>
 
     <!-- 地址信息 -->
-    <view class="card form-card" wx:if="{{isOwner || isBanker}}">
+    <view class="card form-card" wx:if="{{(isOwner || isBanker) && (SENDER_ADDR_ENABLED || RECVER_ADDR_ENABLED) }}">
       <view class="card-header">
-        <text class="card-title">物流信息</text>
+        <text class="card-title">填写快递单号（只收顺丰快递）</text>
       </view>
 
       <!-- 发货地址 -->
@@ -230,7 +230,7 @@
         {{orderNextStep}}
       </button>
       <button class="btn-secondary" bindtap="cancelOrder">
-        取消订单
+        取消
       </button>
     </view>
 

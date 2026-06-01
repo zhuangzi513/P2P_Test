@@ -47,13 +47,16 @@ module.exports = {
 
 <view class="jd-category-container">
   <view class="jd-category-grid">
-    <view class="jd-category-item" wx:for="{{bankers}}" wx:for-index="idx" bindtap="tabClick" data-id="{{item.id}}" data-userid="{{item.user_id}}" data-index="{{idx}}"
+    <view class="jd-category-item" wx:for="{{bankers}}" wx:for-index="idx" wx:if="{{idx < 3}}" bindtap="tabClick" data-id="{{item.id}}" data-userid="{{item.user_id}}" data-index="{{idx}}"
           hover-class="button-hover" hover-start-time="50" hover-stay-time="150" hover-stop-propagation="true">
       <view class="jd-category-icon-wrap">
         <image mode="aspectFill" src="{{item.avatar}}"></image>
       </view>
       <text class="jd-category-name">{{item.data.nick}}</text>
-      <text class="jd-category-level">Lv.{{item.data.score}}</text>
+      <text class="jd-category-level">等级：{{item.data.score}}</text>
+    </view>
+    <view class="jd-category-more" bindtap="goBankers" hover-class="button-hover" hover-start-time="50" hover-stay-time="150">
+      <text class="jd-category-more-icon">▶</text>
     </view>
   </view>
 </view>

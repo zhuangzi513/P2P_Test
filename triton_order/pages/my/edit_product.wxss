@@ -1,5 +1,5 @@
 .container {
-  background-color: #f8f8f8;
+  background-color: #E4FFED;
   min-height: 100vh;
   padding: 20rpx;
 }
@@ -9,22 +9,25 @@
   border-radius: 20rpx;
   padding: 30rpx;
   margin-bottom: 30rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 80, 0, 0.06);
 }
 .section-title {
   font-size: 32rpx;
-  font-weight: 500;
-  border-left: 8rpx solid #07c160;
+  font-weight: 600;
+  border-left: 8rpx solid #026302;
   padding-left: 20rpx;
   margin-bottom: 30rpx;
+  color: #026302;
 }
 .form-item { margin-bottom: 30rpx; }
-.label { font-size: 28rpx; color: #666; margin-bottom: 16rpx; }
+.label { font-size: 28rpx; color: #026302; margin-bottom: 16rpx; font-weight: 500; }
 .input, .textarea {
-  border: 1px solid #e0e0e0;
+  border: 2rpx solid #C8E6C9;
   border-radius: 12rpx;
   padding: 20rpx;
   font-size: 28rpx;
-  background-color: #fafafa;
+  background-color: #E4FFED;
+  color: #026302;
 }
 .textarea { width: 100%; min-height: 150rpx; }
 .media-list {
@@ -38,7 +41,7 @@
   height: 200rpx;
   border-radius: 12rpx;
   overflow: hidden;
-  background-color: #f0f0f0;
+  background-color: #C8E6C9;
 }
 .video-item { background-color: #000; }
 .preview-image, .preview-video { width: 100%; height: 100%; }
@@ -58,20 +61,22 @@
 .add-btn {
   width: 200rpx;
   height: 200rpx;
-  border: 2rpx dashed #ccc;
+  border: 2rpx dashed #026302;
   border-radius: 12rpx;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 60rpx;
-  color: #999;
-  background-color: #fafafa;
+  color: #026302;
+  background-color: #E4FFED;
 }
 .submit-btn {
   border-radius: 48rpx;
   background-color: #b7e4b7;
   color: #026302;
   margin: 20rpx 0 60rpx;
+  box-shadow: 0 8rpx 24rpx rgba(0, 115, 0, 0.15);
+  font-weight: 600;
 }
 
 .submit-btn:active {

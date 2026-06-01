@@ -145,7 +145,7 @@ page {
 .goods-price {
   font-size: 34rpx;
   font-weight: 700;
-  color: #026302;
+  color: #E4393C;
 }
 
 .goods-arrow {

@@ -111,7 +111,7 @@
       {{orderNextStep}}
     </button>
     <button class="btn btn-outline" disabled="{{cancelingDisabled}}" bind:tap="cancelOrder">
-      取消订单
+      取消
     </button>
   </view>
 

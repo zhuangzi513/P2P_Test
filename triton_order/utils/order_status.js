@@ -15,19 +15,19 @@ const ORDERSTATUS0 = {
   CLOSE: 12
 };
 const statusMapType0 = [
-'Initialization',
-'Confirm',
-'SendToSaler',
-'ConfirmRecived',
-'Exhibition',
-'Hitted',
-'Selled',
-'Payed',
-'Done',
-'Canceled',
-'Backing',
-'Backed',
-'Closed'
+'新建',
+'确认',
+'发货给商家',
+'确认接收',
+'平台展示',
+'买家已出价',
+'平台已售出',
+'平台已付款',
+'订单完成',
+'取消订单',
+'商品正在寄回',
+'商品已寄回',
+'关闭订单'
 ];
 
 const ORDERSTATUS1 = {
@@ -45,17 +45,17 @@ CLOSE: 9
 };
 
 const statusMapType1 = [
-'Initialization',
-'AGREE',
-'CONFIRM',
-'PAYED',
-'SENDTORECVER',
-'RECVED',
-'DONE',
-'CANCELLED',
-'BACKING',
-'BACKED',
-'CLOSED'
+'新建',
+'同意',
+'确认',
+'已付款',
+'发货给买家',
+'确认收到',
+'订单完成',
+'正在取消',
+'正在寄回',
+'已寄回',
+'关闭订单'
 ];
 
 
