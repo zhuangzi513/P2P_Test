@@ -77,7 +77,7 @@
     <!-- 订单列表 -->
     <view class="goods-info-card orders-section">
       <view class="info-header">
-        <text class="info-title">商品订单</text>
+        <text class="info-title">寄售单/买单</text>
         <text class="orders-count" wx:if="{{orderList.length > 0}}">{{orderList.length}}条</text>
       </view>
       <view class="orders-loading" wx:if="{{orderLoading}}">
@@ -90,12 +90,16 @@
         <view class="order-item" wx:for="{{orderList}}" wx:key="order_id" bindtap="goOrderDetail" data-orderid="{{item.order_id}}" data-ordertype="{{item.order_type}}">
           <view class="order-item-header">
             <text class="order-type-tag {{item.order_type === 0 ? 'tag-input' : 'tag-output'}}">{{item.orderTypeLabel}}</text>
-            <text class="order-id-text">订单号: {{item.order_id}}</text>
+            <text class="order-price-text" wx:if="{{item.orderPrice}}">¥{{item.orderPrice}}</text>
+            <text class="order-id-text" wx:else>订单号: {{item.order_id}}</text>
           </view>
           <view class="order-item-body">
-            <view class="order-status-row">
-              <text class="order-status-label">状态</text>
-              <text class="order-status-value {{item.status === 8 || item.status === 5 ? 'status-done' : item.status === 9 || item.status === 6 || item.status === 12 || item.status === 9 ? 'status-cancelled' : 'status-pending'}}">{{item.statusText}}</text>
+            <view class="order-info-col">
+              <text class="order-time-text" wx:if="{{item.createTime}}">{{item.createTime}}</text>
+              <view class="order-status-row">
+                <text class="order-status-label">状态</text>
+                <text class="order-status-value {{item.orderStatus === 8 || item.orderStatus === 5 ? 'status-done' : item.orderStatus === 9 || item.orderStatus === 6 || item.orderStatus === 12 ? 'status-cancelled' : 'status-pending'}}">{{item.statusText}}</text>
+              </view>
             </view>
           </view>
           <view class="order-item-arrow">▶</view>

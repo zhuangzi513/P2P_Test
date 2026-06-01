@@ -131,14 +131,44 @@ Page({
     try {
       const res = await CLOUDFUNC.callCloudFunction('queryOrdersByGoods', { goodsID: goodsID });
       if (res && res.orders) {
-        const orders = res.orders.map(order => {
+        // 当前用户是否为商品所有者
+        const isOwner = this.data.userID && this.data.ownerID && String(this.data.userID) === String(this.data.ownerID);
+
+        let filteredOrders = res.orders;
+        if (isOwner) {
+          // owner 可以看到所有寄售单 + order_status == 0 的买单
+          filteredOrders = res.orders.filter(order => order.order_type === 0 || (order.order_type === 1 && order.order_status === 0));
+        }
+
+        const orders = filteredOrders.map(order => {
+          // 使用 order_status 字段获取状态（数据库字段名为 order_status）
+          const orderStatus = order.order_status;
           const statusText = order.order_type === 0
-            ? ORDERSTATUS.getStatusText0(order.status)
-            : ORDERSTATUS.getStatusText1(order.status);
+            ? ORDERSTATUS.getStatusText0(orderStatus)
+            : ORDERSTATUS.getStatusText1(orderStatus);
+          // 格式化创建时间
+          let createTime = '';
+          if (order.order_details && order.order_details.time_created) {
+            const d = new Date(order.order_details.time_created);
+            const Y = d.getFullYear();
+            const M = String(d.getMonth() + 1).padStart(2, '0');
+            const D = String(d.getDate()).padStart(2, '0');
+            const h = String(d.getHours()).padStart(2, '0');
+            const m = String(d.getMinutes()).padStart(2, '0');
+            createTime = `${Y}-${M}-${D} ${h}:${m}`;
+          }
+          // 获取订单价格
+          let orderPrice = '';
+          if (order.order_details && order.order_details.price !== undefined) {
+            orderPrice = order.order_details.price;
+          }
           return {
             ...order,
             statusText: statusText || '未知',
-            orderTypeLabel: order.order_type === 0 ? '入库' : '出库'
+            orderTypeLabel: order.order_type === 0 ? '寄售单' : '买单',
+            createTime: createTime,
+            orderStatus: orderStatus,
+            orderPrice: orderPrice
           };
         });
         this.setData({ orderList: orders, orderLoading: false });

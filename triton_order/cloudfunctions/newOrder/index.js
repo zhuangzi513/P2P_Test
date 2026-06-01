@@ -43,7 +43,7 @@ exports.main = async (event, context) => {
     ownerId = event.ownerID;
     bankerId = event.bankerID;
     buyerId = event.buyerID;
-    goodsId = event.goodsID;
+    goodsId = Number(event.goodsID);
     if (bankerId == undefined || ownerId == undefined
 	|| buyerId == undefined || goodsId == undefined) {
       return {

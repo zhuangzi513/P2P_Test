@@ -260,10 +260,28 @@ textarea {
   color: #999;
 }
 
+.order-price-text {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #E4393C;
+}
+
 .order-item-body {
   flex: 1;
   display: flex;
   justify-content: flex-end;
+}
+
+.order-info-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8rpx;
+}
+
+.order-time-text {
+  font-size: 22rpx;
+  color: #999;
 }
 
 .order-status-row {

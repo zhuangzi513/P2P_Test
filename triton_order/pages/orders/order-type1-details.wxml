@@ -1,12 +1,19 @@
 <view class="page-container">
   <!-- 状态卡片 -->
   <view class="status-card">
-    <view class="status-header">
-      <view class="status-badge {{orderDetails.order_status < 0 ? 'warning' : orderDetails.order_status >= 9 ? 'success' : 'active'}}">
-        {{orderDetails.order_status < 0 ? '待确认' : orderDetail.orderStatus >= 9 ? '已完成' : '进行中'}}
+    <view class="status-card-row">
+      <view class="status-header">
+        <view class="status-badge {{orderDetails.order_status < 0 ? 'warning' : orderDetails.order_status >= 9 ? 'success' : 'active'}}">
+          {{orderDetails.order_status < 0 ? '待确认' : orderDetail.orderStatus >= 9 ? '已完成' : '进行中'}}
+        </view>
+        <view class="status-title">{{orderCurrentStep}}</view>
+        <view class="order-number">订单ID: {{orderID || '加载中...'}}</view>
       </view>
-      <view class="status-title">{{orderCurrentStep}}</view>
-      <view class="order-number">订单ID: {{orderID || '加载中...'}}</view>
+      <!-- 买家诚信度 -->
+      <view class="status-credit-area">
+        <text class="credit-label">买家诚信度</text>
+        <text class="credit-score">100</text>
+      </view>
     </view>
   </view>
 

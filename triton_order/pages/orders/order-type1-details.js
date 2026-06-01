@@ -25,6 +25,7 @@ Page({
       isBanker: false,
       isBuyer: false,
       canSee: false,
+      buyerScore: '',
       goodInfo: {
         imageList: [],
         videoList: [],
@@ -108,7 +109,9 @@ Page({
       let _isBanker = (this.data.userID == _orderInfo.banker_id);
       let _isBuyer  = (this.data.userID == _orderInfo.buyer_id);
       let _isOwner  = (this.data.userID == _orderInfo.owner_id);
-      let _canSee   = (_isBanker || _isBuyer);
+      // owner 只有在 order_status == 0（同意）时可见
+      let _ownerCanSee = _isOwner && (_orderInfo.order_details.order_status === 0);
+      let _canSee   = (_isBanker || _isBuyer || _ownerCanSee);
       console.log('1111111111111owner, buyer, banker:', _isOwner, _isBuyer, _isBanker)
       console.log('1111111111111 _orderDetails:', _orderInfo.order_details);
       console.log('1111111111111 userID:', this.data.userID);
@@ -118,6 +121,11 @@ Page({
 	      isOwner: _isOwner, 
 	      canSee : _canSee
       });
+
+      // 获取 buyer 的诚信等级
+      if (_orderInfo.buyer_id) {
+        this.getBuyerScore(_orderInfo.buyer_id);
+      }
     },
     async updateGoodsInfo(goodsID) {
       if (!goodsID) {
@@ -165,6 +173,16 @@ Page({
       }
     },
 
+    async getBuyerScore(buyerID) {
+      try {
+        const res = await CLOUDFUNC.callCloudFunction('getUserInfo', { userID: buyerID });
+        if (res && res.userInfo && res.userInfo.score !== undefined) {
+          this.setData({ buyerScore: res.userInfo.score });
+        }
+      } catch (err) {
+        console.log('getBuyerScore failed:', err);
+      }
+    },
     updateButtonStatus() {
       console.log('owner, buyer, banker:', this.data.isOwner, this.data.isBuyer, this.data.isBanker)
       let userID = this.data.userID; 
