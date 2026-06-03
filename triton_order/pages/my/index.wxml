@@ -42,6 +42,26 @@
         <text class="edit-label">名称</text>
         <input class="edit-nick-input" value="{{editNick}}" placeholder="请输入昵称" bindinput="onNickInput" maxlength="20" />
       </view>
+      <!-- 卖家服务费 -->
+      <view class="edit-nick-section">
+        <text class="edit-label">卖家服务费</text>
+        <input class="edit-nick-input" value="{{editTaxRatioToSaler}}" placeholder="输入比例（%）" bindinput="onTaxRatioToSalerInput" type="digit" />
+      </view>
+      <!-- 买家服务费 -->
+      <view class="edit-nick-section">
+        <text class="edit-label">买家服务费</text>
+        <input class="edit-nick-input" value="{{editTaxRatioToBuyer}}" placeholder="输入比例（%）" bindinput="onTaxRatioToBuyerInput" type="digit" />
+      </view>
+      <!-- 收取固定服务费的价格 -->
+      <view class="edit-nick-section">
+        <text class="edit-label">固定服务费起收价</text>
+        <input class="edit-nick-input" value="{{editFixedTaxPrice}}" placeholder="输入价格" bindinput="onFixedTaxPriceInput" type="digit" />
+      </view>
+      <!-- 固定服务费的数额 -->
+      <view class="edit-nick-section">
+        <text class="edit-label">固定服务费数额</text>
+        <input class="edit-nick-input" value="{{editFixedTaxValue}}" placeholder="输入数额" bindinput="onFixedTaxValueInput" type="digit" />
+      </view>
     </view>
     <view class="modal-footer">
       <view class="modal-btn cancel-btn" bindtap="hideEditModal">取消</view>

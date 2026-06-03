@@ -14,7 +14,11 @@ Page({
       userInfoMap: {},
       showEditModal: false,
       editNick: '',
-      editAvatar: ''
+      editAvatar: '',
+      editTaxRatioToSaler: '',
+      editTaxRatioToBuyer: '',
+      editFixedTaxPrice: '',
+      editFixedTaxValue: ''
   },
   onLoad() {
     this.readConfigVal()
@@ -116,18 +120,38 @@ Page({
     this.setData({
       showEditModal: true,
       editNick: userInfoMap.nick || '',
-      editAvatar: ''
+      editAvatar: '',
+      editTaxRatioToSaler: userInfoMap.tax_ratio_to_saler != null ? String(userInfoMap.tax_ratio_to_saler) : '',
+      editTaxRatioToBuyer: userInfoMap.tax_ratio_to_buyer != null ? String(userInfoMap.tax_ratio_to_buyer) : '',
+      editFixedTaxPrice: userInfoMap.fixed_tax_price != null ? String(userInfoMap.fixed_tax_price) : '',
+      editFixedTaxValue: userInfoMap.fixed_tax_value != null ? String(userInfoMap.fixed_tax_value) : ''
     });
   },
   hideEditModal() {
     this.setData({
       showEditModal: false,
       editNick: '',
-      editAvatar: ''
+      editAvatar: '',
+      editTaxRatioToSaler: '',
+      editTaxRatioToBuyer: '',
+      editFixedTaxPrice: '',
+      editFixedTaxValue: ''
     });
   },
   onNickInput(e) {
     this.setData({ editNick: e.detail.value });
+  },
+  onTaxRatioToSalerInput(e) {
+    this.setData({ editTaxRatioToSaler: e.detail.value });
+  },
+  onTaxRatioToBuyerInput(e) {
+    this.setData({ editTaxRatioToBuyer: e.detail.value });
+  },
+  onFixedTaxPriceInput(e) {
+    this.setData({ editFixedTaxPrice: e.detail.value });
+  },
+  onFixedTaxValueInput(e) {
+    this.setData({ editFixedTaxValue: e.detail.value });
   },
   chooseAvatar() {
     const that = this;
@@ -143,7 +167,7 @@ Page({
   },
   saveProfile() {
     const that = this;
-    const { editNick, editAvatar, userInfoMap } = this.data;
+    const { editNick, editAvatar, editTaxRatioToSaler, editTaxRatioToBuyer, editFixedTaxPrice, editFixedTaxValue, userInfoMap } = this.data;
 
     if (!editNick.trim()) {
       wx.showToast({ title: '请输入昵称', icon: 'none' });
@@ -157,7 +181,11 @@ Page({
         ...userInfoMap,
 	data : {
           nick: editNick.trim(),
-          avatar: avatarUrl || userInfoMap.avatar || ''
+          avatar: avatarUrl || userInfoMap.avatar || '',
+          tax_ratio_to_saler: editTaxRatioToSaler ? parseFloat(editTaxRatioToSaler) : undefined,
+          tax_ratio_to_buyer: editTaxRatioToBuyer ? parseFloat(editTaxRatioToBuyer) : undefined,
+          fixed_tax_price: editFixedTaxPrice ? parseFloat(editFixedTaxPrice) : undefined,
+          fixed_tax_value: editFixedTaxValue ? parseFloat(editFixedTaxValue) : undefined
 	}
       };
       console.log(updatedUserInfo)
@@ -174,7 +202,11 @@ Page({
           userInfoMap: updatedUserInfo,
           showEditModal: false,
           editNick: '',
-          editAvatar: ''
+          editAvatar: '',
+          editTaxRatioToSaler: '',
+          editTaxRatioToBuyer: '',
+          editFixedTaxPrice: '',
+          editFixedTaxValue: ''
         });
       }).catch(err => {
         wx.hideLoading();
@@ -188,8 +220,7 @@ Page({
       wx.cloud.uploadFile({
         cloudPath: cloudPath,
         filePath: editAvatar
-      }).then(uploadRes => {
-        doSave(uploadRes.fileID);
+      }).then(uploadRes => { doSave(uploadRes.fileID);
       }).catch(() => {
         wx.hideLoading();
         wx.showToast({ title: '头像上传失败', icon: 'none' });

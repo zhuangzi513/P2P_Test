@@ -8,7 +8,11 @@ Page({
     bankerInfo: {
       nick: '',
       score: '',
-      avatar: ''
+      avatar: '',
+      tax_ratio_to_saler: '',
+      tax_ratio_to_buyer: '',
+      fixed_tax_price: '',
+      fixed_tax_value: ''
     },
     bankerID: -1,
     activeTab: 'recommend',
@@ -68,11 +72,17 @@ Page({
     try {
       const res = await CLOUDFUNC.callCloudFunction('getUserInfo', { userID: bankerID });
       if (res && res.userInfo) {
+        const info = res.userInfo;
+	console.log(info.nick, info.score, info.avatar, info.tax_ratio_to_saler);
         this.setData({
           bankerInfo: {
-            nick: res.userInfo.nick || '',
-            score: res.userInfo.score || '',
-            avatar: res.userInfo.avatar || ''
+            nick: info.nick || 'EMPTY',
+            score: info.score || 'EMPTY',
+            avatar: info.avatar || '',
+            tax_ratio_to_saler: info.tax_ratio_to_saler != null ? info.tax_ratio_to_saler : '',
+            tax_ratio_to_buyer: info.tax_ratio_to_buyer != null ? info.tax_ratio_to_buyer : '',
+            fixed_tax_price: info.fixed_tax_price != null ? info.fixed_tax_price : '',
+            fixed_tax_value: info.fixed_tax_value != null ? info.fixed_tax_value : ''
           }
         })
       }

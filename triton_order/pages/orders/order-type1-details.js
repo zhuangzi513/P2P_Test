@@ -31,7 +31,14 @@ Page({
         videoList: [],
       },
       orderDetails: {
-      }
+      },
+      bankerTaxInfo: {
+        tax_ratio_to_buyer: null,
+        fixed_tax_price: null,
+        fixed_tax_value: null
+      },
+      payableAmount: '--',
+      serviceFee: '0'
     },
     onLoad:function(options){
       const orderID = options.id ? Number(options.id) : -1;
@@ -77,8 +84,11 @@ Page({
 	if (!goodsInfo) {
           wx.showToast({ title: 'FAILED TO GET goodsInfo:' + this.data.orderID, icon: 'none' });
 	}
+	console.log("goodsInfo", goodsInfo)
 	if (goodsInfo) {
           this.setData({ 'orderDetails.price': goodsInfo.price});
+          // 获取 banker 服务费信息
+          this.getBankerTaxInfo(goodsInfo.bankID);
 	}
   
 	return;
@@ -125,6 +135,10 @@ Page({
       // 获取 buyer 的诚信等级
       if (_orderInfo.buyer_id) {
         this.getBuyerScore(_orderInfo.buyer_id);
+      }
+      // 获取 banker 服务费信息
+      if (_orderInfo.banker_id) {
+        this.getBankerTaxInfo(_orderInfo.banker_id);
       }
     },
     async updateGoodsInfo(goodsID) {
@@ -182,6 +196,55 @@ Page({
       } catch (err) {
         console.log('getBuyerScore failed:', err);
       }
+    },
+
+    async getBankerTaxInfo(bankerID) {
+      console.log('getBankerTaxInfo:', bankerID);
+      if (!bankerID) return;
+      try {
+        const res = await CLOUDFUNC.callCloudFunction('getUserInfo', { userID: bankerID });
+        if (res && res.userInfo) {
+          const info = res.userInfo;
+	  console.log('bankerinfo:',info)
+          this.setData({
+            bankerTaxInfo: {
+              tax_ratio_to_buyer: info.tax_ratio_to_buyer != null ? Number(info.tax_ratio_to_buyer) : null,
+              fixed_tax_price: info.fixed_tax_price != null ? Number(info.fixed_tax_price) : null,
+              fixed_tax_value: info.fixed_tax_value != null ? Number(info.fixed_tax_value) : null
+            }
+          });
+          this.calcPayableAmount();
+        }
+      } catch (err) {
+        console.log('getBankerTaxInfo failed:', err);
+      }
+    },
+
+    calcPayableAmount(inputPrice) {
+      let price = Number(this.data.orderDetails.price) || 0;
+      if (inputPrice) {
+        price = Number(inputPrice);
+      }
+      const { tax_ratio_to_buyer, fixed_tax_price, fixed_tax_value } = this.data.bankerTaxInfo;
+      console.log("tax:", tax_ratio_to_buyer, fixed_tax_price, fixed_tax_value)
+
+      let serviceFee = 0;
+      // 当商品价格大于 fixed_tax_price 时，按比例计算服务费
+      if (tax_ratio_to_buyer != null && price > (fixed_tax_price || 0)) {
+        let _serviceFee = price * tax_ratio_to_buyer / 100;
+	serviceFee = _serviceFee > Number(fixed_tax_value) ? _serviceFee : Number(fixed_tax_value);
+	console.log('serviceFee 1', serviceFee);
+      } else if (fixed_tax_value != null) {
+        // 否则使用固定服务费
+        serviceFee = fixed_tax_value;
+	console.log('serviceFee 2', serviceFee);
+      }
+
+      const payableAmount = (price + serviceFee).toFixed(2);
+      this.setData({
+        payableAmount: payableAmount,
+        serviceFee: serviceFee.toFixed(2)
+      });
     },
     updateButtonStatus() {
       console.log('owner, buyer, banker:', this.data.isOwner, this.data.isBuyer, this.data.isBanker)
@@ -255,6 +318,7 @@ Page({
     onPriceInput(e) {
       if (this.data.isBuyer && this.data.isNewOrder) {
         this.setData({ 'orderDetails.price': e.detail.value });
+        this.calcPayableAmount(e.detail.value);
       }
     },
     onSenderAddrInput(e)  { 

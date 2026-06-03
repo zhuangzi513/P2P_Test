@@ -341,6 +341,11 @@ page {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-bottom: 28rpx;
+}
+
+.edit-nick-section:last-child {
+  margin-bottom: 0;
 }
 
 .edit-nick-input {

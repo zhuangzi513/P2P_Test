@@ -56,6 +56,15 @@
         </view>
       </view>
 
+      <!-- 应付金额 -->
+      <view class="info-row payable-row">
+        <view class="info-label">应付金额</view>
+        <view class="info-value payable-value">
+          <text class="payable-amount">¥{{payableAmount}}</text>
+          <text class="payable-detail">商品 ¥{{orderDetails.price || goodInfo.price || 0}} + 服务费 ¥{{serviceFee}}</text>
+        </view>
+      </view>
+
       <!-- 发件人地址 -->
       <view class="info-row" wx:if="{{senderAddrNeeded}}">
         <view class="info-label">发货地址</view>

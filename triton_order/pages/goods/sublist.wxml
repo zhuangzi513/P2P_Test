@@ -10,11 +10,38 @@ module.exports = {
   <!-- Banker Info -->
   <view class="banker-info-card">
     <view class="banker-avatar-wrap">
-      <image class="banker-avatar" src="{{bankerInfo.avatar}}" mode="aspectFill" />
+      <image wx:if="{{bankerInfo.avatar}}" class="banker-avatar" src="{{bankerInfo.avatar}}" mode="aspectFill" />
+      <view wx:else class="banker-avatar-placeholder">
+        <text class="banker-avatar-text">{{bankerInfo.nick ? bankerInfo.nick.charAt(0) : '?'}}</text>
+      </view>
     </view>
     <view class="banker-info-content">
       <view class="banker-nick">{{bankerInfo.nick || '未知'}}</view>
       <view class="banker-score">等级：{{bankerInfo.score || '--'}}</view>
+    </view>
+  </view>
+
+  <!-- 服务费说明 -->
+  <view class="tax-card">
+    <view class="tax-card-header">
+      <view class="tax-card-title-bar"></view>
+      <text class="tax-card-title">服务费说明</text>
+    </view>
+    <view class="tax-card-body">
+      <view class="tax-row">
+        <text class="tax-row-label">卖家服务费</text>
+        <text class="tax-row-value">{{bankerInfo.tax_ratio_to_saler ? bankerInfo.tax_ratio_to_saler + '%' : '未设置'}}</text>
+        <view class="tax-row-divider"></view>
+        <text class="tax-row-label">买家服务费</text>
+        <text class="tax-row-value">{{bankerInfo.tax_ratio_to_buyer ? bankerInfo.tax_ratio_to_buyer + '%' : '未设置'}}</text>
+      </view>
+      <view class="tax-row">
+        <text class="tax-row-label">固定起收价</text>
+        <text class="tax-row-value">{{bankerInfo.fixed_tax_price ? '¥' + bankerInfo.fixed_tax_price : '未设置'}}</text>
+        <view class="tax-row-divider"></view>
+        <text class="tax-row-label">固定服务费</text>
+        <text class="tax-row-value">{{bankerInfo.fixed_tax_value ? '¥' + bankerInfo.fixed_tax_value : '未设置'}}</text>
+      </view>
     </view>
   </view>
 

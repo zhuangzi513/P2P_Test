@@ -28,11 +28,29 @@ page {
   background: #a4bea6;
   margin-right: 24rpx;
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .banker-avatar {
   width: 100%;
   height: 100%;
+}
+
+.banker-avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #026302, #059505);
+}
+
+.banker-avatar-text {
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #FFFFFF;
 }
 
 .banker-info-content {
@@ -94,7 +112,7 @@ page {
   transform: translateX(-50%);
   width: 48rpx;
   height: 4rpx;
-  background: #E4393C;
+  background: #026302;
   border-radius: 2rpx;
 }
 
@@ -125,20 +143,20 @@ page {
   left: 0;
   width: 60%;
   height: 6rpx;
-  background: linear-gradient(90deg, #E4393C 0%, transparent 100%);
+  background: linear-gradient(90deg, #026302 0%, transparent 100%);
   border-radius: 3rpx;
 }
 
 .jd-price-symbol {
   font-size: 32rpx;
-  color: #E4393C;
+  color: #026302;
   font-weight: bold;
   margin-right: 4rpx;
 }
 
 .jd-price-num {
   font-size: 48rpx;
-  color: #E4393C;
+  color: #026302;
   font-weight: bold;
   line-height: 1;
 }
@@ -223,6 +241,69 @@ page {
 .jd-goods-price .jd-price-num {
   font-size: 36rpx;
   color: #086008;
+}
+
+/* 服务费说明卡片 */
+.tax-card {
+  background: #FFFFFF;
+  margin: 0 24rpx 20rpx;
+  border-radius: 16rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 115, 0, 0.1);
+  overflow: hidden;
+}
+
+.tax-card-header {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 28rpx 0;
+}
+
+.tax-card-title-bar {
+  width: 6rpx;
+  height: 32rpx;
+  background: linear-gradient(180deg, #026302, #059505);
+  border-radius: 3rpx;
+  margin-right: 12rpx;
+}
+
+.tax-card-title {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #026302;
+}
+
+.tax-card-body {
+  padding: 20rpx 28rpx 24rpx;
+}
+
+.tax-row {
+  display: flex;
+  align-items: center;
+  padding: 18rpx 0;
+}
+
+.tax-row:not(:last-child) {
+  border-bottom: 1rpx solid #e8f5e8;
+}
+
+.tax-row-label {
+  font-size: 26rpx;
+  color: #666;
+  min-width: 140rpx;
+}
+
+.tax-row-value {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #CC0000;
+  min-width: 100rpx;
+}
+
+.tax-row-divider {
+  width: 1rpx;
+  height: 28rpx;
+  background: #d4edda;
+  margin: 0 24rpx;
 }
 
 ::-webkit-scrollbar {

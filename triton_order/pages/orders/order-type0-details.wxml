@@ -114,6 +114,15 @@
                    bindinput="onPriceInput" />
           </view>
         </view>
+
+        <!-- 应付金额 -->
+        <view class="form-row payable-row">
+          <view class="form-label">应付金额</view>
+          <view class="payable-value">
+            <text class="payable-amount">¥{{payableAmount}}</text>
+            <text class="payable-detail">商品 ¥{{goodInfo.price || 0}} + 服务费 ¥{{serviceFee}}</text>
+          </view>
+        </view>
         
         <view class="form-row">
           <view class="checkbox-wrapper {{!isOwner ? 'disabled' : ''}}" bindtap="{{isOwner ? 'onFixedPriceToggle' : ''}}">
