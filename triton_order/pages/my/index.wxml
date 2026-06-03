@@ -64,13 +64,17 @@
         <view class="menu-label">出库记录</view>
         <text class="arrow"></text>
       </view>
+      <navigator url="/pages/goods/sublist_status" class="menu-item">
+        <view class="menu-label">订单状态</view>
+        <text class="arrow">查看订单流转状态</text>
+      </navigator>
     </block>
     <block wx:else>
-      <view bindtap="switchToOutputOrders" class="menu-item">
+      <view bindtap="switchToInputOrders" class="menu-item">
         <view class="menu-label">寄售单</view>
         <text class="arrow"></text>
       </view>
-      <view bindtap="switchToInputOrders" class="menu-item">
+      <view bindtap="switchToOutputOrders" class="menu-item">
         <view class="menu-label">购入订单</view>
         <text class="arrow"></text>
       </view>

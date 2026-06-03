@@ -15,7 +15,7 @@ const ORDERSTATUS0 = {
   CLOSE: 12
 };
 const statusMapType0 = [
-'新建',
+'提交',
 '确认',
 '发货给商家',
 '确认接收',
@@ -45,7 +45,7 @@ CLOSE: 9
 };
 
 const statusMapType1 = [
-'新建',
+'提交',
 '同意',
 '确认',
 '已付款',

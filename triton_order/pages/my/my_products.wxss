@@ -1,26 +1,16 @@
 
-
 page {
-  background-color: #F5F5F5;
+  background-color: #E4FFED;
 }
-
-
-
-
-
-
-
 
 .jd-main-container {
   min-height: 100vh;
   padding-bottom: 40rpx;
 }
 
-
-
 .jd-section-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   padding: 32rpx 24rpx 28rpx;
 }
@@ -28,6 +18,7 @@ page {
 .jd-section-title {
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 .jd-section-icon {
@@ -39,7 +30,7 @@ page {
 .jd-section-name {
   font-size: 36rpx;
   font-weight: bold;
-  color: #333;
+  color: #047504;
   position: relative;
 }
 
@@ -48,27 +39,11 @@ page {
   position: absolute;
   bottom: -6rpx;
   left: 0;
-  width: 60%;
+  width: 100%;
   height: 6rpx;
-  background: linear-gradient(90deg, #E4393C 0%, transparent 100%);
+  background: linear-gradient(90deg, #026302 0%, #059505 50%, transparent 100%);
   border-radius: 3rpx;
 }
-
-
-.jd-price-symbol {
-  font-size: 32rpx;
-  color: #E4393C;
-  font-weight: bold;
-  margin-right: 4rpx;
-}
-
-.jd-price-num {
-  font-size: 48rpx;
-  color: #E4393C;
-  font-weight: bold;
-  line-height: 1;
-}
-
 
 .jd-goods-grid {
   display: flex;
@@ -83,7 +58,7 @@ page {
   background: #FFFFFF;
   border-radius: 12rpx;
   overflow: hidden;
-  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
+  box-shadow: 0 8rpx 16rpx rgba(7, 255, 11, 0.3);
   transition: all 0.3s ease;
 }
 
@@ -92,7 +67,7 @@ page {
   height: 345rpx;
   position: relative;
   overflow: hidden;
-  background: #F9F9F9;
+  background: #a4bea6;
 }
 
 .jd-goods-img-wrap image {
@@ -107,7 +82,8 @@ page {
 
 .jd-goods-name {
   font-size: 28rpx;
-  color: #333;
+  color: #005000;
+  font-weight: bold;
   line-height: 1.4;
   height: 78rpx;
   overflow: hidden;
@@ -120,7 +96,7 @@ page {
 
 .jd-goods-desc {
   font-size: 24rpx;
-  color: #999;
+  color: #047504;
   line-height: 1.3;
   height: 31rpx;
   overflow: hidden;
@@ -138,15 +114,21 @@ page {
 .jd-goods-price {
   display: flex;
   align-items: baseline;
-  color: #E4393C;
+  color: #022c12;
 }
 
 .jd-goods-price .jd-price-symbol {
-  font-size: 24rpx;
+  font-size: 32rpx;
+  color: #026302;
+  font-weight: bold;
+  margin-right: 4rpx;
 }
 
 .jd-goods-price .jd-price-num {
-  font-size: 36rpx;
+  font-size: 48rpx;
+  color: #026302;
+  font-weight: bold;
+  line-height: 1;
 }
 
 .jd-goods-original-price {
@@ -156,20 +138,8 @@ page {
   margin-left: 8rpx;
 }
 
-
-
-
-
-
-
-
 ::-webkit-scrollbar {
   width: 0;
   height: 0;
   color: transparent;
 }
-
-
-
-
-

@@ -1,16 +1,7 @@
-<wxs module="goodsDetailPage">
-module.exports = {
-  url : function(item) {
-    return '/pages/goods-details/index?id=' + item.goodsId
-  }
-}
-</wxs>
-
 <view class="jd-main-container">
   <view class="jd-section-header">
     <view class="jd-section-title">
-      <image class="jd-section-icon" src="../../images/home/goodslist.png"></image>
-      <text class="jd-section-name">MY</text>
+      <text class="jd-section-name">我的寄售/购入</text>
     </view>
   </view>
   <view class="jd-goods-grid">
