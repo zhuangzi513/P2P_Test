@@ -23,6 +23,7 @@ exports.main = async (event, context) => {
     if (goodsInfo && typeof goodsInfo === 'object') {
       const existing = record.data[0].goods_info || {};
       const merged = { ...existing, ...goodsInfo };
+      console.log(merged);
       await db.collection('goods_info').doc(docId).update({
         data: { goods_info: merged }
       });

@@ -49,8 +49,6 @@ Page({
     }).then(res => {
     console.log(res);
       if (res && res.orderId) {
-      console.log('navigate to new order-type0-detail:');
-      console.log('/pages/orders/order-type0-details?is_new=true&banker_id=' + bankerID + '&id=' + res.orderId)
         wx.navigateTo({
 	  url: '/pages/orders/order-type0-details?is_new=true&banker_id=' + bankerID + '&id=' + res.orderId,
 	});

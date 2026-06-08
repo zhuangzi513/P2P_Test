@@ -415,14 +415,24 @@ Page({
         const curStatus = this.data.orderDetails.order_status;
         console.log('updateOrderData, owner_id, goods_id, order_status', this.data.userID, this.data.goodsID, curStatus)
         console.log('updateOrderData, details:', this.data.orderDetails);
-        // 仅在 INIT(0) 状态下将 serviceFee / payableAmount 持久化到 orders_info
+        const details = { ...this.data.orderDetails };
+        // 仅在 INIT(0) 状态下将商品信息、服务费写入 order_details，使 order 文档自包含
+        if (curStatus === ORDER_STATUS.ORDERSTATUS_ENUM0.INIT) {
+          const gi = this.data.goodInfo || {};
+          details.price = gi.price || '';
+          details.goods_name = gi.name || '';
+          details.thumbnail = gi.pic
+            || (gi.imageList && gi.imageList[0] && gi.imageList[0].url)
+            || '';
+        }
         const _orderDetail = {
           order_status: curStatus,
-          order_details: this.data.orderDetails
+          order_details: details
         };
         if (curStatus === ORDER_STATUS.ORDERSTATUS_ENUM0.INIT) {
           _orderDetail.service_fee = parseFloat(this.data.serviceFee) || 0;
           _orderDetail.payable_amount = parseFloat(this.data.payableAmount) || 0;
+          _orderDetail.price = parseFloat(details.price) || 0;
           _orderDetail.owner_id = this.data.userID,
           _orderDetail.goods_id = this.data.goodsID
         }

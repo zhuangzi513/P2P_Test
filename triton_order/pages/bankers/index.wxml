@@ -1,0 +1,18 @@
+<view class="page-container">
+  <view class="page-title">全部商家</view>
+
+  <view class="bankers-grid" wx:if="{{bankers.length > 0}}">
+    <view class="banker-card" wx:for="{{bankers}}" wx:for-index="idx" bindtap="tabClick" data-id="{{item.id}}" data-userid="{{item.user_id}}" data-index="{{idx}}"
+          hover-class="button-hover" hover-start-time="50" hover-stay-time="150" hover-stop-propagation="true">
+      <view class="banker-avatar-wrap">
+        <image mode="aspectFill" src="{{item.avatar}}"></image>
+      </view>
+      <text class="banker-name">{{item.data.nick}}</text>
+      <text class="banker-level">等级：{{item.data.score}}</text>
+    </view>
+  </view>
+
+  <view class="empty-tip" wx:else>
+    <text>暂无商家信息</text>
+  </view>
+</view>

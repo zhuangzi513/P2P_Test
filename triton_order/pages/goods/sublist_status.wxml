@@ -1,0 +1,28 @@
+<view class="jd-main-container">
+  <!-- Tab Bar -->
+  <view class="tab-bar">
+    <view class="tab-item {{activeTab === 'pending' ? 'tab-active' : ''}}" bindtap="switchTab" data-tab="pending">待确认</view>
+    <view class="tab-item {{activeTab === 'active' ? 'tab-active' : ''}}" bindtap="switchTab" data-tab="active">进行中</view>
+  </view>
+
+  <!-- Goods Grid -->
+  <view class="jd-goods-grid">
+    <view class="jd-goods-card" wx:for="{{displayGoods}}" wx:key="id" bindtap="toDetailsTap" data-id="{{item.id}}" data-type="{{item.order_type}}">
+      <view class="jd-goods-img-wrap">
+        <image src="{{item.pic}}" mode="aspectFill" lazy-load="true" />
+      </view>
+      <view class="jd-goods-info">
+        <view class="jd-goods-name">{{item.name}}</view>
+        <view wx:if="{{item.orderTypeText}}" class="jd-goods-type">{{item.orderTypeText}}</view>
+        <view wx:if="{{item.statusText}}" class="jd-goods-status">{{item.statusText}}</view>
+        <view class="jd-goods-price-box">
+          <view class="jd-goods-price">
+            <text class="jd-price-symbol">¥</text>
+            <text class="jd-price-num">{{item.price}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <van-divider wx:if="{{ !loadingMoreHidden }}" custom-class="jd-end-divider" contentPosition="center">已经到底了</van-divider>
+</view>

@@ -1,0 +1,97 @@
+page {
+  background: #E4FFED;
+}
+
+.page-container {
+  min-height: 100vh;
+  padding: 24rpx;
+  padding-bottom: 40rpx;
+}
+
+.page-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #026302;
+  text-align: center;
+  padding: 32rpx 0 28rpx;
+}
+
+.bankers-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20rpx;
+  padding: 0 8rpx;
+}
+
+.banker-card {
+  width: calc((100% - 40rpx) / 3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28rpx 12rpx 24rpx;
+  background: #FFFFFF;
+  border-radius: 16rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 115, 0, 0.08);
+}
+
+.banker-card:active {
+  background: #026302;
+}
+
+.banker-card:active .banker-name,
+.banker-card:active .banker-level {
+  color: #ffffff;
+}
+
+.banker-card:active .banker-level {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.banker-avatar-wrap {
+  width: 110rpx;
+  height: 110rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16rpx;
+  border-radius: 50%;
+  background: #E4FFED;
+  box-shadow: 0 2rpx 8rpx rgba(0, 115, 0, 0.1);
+  overflow: hidden;
+}
+
+.banker-avatar-wrap image {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+}
+
+.banker-name {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #026302;
+  text-align: center;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-bottom: 8rpx;
+}
+
+.banker-level {
+  font-size: 22rpx;
+  color: #047504;
+  background: #E4FFED;
+  padding: 4rpx 20rpx;
+  border-radius: 20rpx;
+  text-align: center;
+}
+
+.empty-tip {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 120rpx 0;
+  font-size: 28rpx;
+  color: #999;
+}
