@@ -48,7 +48,7 @@ Page({
     },
     onLoad:function(options){
       // URL 参数都是字符串，orderID 保持字符串以便云函数处理
-      const orderID = options.id ? Number(options.id) : 0;
+      const orderID = options.id ? Number(options.id) : -1;
       const bankerID = options.banker_id ? Number(options.banker_id) : -1;
       const isNewOrder = (options.is_new == undefined) ? false : options.is_new;
       
@@ -436,6 +436,7 @@ Page({
           _orderDetail.owner_id = this.data.userID,
           _orderDetail.goods_id = this.data.goodsID
         }
+	console.log('calling updateOrderInfo with orderID:', this.data.orderID);
         const res = await CLOUDFUNC.callCloudFunction('updateOrderInfo',
                 {
 		  orderID: this.data.orderID,
@@ -486,15 +487,63 @@ Page({
       const validation = this.checkOrder(goodsID);
       if (!validation) return;
       
+      console.log("isNewOrder:", this.data.isNewOrder)
       if (this.data.isNewOrder) {
-        this.setData({ 'orderDetails.order_status': ORDER_STATUS.ORDERSTATUS_ENUM0.INIT });
+        try {
+          console.log("callling newOrder with bankerID:", this.data.bankerID);
+          console.log("callling newOrder with ownerID:", wx.getStorageSync('userID'));
+	  const res = await CLOUDFUNC.callCloudFunction('newOrder',
+          {
+            bankerID: this.data.bankerID,
+            ownerID: wx.getStorageSync('userID'),
+            orderType:0,
+            senderAddr: wx.getStorageSync('userAddr')
+          });
+	  console.log('newOrder returns:',res);
+          if (res && res.orderId) {
+            this.setData(
+	      {
+                orderID: res.orderId,
+	        'orderDetails.order_id': res.orderId,
+	        'orderDetails.order_status': ORDER_STATUS.ORDERSTATUS_ENUM0.INIT
+	      });
+	  }
+        } catch(err) {
+	  console.log(err);
+          wx.showToast({ title: '创建订单失败', icon: 'none' });
+        }
+
       } else {
         this.setData({ 'orderDetails.order_status': this.data.orderDetails.order_status + 1 });
       }
       
       // 等待订单更新完成
       await this.updateOrderData();
-      
+
+      let curOrderStatus = this.data.orderDetails.order_status;
+      let newGoodStatus = 0;
+      let goodStatusChanged = false;
+      if (curOrderStatus == ORDER_STATUS.ORDERSTATUS_ENUM0.RECVED0) {
+        newGoodStatus = 1;
+	goodStatusChanged = true;
+	console.log('newGoodStatus:', newGoodStatus)
+      } else if (curOrderStatus == ORDER_STATUS.ORDERSTATUS_ENUM0.ONSALE) { 
+        newGoodStatus = 2;
+	goodStatusChanged = true;
+	console.log('newGoodStatus:', newGoodStatus)
+      } else if (curOrderStatus == ORDER_STATUS.ORDERSTATUS_ENUM0.DONE) { 
+        newGoodStatus = 4;
+	goodStatusChanged = true;
+	console.log('newGoodStatus:', newGoodStatus)
+      }
+      if (goodStatusChanged) {
+        const res1 = await CLOUDFUNC.callCloudFunction('updateGoodsInfo',
+                     {
+                       goodsID: goodsID,
+                       goodsInfo: { goodStatus: newGoodStatus }
+                     });
+      }
+
       // ✅ 使用局部变量 goodsID，而不是 this.data.goodsID
       setTimeout(() => {
         const redirectID = goodsID || this.data.goodsID;
@@ -511,6 +560,7 @@ Page({
       console.log('submitGood')
       this.data.goodInfo.ownerID = wx.getStorageSync("userID");
       this.data.goodInfo.bankID = this.data.bankerID;
+      this.data.goodInfo.goodStatus = Number(0);
       this.data.goodInfo.banker_order_id = this.data.orderID;
       
       // 验证
@@ -520,10 +570,10 @@ Page({
       }
 
       if (this.data.isBanker) {
-        if (!this.data.goodInfo.color.trim()) {
-          wx.showToast({ title: 'COLOR NEEDED', icon: 'none' });
-          throw new Error('COLOR NEEDED');
-        }
+        //if (!this.data.goodInfo.color.trim()) {
+        //  wx.showToast({ title: 'COLOR NEEDED', icon: 'none' });
+        //  throw new Error('COLOR NEEDED');
+        //}
         if (!this.data.goodInfo.sizeX.trim()) {
           wx.showToast({ title: 'SHAPEX NEEDED', icon: 'none' });
           throw new Error('SHAPEX NEEDED');

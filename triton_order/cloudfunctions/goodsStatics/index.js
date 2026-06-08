@@ -8,7 +8,7 @@ exports.main = async (event, context) => {
   const userID = event.userID;
   const bankerID = event.bankerID;
   const pageNo = 1;
-  const pageSize = 20; 
+  const pageSize = event.pageSize; 
   const goodsCollection = db.collection('goods_info');
   
   try {
@@ -17,9 +17,10 @@ exports.main = async (event, context) => {
       query = goodsCollection.where({banker_id: Number(bankerID)});
     } else if (userID) {
       query = goodsCollection.where({owner_id: Number(userID)});
-    } else {
-      query = goodsCollection;
     }
+    //else {
+    //  query = goodsCollection;
+    //}
     console.log('userID', userID, 'bankerID', bankerID)
     const countResult = await query.count();
     const total = countResult.total;

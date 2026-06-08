@@ -20,7 +20,7 @@ Page({
     displayGoods: [],
     loadingMoreHidden: true,
     curPage: 1,
-    pageSize: 20
+    pageSize: 50
   },
   toDetailsTap: function(e) {
     const id = e.currentTarget.dataset.id
@@ -105,14 +105,19 @@ Page({
     if (append) { goods = this.data.allGoods }
     for (var i = 0; i < res.goods.length; i++) {
       const item = res.goods[i];
-      goods.push({
-        id: item.goods_id,
-        name: item.goods_info?.name || '',
-        price: item.goods_info?.price || '0',
-        fixedprice: item.goods_info?.fixedprice || false,
-        characteristic: item.goods_info?.characteristic || '',
-        pic: (item.goods_info?.imageList && item.goods_info.imageList[0]) ? item.goods_info.imageList[0].url : ''
-      });
+      console.log('item:', item.goods_info.goodStatus)
+      if (item.goods_info.goodStatus) {
+        if (item.goods_info.goodStatus > 0 && item.goods_info.goodStatus < 3) {
+          goods.push({
+            id: item.goods_id,
+            name: item.goods_info?.name || '',
+            price: item.goods_info?.price || '0',
+            fixedprice: item.goods_info?.fixedprice || false,
+            characteristic: item.goods_info?.characteristic || '',
+            pic: (item.goods_info?.imageList && item.goods_info.imageList[0]) ? item.goods_info.imageList[0].url : ''
+          });
+        }
+      }
     }
     this.setData({
       loadingMoreHidden: true,

@@ -40,21 +40,24 @@ Page({
   onCardTap(e) {
     const bankerID = e.currentTarget.dataset.userid;
     if (!bankerID) return;
-    CLOUDFUNC.callCloudFunction('newOrder',
-    {
-      bankerID: bankerID,
-      ownerID: wx.getStorageSync('userID'),
-      orderType:0,
-      senderAddr: wx.getStorageSync('userAddr')
-    }).then(res => {
-    console.log(res);
-      if (res && res.orderId) {
-        wx.navigateTo({
-	  url: '/pages/orders/order-type0-details?is_new=true&banker_id=' + bankerID + '&id=' + res.orderId,
-	});
-      }
-    }).catch(err => {
-      wx.showToast({ title: '创建订单失败', icon: 'none' });
+    //CLOUDFUNC.callCloudFunction('newOrder',
+    //{
+    //  bankerID: bankerID,
+    //  ownerID: wx.getStorageSync('userID'),
+    //  orderType:0,
+    //  senderAddr: wx.getStorageSync('userAddr')
+    //}).then(res => {
+    //console.log(res);
+    //  if (res && res.orderId) {
+    //    wx.navigateTo({
+    //      url: '/pages/orders/order-type0-details?is_new=true&banker_id=' + bankerID + '&id=' + res.orderId,
+    //    });
+    //  }
+    //}).catch(err => {
+    //  wx.showToast({ title: '创建订单失败', icon: 'none' });
+    //});
+    wx.navigateTo({
+      url: '/pages/orders/order-type0-details?is_new=true&banker_id=' + bankerID,
     });
   },
 
