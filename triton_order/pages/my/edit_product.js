@@ -14,7 +14,7 @@ Page({
 
   onLoad(options) {
     if (!options.id) {
-      wx.showToast({ title: 'ID needed', icon: 'none' });
+      wx.showToast({ title: '缺少商品ID', icon: 'none' });
       setTimeout(() => wx.navigateBack(), 1500);
       return;
     }
@@ -23,7 +23,7 @@ Page({
   },
 
   async fetchDetail() {
-    wx.showLoading({ title: 'loading...' });
+    wx.showLoading({ title: '加载中...' });
     try {
       const res = await CLOUDFUNC.callCloudFunction('getGoodsInfo', {goodsID : this.data.goodId });
       if (res && res.goodsInfo && res.goodsInfo.length > 0) {
@@ -42,7 +42,7 @@ Page({
           loading: false
         });
       } else {
-        wx.showToast({ title: 'LOAD FAILED', icon: 'none' });
+        wx.showToast({ title: '加载失败', icon: 'none' });
         setTimeout(() => wx.navigateBack(), 1500);
       }
     } catch (err) {
@@ -77,7 +77,7 @@ Page({
       wx.hideLoading();
     } catch (err) {
       wx.hideLoading();
-      wx.showToast({ title: 'FAILED to upload', icon: 'none' });
+      wx.showToast({ title: '上传失败', icon: 'none' });
     }
   },
 
@@ -99,7 +99,7 @@ Page({
       wx.hideLoading();
     } catch (err) {
       wx.hideLoading();
-      wx.showToast({ title: 'FAILED to upload', icon: 'none' });
+      wx.showToast({ title: '上传失败', icon: 'none' });
     }
   },
 
@@ -145,7 +145,7 @@ Page({
         if (prevPage && prevPage.onRefresh) prevPage.onRefresh();
         setTimeout(() => wx.navigateBack(), 1500);
       } else {
-        wx.showToast({ title: 'FAIL TO UPDATE', icon: 'none' });
+        wx.showToast({ title: '更新失败', icon: 'none' });
       }
     } catch (err) {
       wx.hideLoading();

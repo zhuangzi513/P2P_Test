@@ -39,26 +39,26 @@
       </view>
       <!-- 昵称编辑 -->
       <view class="edit-nick-section">
-        <text class="edit-label">名称</text>
+        <text class="edit-label">昵称</text>
         <input class="edit-nick-input" value="{{editNick}}" placeholder="请输入昵称" bindinput="onNickInput" maxlength="20" />
       </view>
-      <!-- 卖家服务费 -->
-      <view class="edit-nick-section">
+      <!-- 卖家服务费（仅寄售商家） -->
+      <view class="edit-nick-section" wx:if="{{isBanker}}">
         <text class="edit-label">卖家服务费</text>
         <input class="edit-nick-input" value="{{editTaxRatioToSaler}}" placeholder="输入比例（%）" bindinput="onTaxRatioToSalerInput" type="digit" />
       </view>
-      <!-- 买家服务费 -->
-      <view class="edit-nick-section">
+      <!-- 买家服务费（仅寄售商家） -->
+      <view class="edit-nick-section" wx:if="{{isBanker}}">
         <text class="edit-label">买家服务费</text>
         <input class="edit-nick-input" value="{{editTaxRatioToBuyer}}" placeholder="输入比例（%）" bindinput="onTaxRatioToBuyerInput" type="digit" />
       </view>
-      <!-- 收取固定服务费的价格 -->
-      <view class="edit-nick-section">
+      <!-- 收取固定服务费的价格（仅寄售商家） -->
+      <view class="edit-nick-section" wx:if="{{isBanker}}">
         <text class="edit-label">固定服务费起收价</text>
         <input class="edit-nick-input" value="{{editFixedTaxPrice}}" placeholder="输入价格" bindinput="onFixedTaxPriceInput" type="digit" />
       </view>
-      <!-- 固定服务费的数额 -->
-      <view class="edit-nick-section">
+      <!-- 固定服务费的数额（仅寄售商家） -->
+      <view class="edit-nick-section" wx:if="{{isBanker}}">
         <text class="edit-label">固定服务费数额</text>
         <input class="edit-nick-input" value="{{editFixedTaxValue}}" placeholder="输入数额" bindinput="onFixedTaxValueInput" type="digit" />
       </view>
@@ -73,8 +73,8 @@
     <view class="section-title">订单</view>
     <block wx:if="{{isBanker}}">
       <view bindtap="createInputOrder" class="menu-item">
-        <view class="menu-label">新建入库单</view>
-        <text class="arrow">给货主的填写的寄售单</text>
+        <view class="menu-label">新建寄售单</view>
+        <text class="arrow">创建后分享给玩家填写</text>
       </view>
       <view bindtap="switchToInputOrders" class="menu-item">
         <view class="menu-label">入库记录</view>
@@ -84,28 +84,28 @@
         <view class="menu-label">出库记录</view>
         <text class="arrow"></text>
       </view>
+      <navigator url="/pages/my/my_products" class="menu-item">
+        <view class="menu-label">我的库存</view>
+        <text class="arrow"></text>
+      </navigator>
       <navigator url="/pages/goods/sublist_status" class="menu-item">
         <view class="menu-label">订单状态</view>
         <text class="arrow">查看订单流转状态</text>
       </navigator>
     </block>
     <block wx:else>
-      <view bindtap="switchToInputOrders" class="menu-item">
-        <view class="menu-label">寄售单</view>
+      <view bindtap="switchToMyPurchase" class="menu-item">
+        <view class="menu-label">我的购买</view>
         <text class="arrow"></text>
       </view>
-      <view bindtap="switchToOutputOrders" class="menu-item">
-        <view class="menu-label">购入订单</view>
+      <view bindtap="switchToMySale" class="menu-item">
+        <view class="menu-label">我的寄售</view>
         <text class="arrow"></text>
       </view>
     </block>
     <navigator url="/pages/my/select_addr" class="menu-item">
       <view class="menu-label">我的地址</view>
       <text class="arrow">我的地址</text>
-    </navigator>
-    <navigator url="/pages/my/my_products" class="menu-item">
-      <view class="menu-label">{{isBanker ? '我的库存' : '我的购入/寄售'}}</view>
-      <text class="arrow"></text>
     </navigator>
     <navigator url="/pages/my/money" class="menu-item">
       <view class="menu-label">我的账单</view>

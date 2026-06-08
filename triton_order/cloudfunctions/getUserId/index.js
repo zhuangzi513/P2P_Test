@@ -4,10 +4,11 @@ cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV});
 const db = cloud.database();
 const _ = db.command;
 
-async function generateNewUserId() {
+// 玩家用户ID: "WJ" + 随机大写字母 + 4位顺序编号
+async function generatePlayerUserId() {
   const counterCollection = db.collection('ids_info');
-  const counterId = 'user_id_counter';
-  
+  const counterId = 'player_id_counter';
+
   try {
     await counterCollection.doc(counterId).update({
       data: { seq: _.inc(1) }
@@ -21,7 +22,9 @@ async function generateNewUserId() {
     }
   }
   const res = await counterCollection.doc(counterId).get();
-  return res.data.seq;
+  const seq = res.data.seq;
+  const letter = String.fromCharCode(65 + Math.floor(Math.random() * 26)); // A-Z
+  return 'WJ' + letter + String(seq).padStart(4, '0');
 }
 
 exports.main = async (event, context) => {
@@ -34,7 +37,7 @@ exports.main = async (event, context) => {
   
   if (userRecord.data.length === 0) {
     console.log("userRecord.data.length==0")
-    userId = await generateNewUserId();
+    userId = await generatePlayerUserId();
     await usersCollection.add({
       data: {
         open_id: openid,

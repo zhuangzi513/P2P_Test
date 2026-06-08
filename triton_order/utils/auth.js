@@ -88,28 +88,52 @@ async function authorize() {
   }
 }
 
-async function loginAsBanker_() {
+async function loginAsBanker_(inviteCode) {
   wx.setStorageSync('isBanker', true)
   wx.setStorageSync('isCustomer', false)
   try {
-    const res = await CLOUDFUNC.callCloudFunction('login', {isBanker: true});
+    const res = await CLOUDFUNC.callCloudFunction('login', {
+      isBanker: true,
+      inviteCode: inviteCode || ''
+    });
     if (res.token) {
       wx.setStorageSync('token', res.token)
       wx.setStorageSync('userID', res.userID)
       return res
     } else {
       wx.showModal({
-        content: 'login failed',
+        content: res.message || '登录失败',
         showCancel: false
       })
       return null
     }
   } catch (err) {
     wx.showModal({
-      content: err.message || 'login failed',
+      content: err.message || err.msg || '登录失败',
       showCancel: false
     })
     return null
+  }
+}
+
+// 静默登录（不弹错误框），用于试探是否已注册
+async function tryLoginAsBanker(inviteCode) {
+  wx.setStorageSync('isBanker', true)
+  wx.setStorageSync('isCustomer', false)
+  try {
+    const res = await CLOUDFUNC.callCloudFunction('login', {
+      isBanker: true,
+      inviteCode: inviteCode || ''
+    });
+    if (res.token) {
+      wx.setStorageSync('token', res.token)
+      wx.setStorageSync('userID', res.userID)
+      return { success: true, data: res };
+    } else {
+      return { success: false, message: res.message || '登录失败' };
+    }
+  } catch (err) {
+    return { success: false, message: err.message || err.msg || '登录失败' };
   }
 }
 
@@ -192,6 +216,7 @@ module.exports = {
   wxaCode: wxaCode,
   login: login,
   loginAsBanker: loginAsBanker_,
+  tryLoginAsBanker: tryLoginAsBanker,
   loginAsCustomer: loginAsCustomer_,
   loginOut: loginOut,
   checkAndAuthorize: checkAndAuthorize,

@@ -32,6 +32,10 @@
       <!-- Banker 信息 -->
       <view class="card-info">
         <text class="banker-nick">{{item.data.nick || '未知'}}</text>
+        <view class="banker-account">
+          <text class="account-label">账户</text>
+          <text class="account-id">ID:{{item.user_id || '--'}}</text>
+        </view>
         <view class="banker-score-wrap">
           <text class="score-icon">★</text>
           <text class="banker-score">{{item.data.score || 0}}</text>

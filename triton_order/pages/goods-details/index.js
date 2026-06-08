@@ -16,14 +16,15 @@ Page({
     createTabs: false,
     goodsDetail: {},
     goodsInfo: {
-      color: '',
       sizeX: '',
       sizeY: '',
       sizeZ: '',
       price: '',
       description: '',
       imageList: [],
-      videoList: []
+      videoList: [],
+      channel: '',
+      purchasePrice: ''
     },
     selectSizePrice: 0,
     selectSizeOPrice: 0,
@@ -94,14 +95,15 @@ Page({
           goodsID: goodsID,
           goodsDetail: goodsData,
           goodsInfo: goodsData.goods_info || {
-            color: '',
             sizeX: '',
             sizeY: '',
             sizeZ: '',
             price: '',
             description: '',
             imageList: [],
-            videoList: []
+            videoList: [],
+            channel: '',
+            purchasePrice: ''
           },
           ownerID: goodsData.owner_id,
           bankerID: goodsData.banker_id
@@ -213,7 +215,7 @@ Page({
     return _data
   },
   onShareTimeline() {
-    let title = this.data.goodsInfo.color || '商品详情'
+    let title = '商品详情'
     let query = 'id=' + this.data.goodsID + '&inviter_id=' + wx.getStorageSync('userID')
     return {
       title,

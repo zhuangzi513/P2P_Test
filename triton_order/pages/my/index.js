@@ -105,6 +105,16 @@ Page({
       url: '/pages/orders/order-list?type=0',
     });
   },
+  switchToMyPurchase() {
+    wx.navigateTo({
+      url: '/pages/my/my_purchase',
+    });
+  },
+  switchToMySale() {
+    wx.navigateTo({
+      url: '/pages/my/my_sale',
+    });
+  },
   switchToOutputOrders() {
     wx.navigateTo({
       url: '/pages/orders/order-list?type=1',
@@ -174,19 +184,53 @@ Page({
       return;
     }
 
+    // 昵称变更时检查是否与其他用户重复
+    const newNick = editNick.trim();
+    const oldNick = userInfoMap.nick || '';
+    if (newNick !== oldNick) {
+      wx.showLoading({ title: '检查中...' });
+      CLOUDFUNC.callCloudFunction('checkNickname', {
+        nick: newNick,
+        userID: wx.getStorageSync('userID')
+      }).then(res => {
+        wx.hideLoading();
+        if (res && res.exists) {
+          wx.showToast({ title: '该昵称已被其他用户使用', icon: 'none' });
+          return;
+        }
+        // 昵称可用，执行保存
+        that._execSave(editAvatar, editNick, editTaxRatioToSaler, editTaxRatioToBuyer, editFixedTaxPrice, editFixedTaxValue, userInfoMap);
+      }).catch(err => {
+        wx.hideLoading();
+        wx.showToast({ title: '昵称检查失败，请重试', icon: 'none' });
+        console.error('checkNickname error:', err);
+      });
+      return;
+    }
+
+    // 昵称未变更，直接保存
+    this._execSave(editAvatar, editNick, editTaxRatioToSaler, editTaxRatioToBuyer, editFixedTaxPrice, editFixedTaxValue, userInfoMap);
+  },
+
+  _execSave(editAvatar, editNick, editTaxRatioToSaler, editTaxRatioToBuyer, editFixedTaxPrice, editFixedTaxValue, userInfoMap) {
+    const that = this;
     wx.showLoading({ title: '保存中...' });
 
     const doSave = (avatarUrl) => {
+      const dataFields = {
+        nick: editNick.trim(),
+        avatar: avatarUrl || userInfoMap.avatar || ''
+      };
+      // 仅寄售商家可编辑服务费字段
+      if (this.data.isBanker) {
+        dataFields.tax_ratio_to_saler = editTaxRatioToSaler ? parseFloat(editTaxRatioToSaler) : undefined;
+        dataFields.tax_ratio_to_buyer = editTaxRatioToBuyer ? parseFloat(editTaxRatioToBuyer) : undefined;
+        dataFields.fixed_tax_price = editFixedTaxPrice ? parseFloat(editFixedTaxPrice) : undefined;
+        dataFields.fixed_tax_value = editFixedTaxValue ? parseFloat(editFixedTaxValue) : undefined;
+      }
       const updatedUserInfo = {
         ...userInfoMap,
-	data : {
-          nick: editNick.trim(),
-          avatar: avatarUrl || userInfoMap.avatar || '',
-          tax_ratio_to_saler: editTaxRatioToSaler ? parseFloat(editTaxRatioToSaler) : undefined,
-          tax_ratio_to_buyer: editTaxRatioToBuyer ? parseFloat(editTaxRatioToBuyer) : undefined,
-          fixed_tax_price: editFixedTaxPrice ? parseFloat(editFixedTaxPrice) : undefined,
-          fixed_tax_value: editFixedTaxValue ? parseFloat(editFixedTaxValue) : undefined
-	}
+        data: dataFields
       };
       console.log(updatedUserInfo)
       // 只传递需要更新的字段，移除 user_id 避免污染 data 字段
@@ -231,10 +275,10 @@ Page({
   },
   logout() {
     wx.showModal({
-      title: 'LOGOUT',
-      content: 'Are you sure to logout?',
-      confirmText: 'Yes',
-      cancelText: 'Cancel',
+      title: '退出登录',
+      content: '确定要退出登录吗？',
+      confirmText: '确定',
+      cancelText: '取消',
       success: (res) => {
         if (res.confirm) {
           wx.clearStorageSync();
@@ -246,7 +290,7 @@ Page({
             userInfoMap: {}
           });
           wx.showToast({
-            title: 'Logged out',
+            title: '已退出登录',
             icon: 'success',
             duration: 1500
           });
@@ -257,7 +301,7 @@ Page({
   removeInputOrders() {
     CLOUDFUNC.callCloudFunction('removeInputOrder', { userID: this.data.userID }).then(res => {
           wx.showToast({
-            title: 'INPUTORDERS CLEAN',
+            title: '入库订单已清空',
             icon: 'success',
             duration: 1500
           });

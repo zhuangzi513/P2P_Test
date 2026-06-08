@@ -342,6 +342,9 @@ Page({
       try {
         console.log('updateOrderData, owner_id, goods_id, order_status', this.data.userID, this.data.goodsID, this.data.orderDetails.order_status)
         console.log('updateOrderData, order_details:', this.data.orderDetails)
+        // 将 serviceFee / payableAmount 一并持久化到 orders_info
+        const serviceFee = parseFloat(this.data.serviceFee) || 0;
+        const payableAmount = parseFloat(this.data.payableAmount) || 0;
         const res = await CLOUDFUNC.callCloudFunction('updateOrderInfo',
                 {
 		  orderID: this.data.orderID,
@@ -351,7 +354,9 @@ Page({
                     buyer_id:  this.data.userID,
 		    goods_id:  this.data.goodsID,
 		    order_status: newStatus,
-		    order_details : this.data.orderDetails
+		    order_details : this.data.orderDetails,
+                    service_fee: serviceFee,
+                    payable_amount: payableAmount
 		  }
                 });
         return res;

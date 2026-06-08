@@ -28,10 +28,12 @@ Page({
   },
   onLoad: function(options) {
     if (options && options.type) {
+        const orderType = Number(options.type);
         this.setData({
-          orderType: Number(options.type),
+          orderType: orderType,
           userID: wx.getStorageSync('userID'), 
-          isBanker: wx.getStorageSync('isBanker')
+          isBanker: wx.getStorageSync('isBanker'),
+          emptyText: orderType === 1 ? '暂无购入订单' : '暂无订单'
         });
     }      
     console.log(options);

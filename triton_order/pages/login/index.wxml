@@ -3,7 +3,7 @@
   <view class="content-area">
     <!-- 标题区域 -->
     <view class="logo-section">
-      <text class="app-name">翡翠鉴赏订单管理</text>
+      <text class="app-name">珠宝闲置寄售</text>
     </view>
 
     <!-- 登录卡片 -->
@@ -12,10 +12,10 @@
       
       <!-- Customer 登录 -->
       <view class="role-option" bindtap="loginAsCustomer">
-        <view class="role-icon customer-icon">👤</view>
+        <view class="role-icon">👤</view>
         <view class="role-info">
           <text class="role-title">玩家</text>
-          <text class="role-desc">浏览和购买商品</text>
+          <text class="role-desc">浏览、寄售、购买商品</text>
         </view>
         <view class="role-arrow">›</view>
       </view>
@@ -27,11 +27,11 @@
       </view>
 
       <!-- Banker 登录 -->
-      <view class="role-option banker" bindtap="loginAsBanker">
-        <view class="role-icon banker-icon">🏦</view>
+      <view class="role-option" bindtap="onBankerTap">
+        <view class="role-icon">🏦</view>
         <view class="role-info">
-          <text class="role-title">寄售平台</text>
-          <text class="role-desc">管理和出售商品</text>
+          <text class="role-title">寄售商家</text>
+          <text class="role-desc">管理与寄售商品（需邀请码）</text>
         </view>
         <view class="role-arrow">›</view>
       </view>
@@ -40,6 +40,28 @@
     <!-- 底部说明 -->
     <view class="footer-tips">
       <text class="tip-text">登录即表示同意我们的服务条款</text>
+    </view>
+  </view>
+
+  <!-- 邀请码弹窗 -->
+  <view class="invite-mask" wx:if="{{showInviteModal}}" bindtap="closeInviteModal">
+    <view class="invite-modal" catchtap="noop">
+      <text class="invite-title">输入邀请码</text>
+      <text class="invite-desc">寄售商家账户需要邀请码才能注册</text>
+      <text class="invite-contact">联系（微信：Xianbaozb）获取邀请码</text>
+      <input
+        class="invite-input"
+        placeholder="请输入邀请码"
+        value="{{inviteCode}}"
+        bindinput="onInviteInput"
+        maxlength="20"
+        focus="{{true}}"
+      />
+      <text class="invite-error" wx:if="{{inviteError}}">{{inviteError}}</text>
+      <view class="invite-btns">
+        <view class="invite-btn-cancel" bindtap="closeInviteModal">取消</view>
+        <view class="invite-btn-submit" bindtap="submitInviteCode">提交</view>
+      </view>
     </view>
   </view>
 </view>

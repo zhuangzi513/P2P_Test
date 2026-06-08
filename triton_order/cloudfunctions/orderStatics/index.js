@@ -17,9 +17,9 @@ exports.main = async (event, context) => {
   try {
     let query;
     if (!isBanker) {
-        if (orderType == "0") {
+        if (orderType == '0') {
           query = ordersCollection.where({owner_id: userID});
-	} else if (orderType == "1") {
+	} else if (orderType == '1') {
           query = ordersCollection.where({buyer_id: userID});
 	} else {
           query = ordersCollection.where({owner_id: userID});

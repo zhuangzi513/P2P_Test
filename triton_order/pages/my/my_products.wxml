@@ -1,17 +1,28 @@
 <view class="jd-main-container">
   <view class="jd-section-header">
     <view class="jd-section-title">
-      <text class="jd-section-name">我的寄售/购入</text>
+      <text class="jd-section-name">我的库存</text>
     </view>
   </view>
+
+  <!-- 筛选 Tab -->
+  <view class="tab-bar">
+    <view class="tab-item {{activeTab === 'all' ? 'tab-active' : ''}}" bindtap="switchTab" data-tab="all">全部</view>
+    <view class="tab-item {{activeTab === 'onsale' ? 'tab-active' : ''}}" bindtap="switchTab" data-tab="onsale">寄售中</view>
+    <view class="tab-item {{activeTab === 'ordered' ? 'tab-active' : ''}}" bindtap="switchTab" data-tab="ordered">已付款</view>
+    <view class="tab-item {{activeTab === 'paid' ? 'tab-active' : ''}}" bindtap="switchTab" data-tab="paid">待快递</view>
+    <view class="tab-item {{activeTab === 'shipped' ? 'tab-active' : ''}}" bindtap="switchTab" data-tab="shipped">待确认</view>
+    <view class="tab-item {{activeTab === 'confirmed' ? 'tab-active' : ''}}" bindtap="switchTab" data-tab="confirmed">待结算</view>
+  </view>
+
   <view class="jd-goods-grid">
-    <view class="jd-goods-card" wx:for="{{goods}}" wx:key="index" bindtap="toModifyTap" data-id="{{item.goods_id}}">
+    <view class="jd-goods-card" wx:for="{{goods}}" wx:key="goods_id" bindtap="toModifyTap" data-id="{{item.goods_id}}">
       <view class="jd-goods-img-wrap">
         <image src="{{item.goods_info.imageList[0]}}" mode="aspectFill" lazy-load="true" />
       </view>
       <view class="jd-goods-info">
         <view class="jd-goods-name">{{item.goods_info.name}}</view>
-        <view wx:if="{{item.characteristic}}" class="jd-goods-desc">{{item.goods_info.characteristic}}</view>
+        <view wx:if="{{item._statusText}}" class="jd-goods-status">{{item._statusText}}</view>
         <view class="jd-goods-price-box">
           <view class="jd-goods-price">
             <text class="jd-price-symbol">¥</text>

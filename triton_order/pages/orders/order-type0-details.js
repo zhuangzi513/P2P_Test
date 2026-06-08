@@ -9,6 +9,7 @@ Page({
       bankerID:0,
       goodsID:0,
       userID:0,
+      editPriceOnly: false,
       submitting: false,
       loading: true,
       updatingDisabled: true,
@@ -31,6 +32,8 @@ Page({
         imageList: [],
         videoList: [],
         fixedprice: false,
+        channel: '',
+        purchasePrice: '',
       },
       orderDetails: {
       },
@@ -39,6 +42,7 @@ Page({
         fixed_tax_price: null,
         fixed_tax_value: null
       },
+      bankerAddress: null,
       payableAmount: '--',
       serviceFee: '0'
     },
@@ -57,6 +61,7 @@ Page({
         bankerID: bankerID,
         userID: wx.getStorageSync('userID'),
         ownerID: wx.getStorageSync('userID'),
+        editPriceOnly: options.editPriceOnly == '1',
       })
     },
     
@@ -95,11 +100,13 @@ Page({
             const fullAddress = `${address.linkMan} ${address.mobile} ${address.address}`;
             if (type === 'sender') {
               this.setData({
-                'orderDetails.sender_addr': fullAddress
+                'orderDetails.sender_addr': fullAddress,
+                '_pendingSenderAddr': fullAddress
               });
             } else {
               this.setData({
-                'orderDetails.recver_addr': fullAddress
+                'orderDetails.recver_addr': fullAddress,
+                '_pendingRecverAddr': fullAddress
               });
             }
           }
@@ -107,8 +114,24 @@ Page({
       });
     },
     onShow() {
+      // 保存从 select_addr 页面选中的地址（会被 orderDetail 覆盖）
+      const pendingSenderAddr = this.data._pendingSenderAddr;
+      const pendingRecverAddr = this.data._pendingRecverAddr;
       this.orderDetail().then(res => {
-           this.updateButtonStatus()
+        // 恢复被 orderDetail 覆盖的选中地址
+        if (pendingSenderAddr) {
+          this.setData({
+            'orderDetails.sender_addr': pendingSenderAddr,
+            '_pendingSenderAddr': null
+          });
+        }
+        if (pendingRecverAddr) {
+          this.setData({
+            'orderDetails.recver_addr': pendingRecverAddr,
+            '_pendingRecverAddr': null
+          });
+        }
+        this.updateButtonStatus();
       });
     },
     async orderDetail() {
@@ -121,12 +144,14 @@ Page({
         this.setData({
                 orderNextStep: ORDER_STATUS.getStatusText0(ORDER_STATUS.ORDERSTATUS_ENUM0.CREATED),
                 isOwner: true, //any one see this page may be owner.
-                isBanker: false,
+                isBanker: (this.data.bankerID == this.data.userID),
                 canSee : true 
         });
 	console.log('new order, nothing to be shown');
         // 获取 banker 服务费信息（bankerID 来自 onLoad URL 参数）
         this.getBankerTaxInfo(this.data.bankerID);
+        // 获取 banker 收件地址
+        this.getBankerAddress(this.data.bankerID);
 	return;
       }
 
@@ -170,6 +195,7 @@ Page({
         // 获取 banker 服务费信息
         if (_orderInfo.banker_id) {
           this.getBankerTaxInfo(_orderInfo.banker_id);
+          this.getBankerAddress(_orderInfo.banker_id);
         }
       } catch (err) {
         wx.hideLoading();
@@ -206,6 +232,8 @@ Page({
             description: goods.description || '',
             imageList: goods.imageList || [],
             videoList: goods.videoList || [],
+            channel: goods.channel || '',
+            purchasePrice: goods.purchasePrice || '',
             pic: goods.pic || (goods.imageList && goods.imageList[0]?.url) || ''
           };
           this.setData({ goodInfo: mappedGoodsInfo });
@@ -241,6 +269,31 @@ Page({
       }
     },
 
+    async getBankerAddress(bankerID) {
+      if (!bankerID) return;
+      try {
+        const res = await CLOUDFUNC.callCloudFunction('queryAddress', { userID: bankerID });
+        // queryAddress 返回 { code:0, data:{ code:0, result: [...] } }
+        // cloud.js 解包后得到 { code:0, result: [...] }
+        if (res && res.result && res.result.length > 0) {
+          // 优先取默认地址，否则取第一个
+          const defaultAddr = res.result.find(item => item.isDefault) || res.result[0];
+          this.setData({
+            bankerAddress: {
+              linkMan: defaultAddr.linkMan || '',
+              mobile: defaultAddr.mobile || '',
+              address: defaultAddr.address || ''
+            }
+          });
+        } else {
+          this.setData({ bankerAddress: null });
+        }
+      } catch (err) {
+        console.log('getBankerAddress failed:', err);
+        this.setData({ bankerAddress: null });
+      }
+    },
+
     calcPayableAmount(inputPrice) {
       let price = Number(this.data.goodInfo.price) || 0;
       if (inputPrice != null) {
@@ -257,11 +310,13 @@ Page({
         console.log('serviceFee 1', serviceFee);
       } else if (fixed_tax_value != null) {
         // 否则使用固定服务费
-        serviceFee = fixed_tax_value;
+	if (price > 0) {
+          serviceFee = fixed_tax_value;
+	}
         console.log('serviceFee 2', serviceFee);
       }
 
-      const payableAmount = (price + serviceFee).toFixed(2);
+      const payableAmount = (price - serviceFee).toFixed(2);
       this.setData({
         payableAmount: payableAmount,
         serviceFee: serviceFee.toFixed(2)
@@ -324,10 +379,10 @@ Page({
         POST_ID1_ENABLED    : needPostID1,
       });
       if (this.data.SENDER_ADDR_ENABLED) {
-         fillDefaultAddress().then();
+         this.fillDefaultAddress().then();
       }
       if (this.data.RECVER_ADDR_ENABLED) {
-         fillDefaultAddress().then();
+         this.fillDefaultAddress().then();
       }
     },
     onNameInput(e) { this.setData({ 'goodInfo.name': e.detail.value }); },
@@ -342,6 +397,8 @@ Page({
     onFixedPriceToggle() {
       this.setData({ 'goodInfo.fixedprice': !this.data.goodInfo.fixedprice });
     },
+    onChannelInput(e) { this.setData({ 'goodInfo.channel': e.detail.value }); },
+    onPurchasePriceInput(e) { this.setData({ 'goodInfo.purchasePrice': e.detail.value }); },
     onDescInput(e)  { this.setData({ 'goodInfo.description': e.detail.value }); },
     onSenderAddrInput(e)  { this.setData({ 'orderDetails.sender_addr': e.detail.value }); },
     onRecverAddrInput(e)  { this.setData({ 'orderDetails.recver_addr': e.detail.value }); },
@@ -355,17 +412,24 @@ Page({
     },
     async updateOrderData() {
       try {
-        console.log('updateOrderData, owner_id, goods_id, order_status', this.data.userID, this.data.goodsID, this.data.orderDetails.order_status)
+        const curStatus = this.data.orderDetails.order_status;
+        console.log('updateOrderData, owner_id, goods_id, order_status', this.data.userID, this.data.goodsID, curStatus)
         console.log('updateOrderData, details:', this.data.orderDetails);
+        // 仅在 INIT(0) 状态下将 serviceFee / payableAmount 持久化到 orders_info
+        const _orderDetail = {
+          order_status: curStatus,
+          order_details: this.data.orderDetails
+        };
+        if (curStatus === ORDER_STATUS.ORDERSTATUS_ENUM0.INIT) {
+          _orderDetail.service_fee = parseFloat(this.data.serviceFee) || 0;
+          _orderDetail.payable_amount = parseFloat(this.data.payableAmount) || 0;
+          _orderDetail.owner_id = this.data.userID,
+          _orderDetail.goods_id = this.data.goodsID
+        }
         const res = await CLOUDFUNC.callCloudFunction('updateOrderInfo',
                 {
 		  orderID: this.data.orderID,
-		  orderDetail: {
-                    owner_id: this.data.userID,
-		    goods_id: this.data.goodsID,
-		    order_status: this.data.orderDetails.order_status,
-		    order_details : this.data.orderDetails
-		  }
+		  orderDetail: _orderDetail
                 });
         return res;
       } catch (err) {
@@ -605,9 +669,15 @@ Page({
       return true;
     },
     onShareAppMessage: function() {
+      const shareTitle = this.data.isNewOrder 
+        ? '邀请您填写寄售单' 
+        : `${this.data.userName || ''} 分享的订单`;
+      const sharePath = this.data.isNewOrder
+        ? `/pages/orders/order-type0-details?is_new=true&banker_id=${this.data.bankerID}&id=${this.data.orderID}`
+        : `/pages/orders/order-type0-details?id=${this.data.orderID}`;
       return {
-          title: `${this.data.userName} 分享的订单`,
-          path: '/pages/orders/order-type0-details?id=' + this.data.orderID
+          title: shareTitle,
+          path: sharePath
       };
     },
     onShareTimeline() { 
@@ -617,11 +687,58 @@ Page({
         imageUrl: wx.getStorageSync('share_pic')
       }
     },
+    copyBankerAddress() {
+      const addr = this.data.bankerAddress;
+      if (!addr) return;
+      const text = `收件人：${addr.linkMan}\n联系电话：${addr.mobile}\n收件地址：${addr.address}`;
+      wx.setClipboardData({
+        data: text,
+        success: () => {
+          wx.showToast({ title: '已复制收件信息', icon: 'success' });
+        }
+      });
+    },
     goGoodsDetail() {
       if (this.data.goodId) {
         wx.navigateTo({
           url: '/pages/goods-details/index?id=' + this.data.goodId
         });
+      }
+    },
+    async updateGoods() {
+      if (this.data.isNewOrder || !this.data.goodsID) {
+        wx.showToast({ title: '无法更新', icon: 'none' });
+        return;
+      }
+      wx.showLoading({ title: '保存中...' });
+      try {
+        let goodsInfo;
+        if (this.data.editPriceOnly) {
+          // 只能降价：仅保存价格
+          goodsInfo = { price: this.data.goodInfo.price || '' };
+        } else {
+          goodsInfo = {
+            channel: this.data.goodInfo.channel || '',
+            purchasePrice: this.data.goodInfo.purchasePrice || '',
+            description: this.data.goodInfo.description || '',
+            fixedprice: this.data.goodInfo.fixedprice || false,
+            price: this.data.goodInfo.price || '',
+          };
+        }
+        const res = await CLOUDFUNC.callCloudFunction('updateGoodsInfo', {
+          goodsID: this.data.goodsID,
+          goodsInfo: goodsInfo,
+        });
+        wx.hideLoading();
+        if (res && res.success) {
+          wx.showToast({ title: '保存成功', icon: 'success' });
+        } else {
+          wx.showToast({ title: res.message || '保存失败', icon: 'none' });
+        }
+      } catch (err) {
+        wx.hideLoading();
+        console.error('updateGoods failed:', err);
+        wx.showToast({ title: '保存失败', icon: 'none' });
       }
     }
 

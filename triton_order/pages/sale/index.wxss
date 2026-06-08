@@ -163,7 +163,33 @@ page {
   font-size: 24rpx;
   font-weight: bold;
   color: #026302;
+  margin-bottom: 4rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.banker-account {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4rpx;
   margin-bottom: 6rpx;
+  padding: 4rpx 8rpx;
+  background: rgba(4, 117, 4, 0.06);
+  border-radius: 12rpx;
+}
+
+.account-label {
+  font-size: 18rpx;
+  color: #026302;
+  opacity: 0.6;
+}
+
+.account-id {
+  font-size: 18rpx;
+  color: #047504;
+  font-weight: bold;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

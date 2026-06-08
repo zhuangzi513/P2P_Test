@@ -15,7 +15,7 @@ Page({
     adGoods: [],
     loadingMoreHidden: true,
     curPage: 1,
-    pageSize: 20
+    pageSize: 8
   },
   tabClick(e) {
     const userId = e.currentTarget.dataset.userid
@@ -122,7 +122,7 @@ Page({
   async bankers() {
     const res = await CLOUDFUNC.callCloudFunction('bankersList', {userID:wx.getStorageSync('userID')});
     let bankers = [];
-    if (res.code == 0) {
+    if (res && res.bankers) {
       const _bankers = res.bankers
       bankers = bankers.concat(_bankers)
     } else {
@@ -143,7 +143,7 @@ Page({
     })
     const res = await CLOUDFUNC.callCloudFunction('goodsStatics', { pageNo: this.data.curPage, pageSize: this.data.pageSize });
     wx.hideLoading()
-    if (res.code != 0) {
+    if (!res || !res.goods) {
       let newData = {
         loadingMoreHidden: false
       }
@@ -202,10 +202,7 @@ Page({
     //});
   },
   onReachBottom: function() {
-    this.setData({
-      curPage: this.data.curPage + 1
-    });
-    this.getGoodsList(0, true)
+    // 平台优选仅展示 top8，无需加载更多
   },
   onPullDownRefresh: function() {
     this.setData({

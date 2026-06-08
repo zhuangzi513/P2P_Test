@@ -1,6 +1,19 @@
 <view class="page-container">
+  <!-- 分享卡片（新建订单时显示） -->
+  <view class="share-card" wx:if="{{isNewOrder}}">
+    <view class="share-card-header">
+      <text class="share-card-icon">📋</text>
+      <text class="share-card-title">分享寄售单给玩家</text>
+    </view>
+    <view class="share-card-desc">点击下方按钮，将寄售单发送给玩家填写商品信息</view>
+    <button class="share-card-btn" open-type="share">
+      <text class="share-btn-icon">💬</text>
+      分享给好友填写
+    </button>
+  </view>
+
   <!-- 状态卡片 -->
-  <view class="status-banner">
+  <view class="status-banner" wx:if="{{false}}">
     <view class="status-badge {{orderDetails.order_status >= 0 ? 'active' : 'pending'}}">
       <text class="status-icon">{{orderDetails.order_status >= 5 ? '✓' : '⏳'}}</text>
     </view>
@@ -8,6 +21,32 @@
       <text class="status-text">当前状态：{{orderNextStep}}</text>
       <text class="order-id">订单号: {{orderDetails.order_id || orderID }}</text>
     </view>
+  </view>
+
+  <!-- 寄售商家收件信息 -->
+  <view class="card banker-addr-card" wx:if="{{bankerAddress}}">
+    <view class="card-header">
+      <text class="card-title">📦 寄售商家收件信息</text>
+      <view class="copy-btn" bindtap="copyBankerAddress">
+        <text class="copy-icon">📋</text>
+        <text class="copy-text">一键复制</text>
+      </view>
+    </view>
+    <view class="addr-info-grid">
+      <view class="addr-info-row">
+        <text class="addr-label">收件人</text>
+        <text class="addr-value">{{bankerAddress.linkMan}}</text>
+      </view>
+      <view class="addr-info-row">
+        <text class="addr-label">联系电话</text>
+        <text class="addr-value addr-mobile">{{bankerAddress.mobile}}</text>
+      </view>
+      <view class="addr-info-row">
+        <text class="addr-label">收件地址</text>
+        <text class="addr-value">{{bankerAddress.address}}</text>
+      </view>
+    </view>
+    <view class="addr-tip">请将商品寄送至以上地址</view>
   </view>
 
   <!-- 商品卡片 -->
@@ -46,9 +85,9 @@
       <view class="form-grid">
         <view class="form-row">
           <view class="form-label">名称</view>
-          <input class="form-input {{isOwner ? '' : 'disabled'}}" 
+          <input class="form-input {{isOwner && !editPriceOnly ? '' : 'disabled'}}" 
                  placeholder="请输入商品名称（例：佛公吊坠）" 
-                 disabled="{{!isOwner}}" 
+                 disabled="{{!isOwner || editPriceOnly}}" 
                  value="{{goodInfo.name}}" 
                  bindinput="onNameInput" />
         </view>
@@ -82,9 +121,9 @@
         
         <view class="form-row">
           <view class="form-label">购入渠道（选填）</view>
-          <input class="form-input {{isOwner ? '' : 'disabled'}}" 
+          <input class="form-input {{isOwner && !editPriceOnly ? '' : 'disabled'}}" 
                  placeholder="例：六舒闲置" 
-                 disabled="{{!isOwner}}" 
+                 disabled="{{!isOwner || editPriceOnly}}" 
                  value="{{goodInfo.channel}}" 
                  bindinput="onChannelInput" />
         </view>
@@ -93,10 +132,10 @@
           <view class="form-label">购入价格（选填）</view>
           <view class="price-input-wrapper">
             <text class="price-symbol">¥</text>
-            <input class="form-input price-input {{isOwner ? '' : 'disabled'}}" 
+            <input class="form-input price-input {{isOwner && !editPriceOnly ? '' : 'disabled'}}" 
                    type="digit" 
                    placeholder="0.00" 
-                   disabled="{{!isOwner}}" 
+                   disabled="{{!isOwner || editPriceOnly}}" 
                    value="{{goodInfo.purchasePrice}}" 
                    bindinput="onPurchasePriceInput" />
           </view>
@@ -117,14 +156,14 @@
 
         <!-- 应付金额 -->
         <view class="form-row payable-row">
-          <view class="form-label">应付金额</view>
+          <view class="form-label">实收金额</view>
           <view class="payable-value">
             <text class="payable-amount">¥{{payableAmount}}</text>
-            <text class="payable-detail">商品 ¥{{goodInfo.price || 0}} + 服务费 ¥{{serviceFee}}</text>
+            <text class="payable-detail">商品 ¥{{goodInfo.price || 0}} - 服务费 ¥{{serviceFee}}</text>
           </view>
         </view>
         
-        <view class="form-row">
+        <view class="form-row" wx:if="{{!editPriceOnly}}">
           <view class="checkbox-wrapper {{!isOwner ? 'disabled' : ''}}" bindtap="{{isOwner ? 'onFixedPriceToggle' : ''}}">
             <view class="checkbox-box {{goodInfo.fixedprice ? 'checked' : ''}}">
               <text class="checkbox-icon" wx:if="{{goodInfo.fixedprice}}">✓</text>
@@ -133,7 +172,15 @@
           </view>
         </view>
         
-        <view class="form-row">
+        <!-- 更新商品信息按钮（非新建订单时物主可见） -->
+        <view class="form-row" wx:if="{{isOwner && !isNewOrder && goodsID}}">
+          <button class="btn-update-goods" bindtap="updateGoods">
+            <text class="btn-update-icon">💾</text>
+            {{editPriceOnly ? '保存价格' : '保存商品信息'}}
+          </button>
+        </view>
+
+        <view class="form-row" wx:if="{{!editPriceOnly}}">
           <view class="form-label">补充描述（选填）</view>
           <textarea class="form-textarea" 
                     placeholder="例：有证书，天然钻石镶嵌/培育钻石镶嵌" 
@@ -146,7 +193,7 @@
     </view>
 
     <!-- 图片区域 -->
-    <view class="card form-card media-card">
+    <view class="card form-card media-card" wx:if="{{!editPriceOnly}}">
       <view class="card-header">
         <text class="card-title">商品图片</text>
         <text class="img-count">{{goodInfo.imageList.length}}/1</text>

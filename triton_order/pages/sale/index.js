@@ -23,10 +23,7 @@ Page({
       const res = await CLOUDFUNC.callCloudFunction('bankersList', {
         userID: wx.getStorageSync('userID')
       });
-      let bankers = [];
-      if (res.code == 0) {
-        bankers = res.bankers || [];
-      }
+      let bankers = res && res.bankers ? res.bankers : [];
       // 只取前6个 banker
       bankers = bankers.slice(0, 6);
       this.setData({
@@ -65,7 +62,7 @@ Page({
 
   onShareAppMessage() {
     return {
-      title: '出售 - ' + wx.getStorageSync('userName'),
+      title: '寄售 - ' + wx.getStorageSync('userName'),
       path: '/pages/sale/index'
     };
   }

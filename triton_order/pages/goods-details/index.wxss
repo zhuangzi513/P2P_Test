@@ -120,6 +120,12 @@ textarea {
   color: #E4393C;
 }
 
+.fixed-price-tag {
+  color: #E65100;
+  font-weight: bold;
+  font-size: 26rpx;
+}
+
 .description-content {
   padding: 20rpx 0;
   font-size: 28rpx;

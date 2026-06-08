@@ -95,7 +95,7 @@ Page({
     wx.showLoading({ title: '' })
     const res = await CLOUDFUNC.callCloudFunction('goodsStatics', { userID: this.data.userID, bankerID: this.data.bankerID, pageNo: this.data.curPage, pageSize: this.data.pageSize });
     wx.hideLoading()
-    if (res.code != 0) {
+    if (!res || !res.goods) {
       let newData = { loadingMoreHidden: false }
       if (!append) { newData.allGoods = [] }
       this.setData(newData);

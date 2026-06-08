@@ -187,18 +187,13 @@ Page({
     });
     console.log(res)
     wx.hideLoading();
-    if (res.code == 0) {
+    if (res && res.result) {
       this.setData({
         addressList: res.result
       });
-    } else if (res.code == 700) {
-      this.setData({
-        addressList: null
-      });
     } else {
-      wx.showToast({
-        title: res.msg,
-        icon: 'none'
+      this.setData({
+        addressList: []
       });
     }
   },

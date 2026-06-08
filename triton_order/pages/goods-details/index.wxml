@@ -29,16 +29,23 @@
       </view>
       <view class="info-table">
         <view class="info-row">
-          <text class="info-label">颜色</text>
-          <text class="info-value">{{goodsInfo.color || '-'}}</text>
-        </view>
-        <view class="info-row">
           <text class="info-label">尺寸</text>
           <text class="info-value">{{goodsInfo.sizeX || '-'}}{{goodsInfo.sizeY ? ' × ' + goodsInfo.sizeY : ''}}{{goodsInfo.sizeZ ? ' × ' + goodsInfo.sizeZ : ''}}</text>
         </view>
         <view class="info-row">
           <text class="info-label">价格</text>
           <text class="info-value price">¥{{goodsInfo.price || '0'}}</text>
+        </view>
+        <view class="info-row" wx:if="{{goodsInfo.fixedprice}}" style="background: #FFF3E0; border-radius: 8rpx; padding: 12rpx 16rpx;">
+          <text class="info-label fixed-price-tag">一口价，不议价</text>
+        </view>
+        <view class="info-row" wx:if="{{goodsInfo.channel}}">
+          <text class="info-label">购买渠道</text>
+          <text class="info-value">{{goodsInfo.channel}}</text>
+        </view>
+        <view class="info-row" wx:if="{{goodsInfo.purchasePrice}}">
+          <text class="info-label">购入价格</text>
+          <text class="info-value">¥{{goodsInfo.purchasePrice}}</text>
         </view>
       </view>
     </view>

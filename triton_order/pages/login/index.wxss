@@ -55,21 +55,13 @@ page {
   display: flex;
   align-items: center;
   padding: 32rpx;
-  background: #E4FFED;
+  background: linear-gradient(135deg, #026302 0%, #047504 100%);
   border-radius: 20rpx;
   transition: all 0.3s ease;
 }
 
 .role-option:active {
   transform: scale(0.98);
-  background: #d4f5dd;
-}
-
-.role-option.banker {
-  background: linear-gradient(135deg, #026302 0%, #047504 100%);
-}
-
-.role-option.banker:active {
   background: linear-gradient(135deg, #015001 0%, #036303 100%);
 }
 
@@ -82,13 +74,6 @@ page {
   justify-content: center;
   font-size: 44rpx;
   margin-right: 28rpx;
-}
-
-.customer-icon {
-  background: linear-gradient(135deg, #E4393C 0%, #ff6b6b 100%);
-}
-
-.banker-icon {
   background: rgba(255, 255, 255, 0.2);
 }
 
@@ -101,31 +86,19 @@ page {
 .role-title {
   font-size: 32rpx;
   font-weight: 600;
-  color: #026302;
-  margin-bottom: 8rpx;
-}
-
-.role-option.banker .role-title {
   color: #fff;
+  margin-bottom: 8rpx;
 }
 
 .role-desc {
   font-size: 24rpx;
-  color: #666;
-}
-
-.role-option.banker .role-desc {
   color: rgba(255, 255, 255, 0.7);
 }
 
 .role-arrow {
   font-size: 48rpx;
-  color: #aaa;
-  font-weight: 300;
-}
-
-.role-option.banker .role-arrow {
   color: rgba(255, 255, 255, 0.5);
+  font-weight: 300;
 }
 
 /* 分隔线 */
@@ -159,4 +132,114 @@ page {
   font-size: 22rpx;
   color: #047504;
   opacity: 0.5;
+}
+
+/* ===== 邀请码弹窗 ===== */
+.invite-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.invite-modal {
+  width: 580rpx;
+  background: #FFFFFF;
+  border-radius: 24rpx;
+  padding: 48rpx 40rpx 36rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 16rpx 48rpx rgba(0, 0, 0, 0.2);
+}
+
+.invite-title {
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #026302;
+  margin-bottom: 12rpx;
+}
+
+.invite-desc {
+  font-size: 24rpx;
+  color: #666;
+  margin-bottom: 16rpx;
+  text-align: center;
+}
+
+.invite-contact {
+  font-size: 22rpx;
+  color: #E4393C;
+  margin-bottom: 28rpx;
+  text-align: center;
+  line-height: 36rpx;
+}
+
+.invite-input {
+  width: 100%;
+  height: 80rpx;
+  background: #F5F5F5;
+  border-radius: 16rpx;
+  padding: 0 24rpx;
+  font-size: 28rpx;
+  color: #333;
+  box-sizing: border-box;
+  border: 2rpx solid transparent;
+  text-align: center;
+  letter-spacing: 4rpx;
+}
+
+.invite-input:focus {
+  border-color: #047504;
+  background: #FAFFFA;
+}
+
+.invite-error {
+  font-size: 22rpx;
+  color: #E4393C;
+  margin-top: 12rpx;
+}
+
+.invite-btns {
+  width: 100%;
+  display: flex;
+  gap: 24rpx;
+  margin-top: 36rpx;
+}
+
+.invite-btn-cancel {
+  flex: 1;
+  height: 80rpx;
+  line-height: 80rpx;
+  text-align: center;
+  font-size: 28rpx;
+  color: #666;
+  background: #F5F5F5;
+  border-radius: 16rpx;
+}
+
+.invite-btn-cancel:active {
+  background: #E8E8E8;
+}
+
+.invite-btn-submit {
+  flex: 1;
+  height: 80rpx;
+  line-height: 80rpx;
+  text-align: center;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #FFFFFF;
+  background: linear-gradient(135deg, #026302 0%, #047504 100%);
+  border-radius: 16rpx;
+}
+
+.invite-btn-submit:active {
+  background: linear-gradient(135deg, #015001 0%, #036303 100%);
 }

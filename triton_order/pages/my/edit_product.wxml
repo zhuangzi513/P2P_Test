@@ -29,7 +29,7 @@
     </view>
 
     <view class="section">
-      <view class="section-title">PHOTOGRAPH</view>
+      <view class="section-title">图片</view>
       <view class="media-list">
         <block wx:for="{{imageList}}" wx:key="index">
           <view class="media-item">

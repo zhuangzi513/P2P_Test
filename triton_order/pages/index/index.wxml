@@ -10,39 +10,19 @@ module.exports = {
 }
 </wxs>
 <view class="ad-container">
-  <swiper class="ad-swiper" indicator-dots="true" indicator-color="rgba(255,255,255,0.5)" indicator-active-color="#026302" autoplay circular interval="3000">
-    <swiper-item wx:for="{{adGoods}}" wx:key="id">
-      <view class="ad-item" bindtap="toDetailsTap" data-id="{{item.id}}">
-        <image mode="aspectFill" src="{{item.pic}}" />
-        <view class="ad-item-info">
-          <text class="ad-item-name">{{item.name}}</text>
-          <view class="ad-item-price">
-            <text class="ad-price-symbol">¥</text>
-            <text class="ad-price-num">{{item.price}}</text>
-          </view>
-        </view>
-      </view>
-    </swiper-item>
-    <swiper-item>
-      <view class="ad-contact">
-        <view class="ad-contact-content">
-          <text class="ad-contact-title">广告招租</text>
-          <text class="ad-contact-icon">📢</text>
-          <text class="ad-contact-desc">您的商品可在此展示</text>
-          <view class="ad-contact-divider"></view>
-          <text class="ad-contact-phone">招租热线：400-888-8888</text>
-          <text class="ad-contact-tip">优质广告位，超高曝光量</text>
-        </view>
-      </view>
-    </swiper-item>
-  </swiper>
-  <block wx:if="{{adGoods.length === 0}}">
-    <view class="ad-placeholder">
-      <text class="ad-placeholder-icon">📢</text>
-      <text class="ad-placeholder-text">广告位招租中</text>
-      <text class="ad-placeholder-desc">您的商品可在此展示</text>
+  <view class="ad-promo">
+    <view class="ad-promo-bg">
+      <view class="ad-promo-circle ad-promo-circle--1"></view>
+      <view class="ad-promo-circle ad-promo-circle--2"></view>
+      <view class="ad-promo-circle ad-promo-circle--3"></view>
     </view>
-  </block>
+    <view class="ad-promo-content">
+      <text class="ad-promo-icon">🎁</text>
+      <text class="ad-promo-title">开播福利 限时免服务费</text>
+      <text class="ad-promo-subtitle">复检统一出NGTC国检证书 20元/件起</text>
+      <text class="ad-promo-contact">微信：maomaoch1230</text>
+    </view>
+  </view>
 </view>
 
 <view class="jd-category-container">

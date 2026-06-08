@@ -1,29 +1,128 @@
 <view class="page-container">
-  <view class="total-section">
-    <view class="total-card">
-      <text class="total-label">账单总额</text>
-      <view class="total-amount">
-        <text class="total-symbol">¥</text>
-        <text class="total-num">{{totalAmount}}</text>
+  <!-- 月份选择器 -->
+  <view class="month-filter">
+    <picker mode="selector" range="{{monthOptions}}" range-key="label" value="{{monthIndex}}" bindchange="onMonthChange">
+      <view class="month-picker">
+        <text class="month-label">📅 {{monthOptions[monthIndex].label}}</text>
+        <text class="month-arrow">▼</text>
       </view>
-    </view>
+    </picker>
   </view>
 
-  <view class="bill-list">
-    <view class="section-title">账单明细</view>
-    <block wx:if="{{bills.length > 0}}">
-      <view class="bill-item" wx:for="{{bills}}" wx:key="id">
-        <view class="bill-info">
-          <text class="bill-name">{{item.name || item.description}}</text>
-          <text class="bill-time">{{item.time || item.createTime}}</text>
-        </view>
-        <view class="bill-amount">
-          <text class="bill-amount-text">{{item.amount > 0 ? '+' : ''}}{{item.amount}}</text>
+  <!-- ==================== 寄售商家账单 ==================== -->
+  <block wx:if="{{isBanker}}">
+    <!-- 汇总卡片 -->
+    <view class="summary-section" wx:if="{{bills.length > 0}}">
+      <view class="summary-card banker-amount">
+        <text class="summary-label">交易总金额</text>
+        <view class="summary-amount">
+          <text class="summary-symbol">¥</text>
+          <text class="summary-num">{{totalAmount}}</text>
         </view>
       </view>
-    </block>
-    <block wx:else>
-      <view class="empty-tip">暂无账单记录</view>
-    </block>
+      <view class="summary-card banker-fee">
+        <text class="summary-label">服务费总计</text>
+        <view class="summary-amount">
+          <text class="summary-symbol">¥</text>
+          <text class="summary-num">{{totalServiceFee}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 账单明细 -->
+    <view class="bill-list">
+      <view class="section-title">账单明细</view>
+      <block wx:if="{{bills.length > 0}}">
+        <view class="bill-item" wx:for="{{bills}}" wx:key="id">
+          <view class="bill-info">
+            <view class="bill-name-row">
+              <text class="bill-name">物品编号：{{item.goodsId}}</text>
+              <text class="bill-tag {{item.orderType === 1 ? 'tag-buy' : 'tag-in'}}">{{item.typeLabel}}</text>
+            </view>
+            <text class="bill-date">{{item.dateStr}}</text>
+          </view>
+          <view class="bill-detail">
+            <view class="bill-detail-row">
+              <text class="detail-label">卖家编号</text>
+              <text class="detail-value id-val">{{item.ownerId}}</text>
+            </view>
+            <view class="bill-detail-row">
+              <text class="detail-label">买家编号</text>
+              <text class="detail-value id-val">{{item.buyerId || '--'}}</text>
+            </view>
+            <view class="bill-detail-row">
+              <text class="detail-label">交易金额</text>
+              <text class="detail-value">¥{{item.price}}</text>
+            </view>
+            <view class="bill-detail-row">
+              <text class="detail-label">服务费</text>
+              <text class="detail-value fee">-¥{{item.serviceFee}}</text>
+            </view>
+          </view>
+        </view>
+      </block>
+      <block wx:else>
+        <view class="empty-tip">暂无账单记录</view>
+      </block>
+    </view>
+  </block>
+
+  <!-- ==================== 玩家账单 ==================== -->
+  <block wx:else>
+    <!-- 汇总卡片 -->
+    <view class="summary-section" wx:if="{{bills.length > 0}}">
+      <view class="summary-card income">
+        <text class="summary-label">到手收入</text>
+        <view class="summary-amount">
+          <text class="summary-symbol">¥</text>
+          <text class="summary-num">{{totalIncome}}</text>
+        </view>
+      </view>
+      <view class="summary-card paid">
+        <text class="summary-label">实际支付</text>
+        <view class="summary-amount">
+          <text class="summary-symbol">¥</text>
+          <text class="summary-num">{{totalPaid}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 账单明细 -->
+    <view class="bill-list">
+      <view class="section-title">账单明细</view>
+      <block wx:if="{{bills.length > 0}}">
+        <view class="bill-item" wx:for="{{bills}}" wx:key="id">
+          <view class="bill-info">
+            <view class="bill-name-row">
+              <text class="bill-name">{{item.goodsName}}</text>
+              <text class="bill-tag {{item.type === 'sale' ? 'tag-income' : 'tag-paid'}}">{{item.typeLabel}}</text>
+            </view>
+            <text class="bill-date">{{item.dateStr}}</text>
+          </view>
+          <view class="bill-detail">
+            <view class="bill-detail-row">
+              <text class="detail-label">交易金额</text>
+              <text class="detail-value">¥{{item.price}}</text>
+            </view>
+            <view class="bill-detail-row">
+              <text class="detail-label">服务费</text>
+              <text class="detail-value fee">-¥{{item.serviceFee}}</text>
+            </view>
+            <view class="bill-detail-row actual">
+              <text class="detail-label">{{item.type === 'sale' ? '到手金额' : '实际支付'}}</text>
+              <text class="detail-value actual-amount {{item.type === 'sale' ? 'income' : 'paid'}}">{{item.type === 'sale' ? '+' : '-'}}¥{{item.actualAmount}}</text>
+            </view>
+          </view>
+        </view>
+      </block>
+      <block wx:else>
+        <view class="empty-tip">暂无账单记录</view>
+      </block>
+    </view>
+  </block>
+
+  <!-- 加载中 -->
+  <view class="loading-wrap" wx:if="{{loading}}">
+    <text class="loading-text">加载中...</text>
   </view>
 </view>

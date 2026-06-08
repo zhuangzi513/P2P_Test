@@ -10,6 +10,9 @@
     "pages/my/edit_product",
     "pages/my/edit_products",
     "pages/my/my_products",
+    "pages/my/my_purchase",
+    "pages/my/my_sale",
+    "pages/my/money",
     "pages/my/select_addr",
     "pages/bankers/index",
     "pages/orders/index",
@@ -58,7 +61,7 @@
         "pagePath": "pages/sale/index",
         "iconPath": "images/nav/home-off.png",
         "selectedIconPath": "images/nav/home-on.png",
-        "text": "出售"
+        "text": "寄售"
       },
       {
         "pagePath": "pages/my/index",
