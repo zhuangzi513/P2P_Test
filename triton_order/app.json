@@ -18,7 +18,8 @@
     "pages/orders/index",
     "pages/orders/order-type0-details",
     "pages/orders/order-type1-details",
-    "pages/orders/order-list",
+    "pages/orders/order-list-type0",
+    "pages/orders/order-list-type1",
     "pages/sale/index"
   ],
   "requiredPrivateInfos": [
