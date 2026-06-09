@@ -93,7 +93,10 @@ Page({
 
   async getGoodsList(append) {
     wx.showLoading({ title: '' })
+    console.log('getGoodsList, curPage:', this.data.curPage);
     const res = await CLOUDFUNC.callCloudFunction('goodsStatics', { userID: this.data.userID, bankerID: this.data.bankerID, pageNo: this.data.curPage, pageSize: this.data.pageSize });
+    this.setData({ curPage: this.data.curPage + 1 });
+    console.log('getGoodsList, res:', res);
     wx.hideLoading()
     if (!res || !res.goods) {
       let newData = { loadingMoreHidden: false }
@@ -105,7 +108,6 @@ Page({
     if (append) { goods = this.data.allGoods }
     for (var i = 0; i < res.goods.length; i++) {
       const item = res.goods[i];
-      console.log('item:', item.goods_info.goodStatus)
       if (item.goods_info.goodStatus) {
         if (item.goods_info.goodStatus > 0 && item.goods_info.goodStatus < 3) {
           goods.push({
@@ -139,10 +141,11 @@ Page({
     }
   },
   onReachBottom: function() {
-    this.setData({ curPage: this.data.curPage + 1 });
+    console.log("onReachBottom, curPage:", this.data.curPage);
     this.getGoodsList(true)
   },
   onPullDownRefresh: function() {
+    console.log("onPullDonwRefresh");
     this.setData({ curPage: 1 });
     this.getGoodsList(false)
     wx.stopPullDownRefresh()

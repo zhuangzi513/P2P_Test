@@ -7,7 +7,7 @@ const _ = db.command;
 exports.main = async (event, context) => {
   const userID = event.userID;
   const bankerID = event.bankerID;
-  const pageNo = 1;
+  const pageNo = event.pageNo || 1;
   const pageSize = event.pageSize; 
   const goodsCollection = db.collection('goods_info');
   
@@ -18,9 +18,9 @@ exports.main = async (event, context) => {
     } else if (userID) {
       query = goodsCollection.where({owner_id: Number(userID)});
     }
-    //else {
-    //  query = goodsCollection;
-    //}
+    else {
+      query = goodsCollection;
+    }
     console.log('userID', userID, 'bankerID', bankerID)
     const countResult = await query.count();
     const total = countResult.total;
