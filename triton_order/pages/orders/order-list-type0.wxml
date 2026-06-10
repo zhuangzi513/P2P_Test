@@ -1,17 +1,55 @@
-<view class="container">
-  <van-empty wx:if="{{ !orderList }}" description="{{emptyText || '暂无订单'}}" />
-  
-  <view class="order-list" hidden="{{orderList ? false : true}}">
-    <view class="order-card" wx:for="{{orderList}}" wx:key="index">
-      <view class="order-header"  bindtap="goOrderDetail" data-item="{{ item }}" data-index="{{index}}">
-        <view class="order-header-left">
-          <view class="order-number">订单ID: {{item.order_id}}</view>
-          <view class="order-number">价格: {{item.price}}</view>
-        </view>
-        <view class="order-status">{{item.statusStr}}</view>
-      </view>
+<view class="page-container">
+  <!-- 标题 -->
+  <view class="section-header">
+    <view class="section-title">
+      <text class="section-name">寄售订单</text>
     </view>
   </view>
-  
-  <view class="safeAreaOldMarginBttom safeAreaNewMarginBttom"></view>
+
+  <!-- 筛选 Tab -->
+  <view class="tab-bar">
+    <view class="tab-item {{activeTab === item.key ? 'tab-active' : ''}}"
+          wx:for="{{tabs}}" wx:key="key"
+          bindtap="switchTab" data-tab="{{item.key}}">
+      {{item.label}}
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <van-empty wx:if="{{orders.length === 0 && !loading}}" description="暂无订单" />
+
+  <!-- 订单列表 -->
+  <block wx:if="{{orders.length > 0}}">
+    <view class="order-list">
+      <view class="order-card" wx:for="{{orders}}" wx:key="order_id" bindtap="goOrderDetail" data-item="{{item}}">
+        <view class="card-left">
+          <image class="card-thumb" src="{{item.thumbnail || '/images/default-goods.png'}}" mode="aspectFill" />
+        </view>
+        <view class="card-center">
+          <view class="card-row">
+            <text class="card-label">订单号</text>
+            <text class="card-value id-value">{{item.order_id}}</text>
+          </view>
+          <view class="card-row">
+            <text class="card-label">商品编号</text>
+            <text class="card-value id-value">{{item.goods_id}}</text>
+          </view>
+          <view class="card-row">
+            <text class="card-label">商品名称</text>
+            <text class="card-value name-value">{{item.goods_name || '—'}}</text>
+          </view>
+          <view class="card-row">
+            <text class="card-label">期望售价</text>
+            <text class="card-value price-value">¥{{item.goods_price_str}}</text>
+          </view>
+        </view>
+        <view class="card-right">
+          <view class="status-tag {{item.order_status === 9 || item.order_status === 12 ? 'status-cancel' : 'status-active'}}">
+            {{item.status_text}}
+          </view>
+        </view>
+      </view>
+    </view>
+    <van-divider contentPosition="center">没有更多了</van-divider>
+  </block>
 </view>
