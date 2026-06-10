@@ -102,22 +102,22 @@ Page({
   },
   switchToInputOrders() {
     wx.navigateTo({
-      url: '/pages/orders/order-list?type=0',
+      url: '/pages/orders/order-list-type0',
     });
   },
   switchToMyPurchase() {
     wx.navigateTo({
-      url: '/pages/my/my_purchase',
+      url: '/pages/orders/order-list-type0',
     });
   },
   switchToMySale() {
     wx.navigateTo({
-      url: '/pages/my/my_sale',
+      url: '/pages/orders/order-list-type1',
     });
   },
   switchToOutputOrders() {
     wx.navigateTo({
-      url: '/pages/orders/order-list?type=1',
+      url: '/pages/orders/order-list-type1',
     });
   },
   switchToMoney() {

@@ -58,8 +58,6 @@ const statusMapType1 = [
 '关闭订单'
 ];
 
-
-
 // 安全获取状态文本，防止数组越界
 function getStatusText0(status) {
   const idx = status + 1;
@@ -77,12 +75,114 @@ function getStatusText1(status) {
   return 'Unknown';
 }
 
+//function checkMyTurn0(curOrderStatus, isBanker, isOwner, isBuyer, isCanceler) {
+//      let opEnabled = false;
+//      if (curOrderStatus == ORDER_STATUS.ORDERSTATUS_ENUM0.CREATED) {
+//        //recver firstly see, and then confirm
+//        opEnabled = isOwner;
+//      } else if (curOrderStatus == ORDER_STATUS.ORDERSTATUS_ENUM0.INIT) {
+//        opEnabled = isBanker;
+//        needRecverAddr = true;
+//      } else if (curOrderStatus == ORDER_STATUS.ORDERSTATUS_ENUM0.CONFIRM) {
+//        //sender can send it to  recver
+//        opEnabled = isOwner;
+//      } else if (curOrderStatus >= ORDER_STATUS.ORDERSTATUS_ENUM0.SEND0
+//                 && curOrderStatus < ORDER_STATUS.ORDERSTATUS_ENUM0.DONE) {
+//        //recver got it, and then sell it, and pay to sender
+//        opEnabled = isBanker;
+//      } else if (curOrderStatus == ORDER_STATUS.ORDERSTATUS_ENUM0.DONE) {
+//        //sender confirm got payed
+//        opEnabled = isOwner;
+//      } else if (curOrderStatus == ORDER_STATUS.ORDERSTATUS_ENUM0.CANCELLED) {
+//        //done
+//        opEnabled = false;
+//      } else if (curOrderStatus == ORDER_STATUS.ORDERSTATUS_ENUM0.SEND1) {
+//        //any time, cancel should be confirmed by eachother
+//        opEnabled = !isCanceler;
+//      } else if (curOrderStatus == ORDER_STATUS.ORDERSTATUS_ENUM0.RECVED1) {
+//        opEnabled = isBanker;
+//      } else if (curOrderStatus == ORDER_STATUS.ORDERSTATUS_ENUM0.CLOSE) {
+//        opEnabled = this.data.isOwner;
+//      } else {
+//        opEnabled = false;
+//      }
+//}
+const TYPE0_BANKER_TURN = [
+  ORDERSTATUS0.INIT,
+  ORDERSTATUS0.SEND0,
+  ORDERSTATUS0.RECVED0,
+  ORDERSTATUS0.ONSALE,
+  ORDERSTATUS0.HITTED,
+  ORDERSTATUS0.SELLED,
+  ORDERSTATUS0.PAYED
+];
+const TYPE0_OWNER_TURN  = [
+  ORDERSTATUS0.CREATED,
+  ORDERSTATUS0.CONFIRM,
+  ORDERSTATUS0.DONE
+];
+//function checkMyTurn1(curOrderStatus, isBanker, isOwner, isBuyer, isCanceler) {
+//      if (curOrderStatus == ORDER_STATUS.ORDERSTATUS_ENUM1.CREATED) {
+//        //recver firstly see, and then confirm
+//        opEnabled = this.data.isBuyer;
+//      } else if (curOrderStatus == ORDER_STATUS.ORDERSTATUS_ENUM1.AGREED) {
+//        //owner agree
+//        opEnabled = this.data.isOwner;
+//      } else if (curOrderStatus == ORDER_STATUS.ORDERSTATUS_ENUM1.CONFIRM) {
+//        cancelingDisabled: true,
+//        //buyer can pay
+//        opEnabled = this.data.isBanker;
+//      } else if (curOrderStatus ==ORDER_STATUS.ORDERSTATUS_ENUM1.PAYED) {
+//        //buyer paied for it
+//        cancelingDisabled: true,
+//        opEnabled = this.data.isBuyer;
+//      } else if (curOrderStatus == ORDER_STATUS.ORDERSTATUS_ENUM1.SENDTORECVER) {
+//        //banker got paied and then send it to buyer
+//        opEnabled = this.data.isBanker;
+//      } else if (curOrderStatus == ORDER_STATUS.ORDERSTATUS_ENUM1.RECVED) {
+//        //buyer confirm get it
+//        opEnabled = this.data.isBuyer;
+//      } else if (curOrderStatus == ORDER_STATUS.ORDERSTATUS_ENUM1.DONE) {
+//        opEnabled = false;
+//      } else if (curOrderStatus == ORDER_STATUS.ORDERSTATUS_ENUM1.CANCELLED) {
+//        //any time, cancel should be confirmed by eachother
+//        opEnabled = !isCanceler && (this.data.isBanker || this.data.isBuyer);
+//      //} else if (curOrderStatus == ORDER_STATUS.ORDERSTATUS_ENUM1.BACK_CONFIRM) {
+//      //  opEnabled = this.data.isBanker;
+//      } else if (curOrderStatus == ORDER_STATUS.ORDERSTATUS_ENUM1.BACKING) {
+//        opEnabled = this.data.isBanker;
+//      } else if (curOrderStatus == ORDER_STATUS.ORDERSTATUS_ENUM1.BACKED) {
+//        opEnabled = this.data.isBuyer;
+//      } else if (curOrderStatus == ORDER_STATUS.ORDERSTATUS_ENUM1.CLOSE) {
+//        opEnabled = false;
+//      } else {
+//        opEnabled = false;
+//      }
+//}
+const TYPE1_BANKER_TURN = [
+  ORDERSTATUS1.CONFIRM,
+  ORDERSTATUS1.SENDTORECVER,
+];
+const TYPE1_OWNER_TURN = [
+  ORDERSTATUS1.AGREED
+];
+const TYPE1_BUYER_TURN = [
+  ORDERSTATUS1.CREATED,
+  ORDERSTATUS1.PAYED,
+  ORDERSTATUS1.RECVED
+];
+
 module.exports = {
   statusMap0: statusMapType0,
   ORDERSTATUS_ENUM0: ORDERSTATUS0,
   statusMap1: statusMapType1,
   ORDERSTATUS_ENUM1: ORDERSTATUS1,
   getStatusText0,
-  getStatusText1
+  getStatusText1,
+  type0BankerTurn: TYPE0_BANKER_TURN,
+  type1BankerTurn: TYPE1_BANKER_TURN,
+  type0OwnerTurn: TYPE0_OWNER_TURN,
+  type1OwnerTurn: TYPE1_OWNER_TURN,
+  type1BuyerTurn: TYPE1_BUYER_TURN
 }
 
